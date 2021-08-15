@@ -2,11 +2,11 @@
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 
-namespace minic_antlr
+namespace MiniC
 {
     class Program
     {
-           static string str = @"
+        static string str = @"
 int a;
 void interuptServer0(void) {
       int b;

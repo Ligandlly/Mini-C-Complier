@@ -1,7 +1,7 @@
 ﻿using System;
 using Antlr4.Runtime.Misc;
 
-namespace minic_antlr
+namespace MiniC
 {
     public class MyListener
         : ProgramBaseListener

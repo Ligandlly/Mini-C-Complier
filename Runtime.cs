@@ -1,12 +1,12 @@
 ﻿using Antlr4.Runtime.Tree;
 using Antlr4.Runtime;
 
-namespace minic_antlr
+namespace MiniC
 {
-
     public class Runtime
     {
         IParseTree _tree;
+
         public Runtime(IParseTree tree)
         {
             _tree = tree;

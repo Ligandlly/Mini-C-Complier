@@ -60,17 +60,33 @@ public partial class ProgramBaseListener : IProgramListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitDecl([NotNull] ProgramParser.DeclContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ProgramParser.var_decl"/>.
+	/// Enter a parse tree produced by the <c>var_declHasId</c>
+	/// labeled alternative in <see cref="ProgramParser.var_decl"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterVar_decl([NotNull] ProgramParser.Var_declContext context) { }
+	public virtual void EnterVar_declHasId([NotNull] ProgramParser.Var_declHasIdContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ProgramParser.var_decl"/>.
+	/// Exit a parse tree produced by the <c>var_declHasId</c>
+	/// labeled alternative in <see cref="ProgramParser.var_decl"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitVar_decl([NotNull] ProgramParser.Var_declContext context) { }
+	public virtual void ExitVar_declHasId([NotNull] ProgramParser.Var_declHasIdContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>var_declHasArr</c>
+	/// labeled alternative in <see cref="ProgramParser.var_decl"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterVar_declHasArr([NotNull] ProgramParser.Var_declHasArrContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>var_declHasArr</c>
+	/// labeled alternative in <see cref="ProgramParser.var_decl"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitVar_declHasArr([NotNull] ProgramParser.Var_declHasArrContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="ProgramParser.primary_expr"/>.
 	/// <para>The default implementation does nothing.</para>
@@ -84,17 +100,89 @@ public partial class ProgramBaseListener : IProgramListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitPrimary_expr([NotNull] ProgramParser.Primary_exprContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ProgramParser.postfix_expr"/>.
+	/// Enter a parse tree produced by the <c>postfix_exprHasPrimary_expr</c>
+	/// labeled alternative in <see cref="ProgramParser.postfix_expr"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterPostfix_expr([NotNull] ProgramParser.Postfix_exprContext context) { }
+	public virtual void EnterPostfix_exprHasPrimary_expr([NotNull] ProgramParser.Postfix_exprHasPrimary_exprContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ProgramParser.postfix_expr"/>.
+	/// Exit a parse tree produced by the <c>postfix_exprHasPrimary_expr</c>
+	/// labeled alternative in <see cref="ProgramParser.postfix_expr"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitPostfix_expr([NotNull] ProgramParser.Postfix_exprContext context) { }
+	public virtual void ExitPostfix_exprHasPrimary_expr([NotNull] ProgramParser.Postfix_exprHasPrimary_exprContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>postfix_exprHasgetitem</c>
+	/// labeled alternative in <see cref="ProgramParser.postfix_expr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterPostfix_exprHasgetitem([NotNull] ProgramParser.Postfix_exprHasgetitemContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>postfix_exprHasgetitem</c>
+	/// labeled alternative in <see cref="ProgramParser.postfix_expr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitPostfix_exprHasgetitem([NotNull] ProgramParser.Postfix_exprHasgetitemContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>postfix_exprHasEmptyCall</c>
+	/// labeled alternative in <see cref="ProgramParser.postfix_expr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterPostfix_exprHasEmptyCall([NotNull] ProgramParser.Postfix_exprHasEmptyCallContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>postfix_exprHasEmptyCall</c>
+	/// labeled alternative in <see cref="ProgramParser.postfix_expr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitPostfix_exprHasEmptyCall([NotNull] ProgramParser.Postfix_exprHasEmptyCallContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>postfix_exprHasCall</c>
+	/// labeled alternative in <see cref="ProgramParser.postfix_expr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterPostfix_exprHasCall([NotNull] ProgramParser.Postfix_exprHasCallContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>postfix_exprHasCall</c>
+	/// labeled alternative in <see cref="ProgramParser.postfix_expr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitPostfix_exprHasCall([NotNull] ProgramParser.Postfix_exprHasCallContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>postfix_exprHasInc</c>
+	/// labeled alternative in <see cref="ProgramParser.postfix_expr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterPostfix_exprHasInc([NotNull] ProgramParser.Postfix_exprHasIncContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>postfix_exprHasInc</c>
+	/// labeled alternative in <see cref="ProgramParser.postfix_expr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitPostfix_exprHasInc([NotNull] ProgramParser.Postfix_exprHasIncContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>postfix_exprHasDec</c>
+	/// labeled alternative in <see cref="ProgramParser.postfix_expr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterPostfix_exprHasDec([NotNull] ProgramParser.Postfix_exprHasDecContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>postfix_exprHasDec</c>
+	/// labeled alternative in <see cref="ProgramParser.postfix_expr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitPostfix_exprHasDec([NotNull] ProgramParser.Postfix_exprHasDecContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="ProgramParser.argument_expr_list"/>.
 	/// <para>The default implementation does nothing.</para>
@@ -108,173 +196,383 @@ public partial class ProgramBaseListener : IProgramListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitArgument_expr_list([NotNull] ProgramParser.Argument_expr_listContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ProgramParser.unary_expr"/>.
+	/// Enter a parse tree produced by the <c>unary_exprHasPostfix_expr</c>
+	/// labeled alternative in <see cref="ProgramParser.unary_expr"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterUnary_expr([NotNull] ProgramParser.Unary_exprContext context) { }
+	public virtual void EnterUnary_exprHasPostfix_expr([NotNull] ProgramParser.Unary_exprHasPostfix_exprContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ProgramParser.unary_expr"/>.
+	/// Exit a parse tree produced by the <c>unary_exprHasPostfix_expr</c>
+	/// labeled alternative in <see cref="ProgramParser.unary_expr"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitUnary_expr([NotNull] ProgramParser.Unary_exprContext context) { }
+	public virtual void ExitUnary_exprHasPostfix_expr([NotNull] ProgramParser.Unary_exprHasPostfix_exprContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ProgramParser.multiplicative_expr"/>.
+	/// Enter a parse tree produced by the <c>unary_exprHasInc</c>
+	/// labeled alternative in <see cref="ProgramParser.unary_expr"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterMultiplicative_expr([NotNull] ProgramParser.Multiplicative_exprContext context) { }
+	public virtual void EnterUnary_exprHasInc([NotNull] ProgramParser.Unary_exprHasIncContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ProgramParser.multiplicative_expr"/>.
+	/// Exit a parse tree produced by the <c>unary_exprHasInc</c>
+	/// labeled alternative in <see cref="ProgramParser.unary_expr"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitMultiplicative_expr([NotNull] ProgramParser.Multiplicative_exprContext context) { }
+	public virtual void ExitUnary_exprHasInc([NotNull] ProgramParser.Unary_exprHasIncContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ProgramParser.additive_expr"/>.
+	/// Enter a parse tree produced by the <c>unary_exprHasDec</c>
+	/// labeled alternative in <see cref="ProgramParser.unary_expr"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterAdditive_expr([NotNull] ProgramParser.Additive_exprContext context) { }
+	public virtual void EnterUnary_exprHasDec([NotNull] ProgramParser.Unary_exprHasDecContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ProgramParser.additive_expr"/>.
+	/// Exit a parse tree produced by the <c>unary_exprHasDec</c>
+	/// labeled alternative in <see cref="ProgramParser.unary_expr"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitAdditive_expr([NotNull] ProgramParser.Additive_exprContext context) { }
+	public virtual void ExitUnary_exprHasDec([NotNull] ProgramParser.Unary_exprHasDecContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ProgramParser.sft_expr"/>.
+	/// Enter a parse tree produced by the <c>unary_exprHasDol</c>
+	/// labeled alternative in <see cref="ProgramParser.unary_expr"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterSft_expr([NotNull] ProgramParser.Sft_exprContext context) { }
+	public virtual void EnterUnary_exprHasDol([NotNull] ProgramParser.Unary_exprHasDolContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ProgramParser.sft_expr"/>.
+	/// Exit a parse tree produced by the <c>unary_exprHasDol</c>
+	/// labeled alternative in <see cref="ProgramParser.unary_expr"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitSft_expr([NotNull] ProgramParser.Sft_exprContext context) { }
+	public virtual void ExitUnary_exprHasDol([NotNull] ProgramParser.Unary_exprHasDolContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ProgramParser.relational_expr"/>.
+	/// Enter a parse tree produced by the <c>unary_exprHasLNot</c>
+	/// labeled alternative in <see cref="ProgramParser.unary_expr"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterRelational_expr([NotNull] ProgramParser.Relational_exprContext context) { }
+	public virtual void EnterUnary_exprHasLNot([NotNull] ProgramParser.Unary_exprHasLNotContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ProgramParser.relational_expr"/>.
+	/// Exit a parse tree produced by the <c>unary_exprHasLNot</c>
+	/// labeled alternative in <see cref="ProgramParser.unary_expr"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitRelational_expr([NotNull] ProgramParser.Relational_exprContext context) { }
+	public virtual void ExitUnary_exprHasLNot([NotNull] ProgramParser.Unary_exprHasLNotContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ProgramParser.equalityExpression"/>.
+	/// Enter a parse tree produced by the <c>unary_exprHasNot</c>
+	/// labeled alternative in <see cref="ProgramParser.unary_expr"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterEqualityExpression([NotNull] ProgramParser.EqualityExpressionContext context) { }
+	public virtual void EnterUnary_exprHasNot([NotNull] ProgramParser.Unary_exprHasNotContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ProgramParser.equalityExpression"/>.
+	/// Exit a parse tree produced by the <c>unary_exprHasNot</c>
+	/// labeled alternative in <see cref="ProgramParser.unary_expr"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitEqualityExpression([NotNull] ProgramParser.EqualityExpressionContext context) { }
+	public virtual void ExitUnary_exprHasNot([NotNull] ProgramParser.Unary_exprHasNotContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ProgramParser.andExpression"/>.
+	/// Enter a parse tree produced by the <c>assignmentExprHasLsft</c>
+	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterAndExpression([NotNull] ProgramParser.AndExpressionContext context) { }
+	public virtual void EnterAssignmentExprHasLsft([NotNull] ProgramParser.AssignmentExprHasLsftContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ProgramParser.andExpression"/>.
+	/// Exit a parse tree produced by the <c>assignmentExprHasLsft</c>
+	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitAndExpression([NotNull] ProgramParser.AndExpressionContext context) { }
+	public virtual void ExitAssignmentExprHasLsft([NotNull] ProgramParser.AssignmentExprHasLsftContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ProgramParser.exclusiveOrExpression"/>.
+	/// Enter a parse tree produced by the <c>assignmentExprHasLt</c>
+	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterExclusiveOrExpression([NotNull] ProgramParser.ExclusiveOrExpressionContext context) { }
+	public virtual void EnterAssignmentExprHasLt([NotNull] ProgramParser.AssignmentExprHasLtContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ProgramParser.exclusiveOrExpression"/>.
+	/// Exit a parse tree produced by the <c>assignmentExprHasLt</c>
+	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitExclusiveOrExpression([NotNull] ProgramParser.ExclusiveOrExpressionContext context) { }
+	public virtual void ExitAssignmentExprHasLt([NotNull] ProgramParser.AssignmentExprHasLtContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ProgramParser.inclusiveOrExpression"/>.
+	/// Enter a parse tree produced by the <c>assignmentExprHasAssign</c>
+	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterInclusiveOrExpression([NotNull] ProgramParser.InclusiveOrExpressionContext context) { }
+	public virtual void EnterAssignmentExprHasAssign([NotNull] ProgramParser.AssignmentExprHasAssignContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ProgramParser.inclusiveOrExpression"/>.
+	/// Exit a parse tree produced by the <c>assignmentExprHasAssign</c>
+	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitInclusiveOrExpression([NotNull] ProgramParser.InclusiveOrExpressionContext context) { }
+	public virtual void ExitAssignmentExprHasAssign([NotNull] ProgramParser.AssignmentExprHasAssignContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ProgramParser.logicalAndExpression"/>.
+	/// Enter a parse tree produced by the <c>assignmentExprHasEq</c>
+	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterLogicalAndExpression([NotNull] ProgramParser.LogicalAndExpressionContext context) { }
+	public virtual void EnterAssignmentExprHasEq([NotNull] ProgramParser.AssignmentExprHasEqContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ProgramParser.logicalAndExpression"/>.
+	/// Exit a parse tree produced by the <c>assignmentExprHasEq</c>
+	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitLogicalAndExpression([NotNull] ProgramParser.LogicalAndExpressionContext context) { }
+	public virtual void ExitAssignmentExprHasEq([NotNull] ProgramParser.AssignmentExprHasEqContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ProgramParser.logicalOrExpression"/>.
+	/// Enter a parse tree produced by the <c>assignmentExprHasGt</c>
+	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterLogicalOrExpression([NotNull] ProgramParser.LogicalOrExpressionContext context) { }
+	public virtual void EnterAssignmentExprHasGt([NotNull] ProgramParser.AssignmentExprHasGtContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ProgramParser.logicalOrExpression"/>.
+	/// Exit a parse tree produced by the <c>assignmentExprHasGt</c>
+	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitLogicalOrExpression([NotNull] ProgramParser.LogicalOrExpressionContext context) { }
+	public virtual void ExitAssignmentExprHasGt([NotNull] ProgramParser.AssignmentExprHasGtContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ProgramParser.conditionalExpression"/>.
+	/// Enter a parse tree produced by the <c>assignmentExprHasUnary_expr</c>
+	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterConditionalExpression([NotNull] ProgramParser.ConditionalExpressionContext context) { }
+	public virtual void EnterAssignmentExprHasUnary_expr([NotNull] ProgramParser.AssignmentExprHasUnary_exprContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ProgramParser.conditionalExpression"/>.
+	/// Exit a parse tree produced by the <c>assignmentExprHasUnary_expr</c>
+	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitConditionalExpression([NotNull] ProgramParser.ConditionalExpressionContext context) { }
+	public virtual void ExitAssignmentExprHasUnary_expr([NotNull] ProgramParser.AssignmentExprHasUnary_exprContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ProgramParser.assignmentExpression"/>.
+	/// Enter a parse tree produced by the <c>assignmentExprHasLOr</c>
+	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterAssignmentExpression([NotNull] ProgramParser.AssignmentExpressionContext context) { }
+	public virtual void EnterAssignmentExprHasLOr([NotNull] ProgramParser.AssignmentExprHasLOrContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ProgramParser.assignmentExpression"/>.
+	/// Exit a parse tree produced by the <c>assignmentExprHasLOr</c>
+	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitAssignmentExpression([NotNull] ProgramParser.AssignmentExpressionContext context) { }
+	public virtual void ExitAssignmentExprHasLOr([NotNull] ProgramParser.AssignmentExprHasLOrContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ProgramParser.assignmentOperator"/>.
+	/// Enter a parse tree produced by the <c>assignmentExprHasDiv</c>
+	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterAssignmentOperator([NotNull] ProgramParser.AssignmentOperatorContext context) { }
+	public virtual void EnterAssignmentExprHasDiv([NotNull] ProgramParser.AssignmentExprHasDivContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ProgramParser.assignmentOperator"/>.
+	/// Exit a parse tree produced by the <c>assignmentExprHasDiv</c>
+	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitAssignmentOperator([NotNull] ProgramParser.AssignmentOperatorContext context) { }
+	public virtual void ExitAssignmentExprHasDiv([NotNull] ProgramParser.AssignmentExprHasDivContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>assignmentExprHasMin</c>
+	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterAssignmentExprHasMin([NotNull] ProgramParser.AssignmentExprHasMinContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>assignmentExprHasMin</c>
+	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitAssignmentExprHasMin([NotNull] ProgramParser.AssignmentExprHasMinContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>assignmentExprHasAnd</c>
+	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterAssignmentExprHasAnd([NotNull] ProgramParser.AssignmentExprHasAndContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>assignmentExprHasAnd</c>
+	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitAssignmentExprHasAnd([NotNull] ProgramParser.AssignmentExprHasAndContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>assignmentExprHasNe</c>
+	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterAssignmentExprHasNe([NotNull] ProgramParser.AssignmentExprHasNeContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>assignmentExprHasNe</c>
+	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitAssignmentExprHasNe([NotNull] ProgramParser.AssignmentExprHasNeContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>assignmentExprHasLAnd</c>
+	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterAssignmentExprHasLAnd([NotNull] ProgramParser.AssignmentExprHasLAndContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>assignmentExprHasLAnd</c>
+	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitAssignmentExprHasLAnd([NotNull] ProgramParser.AssignmentExprHasLAndContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>assignmentExprHasLe</c>
+	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterAssignmentExprHasLe([NotNull] ProgramParser.AssignmentExprHasLeContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>assignmentExprHasLe</c>
+	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitAssignmentExprHasLe([NotNull] ProgramParser.AssignmentExprHasLeContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>assignmentExprHasXor</c>
+	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterAssignmentExprHasXor([NotNull] ProgramParser.AssignmentExprHasXorContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>assignmentExprHasXor</c>
+	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitAssignmentExprHasXor([NotNull] ProgramParser.AssignmentExprHasXorContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>assignmentExprHasGe</c>
+	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterAssignmentExprHasGe([NotNull] ProgramParser.AssignmentExprHasGeContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>assignmentExprHasGe</c>
+	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitAssignmentExprHasGe([NotNull] ProgramParser.AssignmentExprHasGeContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>assignmentExprHasRsft</c>
+	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterAssignmentExprHasRsft([NotNull] ProgramParser.AssignmentExprHasRsftContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>assignmentExprHasRsft</c>
+	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitAssignmentExprHasRsft([NotNull] ProgramParser.AssignmentExprHasRsftContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>assignmentExprHasAdd</c>
+	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterAssignmentExprHasAdd([NotNull] ProgramParser.AssignmentExprHasAddContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>assignmentExprHasAdd</c>
+	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitAssignmentExprHasAdd([NotNull] ProgramParser.AssignmentExprHasAddContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>assignmentExprHasMod</c>
+	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterAssignmentExprHasMod([NotNull] ProgramParser.AssignmentExprHasModContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>assignmentExprHasMod</c>
+	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitAssignmentExprHasMod([NotNull] ProgramParser.AssignmentExprHasModContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>assignmentExprHasOr</c>
+	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterAssignmentExprHasOr([NotNull] ProgramParser.AssignmentExprHasOrContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>assignmentExprHasOr</c>
+	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitAssignmentExprHasOr([NotNull] ProgramParser.AssignmentExprHasOrContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>assignmentExprHasNum</c>
+	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterAssignmentExprHasNum([NotNull] ProgramParser.AssignmentExprHasNumContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>assignmentExprHasNum</c>
+	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitAssignmentExprHasNum([NotNull] ProgramParser.AssignmentExprHasNumContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>assignmentExprHasMul</c>
+	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterAssignmentExprHasMul([NotNull] ProgramParser.AssignmentExprHasMulContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>assignmentExprHasMul</c>
+	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitAssignmentExprHasMul([NotNull] ProgramParser.AssignmentExprHasMulContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="ProgramParser.expr"/>.
 	/// <para>The default implementation does nothing.</para>
@@ -300,17 +598,33 @@ public partial class ProgramBaseListener : IProgramListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitFunc_def([NotNull] ProgramParser.Func_defContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ProgramParser.compound_stmt"/>.
+	/// Enter a parse tree produced by the <c>compound_stmtHasEmpty</c>
+	/// labeled alternative in <see cref="ProgramParser.compound_stmt"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterCompound_stmt([NotNull] ProgramParser.Compound_stmtContext context) { }
+	public virtual void EnterCompound_stmtHasEmpty([NotNull] ProgramParser.Compound_stmtHasEmptyContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ProgramParser.compound_stmt"/>.
+	/// Exit a parse tree produced by the <c>compound_stmtHasEmpty</c>
+	/// labeled alternative in <see cref="ProgramParser.compound_stmt"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitCompound_stmt([NotNull] ProgramParser.Compound_stmtContext context) { }
+	public virtual void ExitCompound_stmtHasEmpty([NotNull] ProgramParser.Compound_stmtHasEmptyContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>compound_stmtHasBody</c>
+	/// labeled alternative in <see cref="ProgramParser.compound_stmt"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterCompound_stmtHasBody([NotNull] ProgramParser.Compound_stmtHasBodyContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>compound_stmtHasBody</c>
+	/// labeled alternative in <see cref="ProgramParser.compound_stmt"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitCompound_stmtHasBody([NotNull] ProgramParser.Compound_stmtHasBodyContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="ProgramParser.block_item_list"/>.
 	/// <para>The default implementation does nothing.</para>
@@ -336,17 +650,33 @@ public partial class ProgramBaseListener : IProgramListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitBlock_item([NotNull] ProgramParser.Block_itemContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ProgramParser.param_list"/>.
+	/// Enter a parse tree produced by the <c>param_listHasEmpty</c>
+	/// labeled alternative in <see cref="ProgramParser.param_list"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterParam_list([NotNull] ProgramParser.Param_listContext context) { }
+	public virtual void EnterParam_listHasEmpty([NotNull] ProgramParser.Param_listHasEmptyContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ProgramParser.param_list"/>.
+	/// Exit a parse tree produced by the <c>param_listHasEmpty</c>
+	/// labeled alternative in <see cref="ProgramParser.param_list"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitParam_list([NotNull] ProgramParser.Param_listContext context) { }
+	public virtual void ExitParam_listHasEmpty([NotNull] ProgramParser.Param_listHasEmptyContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>param_listHasBody</c>
+	/// labeled alternative in <see cref="ProgramParser.param_list"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterParam_listHasBody([NotNull] ProgramParser.Param_listHasBodyContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>param_listHasBody</c>
+	/// labeled alternative in <see cref="ProgramParser.param_list"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitParam_listHasBody([NotNull] ProgramParser.Param_listHasBodyContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="ProgramParser.param"/>.
 	/// <para>The default implementation does nothing.</para>
@@ -420,17 +750,33 @@ public partial class ProgramBaseListener : IProgramListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitExpr_stmt([NotNull] ProgramParser.Expr_stmtContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ProgramParser.selection_stmt"/>.
+	/// Enter a parse tree produced by the <c>selection_stmtHasElse</c>
+	/// labeled alternative in <see cref="ProgramParser.selection_stmt"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterSelection_stmt([NotNull] ProgramParser.Selection_stmtContext context) { }
+	public virtual void EnterSelection_stmtHasElse([NotNull] ProgramParser.Selection_stmtHasElseContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ProgramParser.selection_stmt"/>.
+	/// Exit a parse tree produced by the <c>selection_stmtHasElse</c>
+	/// labeled alternative in <see cref="ProgramParser.selection_stmt"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitSelection_stmt([NotNull] ProgramParser.Selection_stmtContext context) { }
+	public virtual void ExitSelection_stmtHasElse([NotNull] ProgramParser.Selection_stmtHasElseContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>selection_stmtHasEmpty</c>
+	/// labeled alternative in <see cref="ProgramParser.selection_stmt"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterSelection_stmtHasEmpty([NotNull] ProgramParser.Selection_stmtHasEmptyContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>selection_stmtHasEmpty</c>
+	/// labeled alternative in <see cref="ProgramParser.selection_stmt"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitSelection_stmtHasEmpty([NotNull] ProgramParser.Selection_stmtHasEmptyContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="ProgramParser.iteration_stmt"/>.
 	/// <para>The default implementation does nothing.</para>
