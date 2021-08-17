@@ -12,7 +12,7 @@ namespace MiniC
         public string GenerateIr(string? operation = null, string? firstSrc = null, string? secondSrc = null,
             string? dist = null, string? label = null)
         {
-            return $"{label}: \t {operation ?? " "}; {firstSrc ?? " "}; {secondSrc ?? " "}; {dist ?? " "};";
+            return $"{label + ":"}\t{operation ?? " "}; {firstSrc ?? " "}; {secondSrc ?? " "}; {dist ?? " "};";
         }
     }
 }

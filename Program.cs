@@ -8,15 +8,17 @@ namespace MiniC
     {
         static string str = @"
 int a;
-void interuptServer0(int a, int b) {
+int arr[3];
+void interruptServer0(int a, int b) {
       int b;
       int c;
+      int arr1[3];
       b = a&0xf000;
       c = a + 1;
       c = c & 0x0fff;
       a = ~(~b&~c);
  }
- void interuptServer1(void)
+ void interruptServer1(void)
  {
       int b;
       int c;

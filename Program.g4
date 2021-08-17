@@ -17,38 +17,38 @@ postfix_expr:
 	| primary_expr '[' expr ']'                 # postfix_exprHasgetitem
 	| primary_expr '(' ')'                      # postfix_exprHasEmptyCall
 	| primary_expr '(' argument_expr_list ')'   # postfix_exprHasCall
-	| primary_expr '++'                         # postfix_exprHasInc
-	| primary_expr '--'                         # postfix_exprHasDec;
+	| primary_expr postfix='++'                 # postfix_exprHasInc
+	| primary_expr postfix='--'                         # postfix_exprHasDec;
 
 argument_expr_list: expr (',' expr)*;
 unary_expr:
 	postfix_expr        # unary_exprHasPostfix_expr
-	| '++' unary_expr   # unary_exprHasInc
-	| '--' unary_expr   # unary_exprHasDec
-	| '$' unary_expr    # unary_exprHasDol
-	| '!' unary_expr    # unary_exprHasLNot
-	| '~' unary_expr    # unary_exprHasNot;
+	| prefix='++' unary_expr   # unary_exprHasInc
+	| prefix='--' unary_expr   # unary_exprHasDec
+	| prefix='$' unary_expr    # unary_exprHasDol
+	| prefix='!' unary_expr    # unary_exprHasLNot
+	| prefix='~' unary_expr    # unary_exprHasNot;
 
 assignmentExpr:
-	assignmentExpr '*' assignmentExpr           # assignmentExprHasMul
-	| assignmentExpr '%' assignmentExpr         # assignmentExprHasMod
-	| assignmentExpr '/' assignmentExpr         # assignmentExprHasDiv
-	| assignmentExpr '+' assignmentExpr         # assignmentExprHasAdd
-	| assignmentExpr '-' assignmentExpr         # assignmentExprHasMin
-	| assignmentExpr '<<' assignmentExpr        # assignmentExprHasLsft
-	| assignmentExpr '>>' assignmentExpr        # assignmentExprHasRsft
-	| assignmentExpr '<=' assignmentExpr        # assignmentExprHasLe
-	| assignmentExpr '>=' assignmentExpr        # assignmentExprHasGe
-	| assignmentExpr '<' assignmentExpr         # assignmentExprHasLt
-	| assignmentExpr '>' assignmentExpr         # assignmentExprHasGt
-	| assignmentExpr '==' assignmentExpr        # assignmentExprHasEq
-	| assignmentExpr '!=' assignmentExpr        # assignmentExprHasNe
-	| assignmentExpr '&' assignmentExpr         # assignmentExprHasAnd
-	| assignmentExpr '^' assignmentExpr         # assignmentExprHasXor
-	| assignmentExpr '|' assignmentExpr         # assignmentExprHasOr
-	| assignmentExpr '&&' assignmentExpr        # assignmentExprHasLAnd
-	| assignmentExpr '||' assignmentExpr        # assignmentExprHasLOr
-	| unary_expr '=' assignmentExpr             # assignmentExprHasAssign
+	assignmentExpr   op='*' assignmentExpr         # assignmentExprHasMul
+	| assignmentExpr op='%' assignmentExpr         # assignmentExprHasMod
+	| assignmentExpr op='/' assignmentExpr         # assignmentExprHasDiv
+	| assignmentExpr op='+' assignmentExpr         # assignmentExprHasAdd
+	| assignmentExpr op='-' assignmentExpr         # assignmentExprHasMin
+	| assignmentExpr op='<<' assignmentExpr        # assignmentExprHasLsft
+	| assignmentExpr op='>>' assignmentExpr        # assignmentExprHasRsft
+	| assignmentExpr op='<=' assignmentExpr        # assignmentExprHasLe
+	| assignmentExpr op='>=' assignmentExpr        # assignmentExprHasGe
+	| assignmentExpr op='<' assignmentExpr         # assignmentExprHasLt
+	| assignmentExpr op='>' assignmentExpr         # assignmentExprHasGt
+	| assignmentExpr op='==' assignmentExpr        # assignmentExprHasEq
+	| assignmentExpr op='!=' assignmentExpr        # assignmentExprHasNe
+	| assignmentExpr op='&' assignmentExpr         # assignmentExprHasAnd
+	| assignmentExpr op='^' assignmentExpr         # assignmentExprHasXor
+	| assignmentExpr op='|' assignmentExpr         # assignmentExprHasOr
+	| assignmentExpr op='&&' assignmentExpr        # assignmentExprHasLAnd
+	| assignmentExpr op='||' assignmentExpr        # assignmentExprHasLOr
+	| unary_expr op='=' assignmentExpr             # assignmentExprHasAssign
 	| unary_expr                                # assignmentExprHasUnary_expr
 	| num                                       # assignmentExprHasNum ;
 

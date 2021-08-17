@@ -56,6 +56,7 @@ namespace MiniC
         /// </summary>
         /// <example><c>int i;</c> => <c>decl_var; int; i;  </c></example>
         /// <exception cref="DuplicateNameException">Duplicate Variable Name</exception>
+        /// <remarks>Local variables in function is declared by <c>decl_val</c>, while global variables are declared by <c>global</c>.</remarks>
         /// <param name="context"></param>
         public override void ExitVar_declHasId(ProgramParser.Var_declHasIdContext context)
         {
@@ -71,7 +72,8 @@ namespace MiniC
             }
 
 
-            Ir.Put(context, _irBuilder.GenerateIr("decl_var", type, name));
+            var irCode = _irBuilder.GenerateIr( _currentScopeNameStack.Peek() == Global ? "global" : "decl_var", type, name);
+            Ir.Put(context, irCode);
         }
 
         /// <summary>
@@ -79,17 +81,27 @@ namespace MiniC
         /// push function name into name stack
         /// </summary>
         /// <param name="context"></param>
-        /// 
         /// <exception cref="DuplicateNameException">Duplicate Function Name</exception>
         public override void EnterFunc_def(ProgramParser.Func_defContext context)
         {
             var funcName = context.id().GetText();
-            var rltType = context.type_spec() == null ? context.type_spec().GetText() : context.VOID().GetText();
+            var rltType = context.type_spec() != null ? context.type_spec().GetText() : context.VOID().GetText();
 
             if (_tables[Global].Keys.Contains(funcName))
                 throw new DuplicateNameException("Duplicate Function Name");
 
-            _tables[Global].Add(funcName, new FuncIdentity(funcName, rltType));
+            // Add parameter list
+            var tmpList = new List<(string, string)>();
+            foreach (var child in context.param_list().children)
+            {
+                if (child is not ProgramParser.ParamContext tmpParam) continue;
+                var type = tmpParam.type_spec().GetText();
+                var name = tmpParam.id().GetText();
+
+                tmpList.Add((type, name));
+            }
+
+            _tables[Global].Add(funcName, new FuncIdentity(funcName, rltType, tmpList.ToArray()));
 
             _currentScopeNameStack.Push(funcName);
             _tables.Add(funcName, new SymbolTable());
@@ -116,7 +128,7 @@ namespace MiniC
         {
             var rltBuilder = new StringBuilder();
             var funcName = context.id().GetText();
-            var rltType = context.type_spec() == null ? context.type_spec().GetText() : context.VOID().GetText();
+            var rltType = context.type_spec() != null ? context.type_spec().GetText() : context.VOID().GetText();
 
             var paramList = context.param_list();
 
@@ -147,8 +159,26 @@ namespace MiniC
             _currentScopeNameStack.Pop();
         }
 
-        #endregion
+        /// <summary>
+        /// Array Declaration
+        /// </summary>
+        /// <remarks>Local variables in function is declared by <c>decl_arr</c>, while global variables are declared by <c>global_arr</c>.</remarks>
+        /// <param name="context"></param>
+        public override void ExitVar_declHasArr(ProgramParser.Var_declHasArrContext context)
+        {
+            var type = context.type_spec().GetText();
+            var name = context.id().GetText();
+            var length = int.Parse(context.num().GetText());
+            var arr = new ArrIdentity(name, type, length);
 
+            _tables[Global].Add(name, arr);
+            var irCode = _irBuilder.GenerateIr(_currentScopeNameStack.Peek() == Global ? "global_arr" : "decl_arr", type, name, length.ToString());
+
+            Ir.Put(context, irCode);
+
+        }
+
+        #endregion
 
         #region Literal
 

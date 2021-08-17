@@ -27,30 +27,26 @@ namespace MiniC
 
     public class FuncIdentity : Identity
     {
-        // private (string, string)[] _params;
-        // public (string paramType, string paramName)[] Params
-        // {
-        //     get => _params;
-        //     set
-        //     {
-        //         if (value.Length == 1 && value[0].Item1 == "void")
-        //         {
-        //             _params = Array.Empty<(string, string)>();
-        //         }
-        //         else
-        //         {
-        //             _params = value;
-        //         }
-        //     }
-        // }
-        //
-        // public FuncIdentity(string name, string type, (string, string)[] @params) : base(name, type)
-        // {
-        //     Params = @params;
-        // }
-
-        public FuncIdentity(string name, string type) : base(name, type)
+        private (string, string)[] _params;
+        public (string paramType, string paramName)[] Params
         {
+            get => _params;
+            set
+            {
+                if (value.Length == 1 && value[0].Item1 == "void")
+                {
+                    _params = Array.Empty<(string, string)>();
+                }
+                else
+                {
+                    _params = value;
+                }
+            }
+        }
+
+        public FuncIdentity(string name, string type, (string, string)[] @params) : base(name, type)
+        {
+            Params = @params;
         }
     }
 }
