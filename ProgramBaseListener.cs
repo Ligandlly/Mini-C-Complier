@@ -88,17 +88,47 @@ public partial class ProgramBaseListener : IProgramListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitVar_declHasArr([NotNull] ProgramParser.Var_declHasArrContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ProgramParser.primary_expr"/>.
+	/// Enter a parse tree produced by the <c>primary_exprHasExpr</c>
+	/// labeled alternative in <see cref="ProgramParser.primary_expr"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterPrimary_expr([NotNull] ProgramParser.Primary_exprContext context) { }
+	public virtual void EnterPrimary_exprHasExpr([NotNull] ProgramParser.Primary_exprHasExprContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ProgramParser.primary_expr"/>.
+	/// Exit a parse tree produced by the <c>primary_exprHasExpr</c>
+	/// labeled alternative in <see cref="ProgramParser.primary_expr"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitPrimary_expr([NotNull] ProgramParser.Primary_exprContext context) { }
+	public virtual void ExitPrimary_exprHasExpr([NotNull] ProgramParser.Primary_exprHasExprContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>primary_exprHasId</c>
+	/// labeled alternative in <see cref="ProgramParser.primary_expr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterPrimary_exprHasId([NotNull] ProgramParser.Primary_exprHasIdContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>primary_exprHasId</c>
+	/// labeled alternative in <see cref="ProgramParser.primary_expr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitPrimary_exprHasId([NotNull] ProgramParser.Primary_exprHasIdContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>primary_exprHasNum</c>
+	/// labeled alternative in <see cref="ProgramParser.primary_expr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterPrimary_exprHasNum([NotNull] ProgramParser.Primary_exprHasNumContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>primary_exprHasNum</c>
+	/// labeled alternative in <see cref="ProgramParser.primary_expr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitPrimary_exprHasNum([NotNull] ProgramParser.Primary_exprHasNumContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by the <c>postfix_exprHasPrimary_expr</c>
 	/// labeled alternative in <see cref="ProgramParser.postfix_expr"/>.

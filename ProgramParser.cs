@@ -321,29 +321,63 @@ public partial class ProgramParser : Parser {
 	}
 
 	public partial class Primary_exprContext : ParserRuleContext {
-		[System.Diagnostics.DebuggerNonUserCode] public ExprContext expr() {
-			return GetRuleContext<ExprContext>(0);
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public IdContext id() {
-			return GetRuleContext<IdContext>(0);
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public NumContext num() {
-			return GetRuleContext<NumContext>(0);
-		}
 		public Primary_exprContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
 		}
 		public override int RuleIndex { get { return RULE_primary_expr; } }
+	 
+		public Primary_exprContext() { }
+		public virtual void CopyFrom(Primary_exprContext context) {
+			base.CopyFrom(context);
+		}
+	}
+	public partial class Primary_exprHasIdContext : Primary_exprContext {
+		[System.Diagnostics.DebuggerNonUserCode] public IdContext id() {
+			return GetRuleContext<IdContext>(0);
+		}
+		public Primary_exprHasIdContext(Primary_exprContext context) { CopyFrom(context); }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
 			IProgramListener typedListener = listener as IProgramListener;
-			if (typedListener != null) typedListener.EnterPrimary_expr(this);
+			if (typedListener != null) typedListener.EnterPrimary_exprHasId(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
 			IProgramListener typedListener = listener as IProgramListener;
-			if (typedListener != null) typedListener.ExitPrimary_expr(this);
+			if (typedListener != null) typedListener.ExitPrimary_exprHasId(this);
+		}
+	}
+	public partial class Primary_exprHasExprContext : Primary_exprContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ExprContext expr() {
+			return GetRuleContext<ExprContext>(0);
+		}
+		public Primary_exprHasExprContext(Primary_exprContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void EnterRule(IParseTreeListener listener) {
+			IProgramListener typedListener = listener as IProgramListener;
+			if (typedListener != null) typedListener.EnterPrimary_exprHasExpr(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void ExitRule(IParseTreeListener listener) {
+			IProgramListener typedListener = listener as IProgramListener;
+			if (typedListener != null) typedListener.ExitPrimary_exprHasExpr(this);
+		}
+	}
+	public partial class Primary_exprHasNumContext : Primary_exprContext {
+		[System.Diagnostics.DebuggerNonUserCode] public NumContext num() {
+			return GetRuleContext<NumContext>(0);
+		}
+		public Primary_exprHasNumContext(Primary_exprContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void EnterRule(IParseTreeListener listener) {
+			IProgramListener typedListener = listener as IProgramListener;
+			if (typedListener != null) typedListener.EnterPrimary_exprHasNum(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void ExitRule(IParseTreeListener listener) {
+			IProgramListener typedListener = listener as IProgramListener;
+			if (typedListener != null) typedListener.ExitPrimary_exprHasNum(this);
 		}
 	}
 
@@ -356,6 +390,7 @@ public partial class ProgramParser : Parser {
 			ErrorHandler.Sync(this);
 			switch (TokenStream.LA(1)) {
 			case T__3:
+				_localctx = new Primary_exprHasExprContext(_localctx);
 				EnterOuterAlt(_localctx, 1);
 				{
 				State = 72; Match(T__3);
@@ -364,12 +399,14 @@ public partial class ProgramParser : Parser {
 				}
 				break;
 			case Id:
+				_localctx = new Primary_exprHasIdContext(_localctx);
 				EnterOuterAlt(_localctx, 2);
 				{
 				State = 76; id();
 				}
 				break;
 			case Num:
+				_localctx = new Primary_exprHasNumContext(_localctx);
 				EnterOuterAlt(_localctx, 3);
 				{
 				State = 77; num();

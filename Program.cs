@@ -8,7 +8,7 @@ namespace MiniC
     {
         static string str = @"
 int a;
-void interuptServer0(void) {
+void interuptServer0(int a, int b) {
       int b;
       int c;
       b = a&0xf000;
@@ -38,8 +38,17 @@ $0xff00 = a;
 
         static void Main(string[] args)
         {
-            Runtime runtime = new Runtime(str);
-            Console.WriteLine("Hello World!");
+            ICharStream stream = CharStreams.fromString(str);
+            ITokenSource lexer = new ProgramLexer(stream);
+            ITokenStream tokens = new CommonTokenStream(lexer);
+            ProgramParser parser = new ProgramParser(tokens)
+            {
+                BuildParseTree = true
+            };
+            IParseTree tree = parser.program();
+
+            var walker = new ParseTreeWalker();
+            walker.Walk(new MyListener(), tree);
         }
     }
 }

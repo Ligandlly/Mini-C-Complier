@@ -8,7 +8,10 @@ var_decl: (type_spec id ';')            # var_declHasId
 	| (type_spec id '[' num ']' ';')    # var_declHasArr; // 变量声明
 
 // 变量声明
-primary_expr: '(' expr ')' | id | num;
+primary_expr: 
+    '(' expr ')'    # primary_exprHasExpr
+    | id            # primary_exprHasId
+    | num           # primary_exprHasNum ;
 postfix_expr:
 	primary_expr                                # postfix_exprHasPrimary_expr
 	| primary_expr '[' expr ']'                 # postfix_exprHasgetitem
