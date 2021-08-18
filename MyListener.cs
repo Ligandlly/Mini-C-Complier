@@ -480,6 +480,7 @@ namespace MiniC
         /// </code>
         /// </example>
         /// <param name="context"></param>
+        /// <exception cref="MyListenerException">Increase a Immutable Value</exception>
         public override void ExitUnary_exprHasInc(ProgramParser.Unary_exprHasIncContext context)
         {
             var unaryExprVal = _values.Get(context.unary_expr());
@@ -489,6 +490,12 @@ namespace MiniC
             _values.Put(context, unaryExprVal);
         }
 
+        /// <summary>
+        /// Almost as same as inc
+        /// </summary>
+        /// <param name="context"></param>
+        /// <seealso cref="ExitUnary_exprHasInc"/>
+        /// <exception cref="MyListenerException">Decrease a Immutable Value</exception>
         public override void ExitUnary_exprHasDec(ProgramParser.Unary_exprHasDecContext context)
         {
             var unaryExprVal = _values.Get(context.unary_expr());
