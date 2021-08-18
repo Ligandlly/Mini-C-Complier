@@ -159,30 +159,6 @@ public interface IProgramListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitPostfix_exprHasCall([NotNull] ProgramParser.Postfix_exprHasCallContext context);
 	/// <summary>
-	/// Enter a parse tree produced by the <c>postfix_exprHasInc</c>
-	/// labeled alternative in <see cref="ProgramParser.postfix_expr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterPostfix_exprHasInc([NotNull] ProgramParser.Postfix_exprHasIncContext context);
-	/// <summary>
-	/// Exit a parse tree produced by the <c>postfix_exprHasInc</c>
-	/// labeled alternative in <see cref="ProgramParser.postfix_expr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitPostfix_exprHasInc([NotNull] ProgramParser.Postfix_exprHasIncContext context);
-	/// <summary>
-	/// Enter a parse tree produced by the <c>postfix_exprHasDec</c>
-	/// labeled alternative in <see cref="ProgramParser.postfix_expr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterPostfix_exprHasDec([NotNull] ProgramParser.Postfix_exprHasDecContext context);
-	/// <summary>
-	/// Exit a parse tree produced by the <c>postfix_exprHasDec</c>
-	/// labeled alternative in <see cref="ProgramParser.postfix_expr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitPostfix_exprHasDec([NotNull] ProgramParser.Postfix_exprHasDecContext context);
-	/// <summary>
 	/// Enter a parse tree produced by <see cref="ProgramParser.argument_expr_list"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>

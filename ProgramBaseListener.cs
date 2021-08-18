@@ -186,34 +186,6 @@ public partial class ProgramBaseListener : IProgramListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitPostfix_exprHasCall([NotNull] ProgramParser.Postfix_exprHasCallContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by the <c>postfix_exprHasInc</c>
-	/// labeled alternative in <see cref="ProgramParser.postfix_expr"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterPostfix_exprHasInc([NotNull] ProgramParser.Postfix_exprHasIncContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by the <c>postfix_exprHasInc</c>
-	/// labeled alternative in <see cref="ProgramParser.postfix_expr"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitPostfix_exprHasInc([NotNull] ProgramParser.Postfix_exprHasIncContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by the <c>postfix_exprHasDec</c>
-	/// labeled alternative in <see cref="ProgramParser.postfix_expr"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterPostfix_exprHasDec([NotNull] ProgramParser.Postfix_exprHasDecContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by the <c>postfix_exprHasDec</c>
-	/// labeled alternative in <see cref="ProgramParser.postfix_expr"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitPostfix_exprHasDec([NotNull] ProgramParser.Postfix_exprHasDecContext context) { }
-	/// <summary>
 	/// Enter a parse tree produced by <see cref="ProgramParser.argument_expr_list"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>

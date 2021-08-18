@@ -15,10 +15,8 @@ primary_expr:
 postfix_expr:
 	primary_expr                                # postfix_exprHasPrimary_expr
 	| primary_expr '[' expr ']'                 # postfix_exprHasgetitem
-	| primary_expr '(' ')'                      # postfix_exprHasEmptyCall
-	| primary_expr '(' argument_expr_list ')'   # postfix_exprHasCall
-	| primary_expr postfix='++'                 # postfix_exprHasInc
-	| primary_expr postfix='--'                         # postfix_exprHasDec;
+	| id '(' ')'                      # postfix_exprHasEmptyCall
+	| id '(' argument_expr_list ')'   # postfix_exprHasCall;
 
 argument_expr_list: expr (',' expr)*;
 unary_expr:
