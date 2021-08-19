@@ -55,11 +55,11 @@ namespace MiniC
         /// </summary>
         /// <param name="type">The type of temporary variable</param>
         /// <returns>Identity object</returns>
-        private Identity NewTmpVar(string type)
+        private Identity NewTmpVar(string type, bool mutable=true)
         {
             var rlt = _tmpVariables.Count;
             var name = $"{rlt}t";
-            _tmpVariables.Add(new Identity(name, type));
+            _tmpVariables.Add(new Identity(name, type, mutable));
 
             return _tmpVariables.Last();
         }
@@ -74,18 +74,20 @@ namespace MiniC
 
         public override void ExitPrimary_exprHasExpr(ProgramParser.Primary_exprHasExprContext context)
         {
-            _values.Put(context, _values.Get(context.expr()));
             Ir.Put(context, Ir.Get(context.expr()));
+            _values.Put(context, _values.Get(context.expr()));
         }
 
         public override void ExitPrimary_exprHasId(ProgramParser.Primary_exprHasIdContext context)
         {
             Ir.Put(context, Ir.Get(context.id()));
+            _values.Put(context, _values.Get(context.id()));
         }
 
         public override void ExitPrimary_exprHasNum(ProgramParser.Primary_exprHasNumContext context)
         {
             Ir.Put(context, Ir.Get(context.num()));
+            _values.Put(context, _values.Get(context.num()));
         }
 
         #endregion
@@ -107,7 +109,7 @@ namespace MiniC
             var table = _tables[_currentScopeNameStack.Peek()];
 
             // Check if the name has already in Symbol table
-            if (table.Keys.Contains(name))
+            if (table.ContainsKey(name))
             {
                 throw new MyListenerException("Duplicate Variable Name");
             }
@@ -115,6 +117,7 @@ namespace MiniC
 
             var irCode = _irBuilder.GenerateIr(_currentScopeNameStack.Peek() == Global ? "global" : "decl_var", type, name);
             Ir.Put(context, irCode);
+            _values.Put(context.id(), new Identity(name, type));
         }
 
         /// <summary>
@@ -275,7 +278,9 @@ namespace MiniC
             var name = context.GetText();
             var table = _tables[_currentScopeNameStack.Peek()];
             if (!table.ContainsKey(name))
-                throw new MyListenerException("Undefined Variable");
+            {
+                return;
+            }
 
             var id = table[name];
             
@@ -504,6 +509,57 @@ namespace MiniC
             Ir.Put(context, _irBuilder.GenerateIr("-", unaryExprVal.Name, "1", unaryExprVal.Name));
             _values.Put(context, unaryExprVal);
         }
+
+        /// <summary>
+        /// $a, $0xff
+        /// </summary>
+        /// <example>
+        /// <c>$a = 4</c> =>
+        /// <code>
+        /// $ a ; 0_t
+        /// = 4 ; 0_t
+        /// </code>
+        /// </example>
+        /// <param name="context"></param>
+        public override void ExitUnary_exprHasDol([NotNull] ProgramParser.Unary_exprHasDolContext context)
+        {
+            var exprValue = _values.Get(context.unary_expr());
+            var tmpRlt = NewTmpVar(Identity.Int);
+
+            Ir.Put(context, _irBuilder.GenerateIr("$", exprValue.Name, dist: tmpRlt.Name));
+            _values.Put(context, tmpRlt);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <example>
+        /// <c>a = !b</c> =>
+        /// ! b ; 0_t
+        /// = 0_t ; a
+        /// </example>
+        /// <param name="context"></param>
+        public override void ExitUnary_exprHasLNot([NotNull] ProgramParser.Unary_exprHasLNotContext context)
+        {
+            var unaryId = _values.Get(context.unary_expr());
+            var tmpRlt = NewTmpVar(unaryId.Type, false);
+
+            Ir.Put(context, _irBuilder.GenerateIr("!", unaryId.Name, dist: tmpRlt.Name));
+            _values.Put(context, tmpRlt);
+        }
+
+        public override void ExitUnary_exprHasNot([NotNull] ProgramParser.Unary_exprHasNotContext context)
+        {
+            var unaryId = _values.Get(context.unary_expr());
+            var tmpRlt = NewTmpVar(unaryId.Type, false);
+
+            Ir.Put(context, _irBuilder.GenerateIr("!", unaryId.Name, dist: tmpRlt.Name));
+            _values.Put(context, tmpRlt);
+        }
+
+        #endregion
+
+        #region Assignment_expr
 
         #endregion
     }

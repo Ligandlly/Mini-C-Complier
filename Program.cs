@@ -50,6 +50,7 @@ void interruptServer0(int a, int b) {
  }
  void main(void)
  {
+      interruptServer1();
       $0xfffffc00 = 2;
       $0xff22 = 0x000fffff;
       a = 0;
