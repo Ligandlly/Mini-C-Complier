@@ -31,7 +31,8 @@ namespace MiniC
     {
         static string str = @"
 int a;
-void interruptServer0(int a, int b) {
+// Error: void interruptServer0(int a)
+void interruptServer0(void) {
       int b;
       int c;
       b = a&0xf000;

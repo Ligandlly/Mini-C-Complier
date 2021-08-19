@@ -46,24 +46,24 @@ public partial class ProgramParser : Parser {
 	public const int
 		RULE_program = 0, RULE_decl = 1, RULE_var_decl = 2, RULE_primary_expr = 3, 
 		RULE_postfix_expr = 4, RULE_argument_expr_list = 5, RULE_unary_expr = 6, 
-		RULE_assignmentExpr = 7, RULE_expr = 8, RULE_func_def = 9, RULE_compound_stmt = 10, 
-		RULE_block_item_list = 11, RULE_block_item = 12, RULE_param_list = 13, 
-		RULE_param = 14, RULE_stmt = 15, RULE_continue_stmt = 16, RULE_break_stmt = 17, 
-		RULE_return_stmt = 18, RULE_expr_stmt = 19, RULE_selection_stmt = 20, 
-		RULE_iteration_stmt = 21, RULE_num = 22, RULE_id = 23, RULE_type_spec = 24;
+		RULE_assignmentExpr = 7, RULE_binaryExpr = 8, RULE_expr = 9, RULE_func_def = 10, 
+		RULE_compound_stmt = 11, RULE_block_item_list = 12, RULE_block_item = 13, 
+		RULE_param_list = 14, RULE_param = 15, RULE_stmt = 16, RULE_continue_stmt = 17, 
+		RULE_break_stmt = 18, RULE_return_stmt = 19, RULE_expr_stmt = 20, RULE_selection_stmt = 21, 
+		RULE_iteration_stmt = 22, RULE_num = 23, RULE_id = 24, RULE_type_spec = 25;
 	public static readonly string[] ruleNames = {
 		"program", "decl", "var_decl", "primary_expr", "postfix_expr", "argument_expr_list", 
-		"unary_expr", "assignmentExpr", "expr", "func_def", "compound_stmt", "block_item_list", 
-		"block_item", "param_list", "param", "stmt", "continue_stmt", "break_stmt", 
-		"return_stmt", "expr_stmt", "selection_stmt", "iteration_stmt", "num", 
-		"id", "type_spec"
+		"unary_expr", "assignmentExpr", "binaryExpr", "expr", "func_def", "compound_stmt", 
+		"block_item_list", "block_item", "param_list", "param", "stmt", "continue_stmt", 
+		"break_stmt", "return_stmt", "expr_stmt", "selection_stmt", "iteration_stmt", 
+		"num", "id", "type_spec"
 	};
 
 	private static readonly string[] _LiteralNames = {
 		null, "';'", "'['", "']'", "'('", "')'", "','", "'++'", "'--'", "'$'", 
-		"'!'", "'~'", "'*'", "'%'", "'/'", "'+'", "'-'", "'<<'", "'>>'", "'<='", 
-		"'>='", "'<'", "'>'", "'=='", "'!='", "'&'", "'^'", "'|'", "'&&'", "'||'", 
-		"'='", "'{'", "'}'", null, null, null, null, "'int'", "'short'", "'char'", 
+		"'!'", "'~'", "'='", "'*'", "'%'", "'/'", "'+'", "'-'", "'<<'", "'>>'", 
+		"'<='", "'>='", "'<'", "'>'", "'=='", "'!='", "'&'", "'^'", "'|'", "'&&'", 
+		"'||'", "'{'", "'}'", null, null, null, null, "'int'", "'short'", "'char'", 
 		"'void'", "'if'", "'else'", "'while'", "'break'", "'continue'", "'return'"
 	};
 	private static readonly string[] _SymbolicNames = {
@@ -137,17 +137,17 @@ public partial class ProgramParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 51;
+			State = 53;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			do {
 				{
 				{
-				State = 50;
+				State = 52;
 				decl();
 				}
 				}
-				State = 53;
+				State = 55;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << INT) | (1L << SHORT) | (1L << CHAR) | (1L << VOID))) != 0) );
@@ -193,20 +193,20 @@ public partial class ProgramParser : Parser {
 		DeclContext _localctx = new DeclContext(Context, State);
 		EnterRule(_localctx, 2, RULE_decl);
 		try {
-			State = 57;
+			State = 59;
 			ErrorHandler.Sync(this);
 			switch ( Interpreter.AdaptivePredict(TokenStream,1,Context) ) {
 			case 1:
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 55;
+				State = 57;
 				var_decl();
 				}
 				break;
 			case 2:
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 56;
+				State = 58;
 				func_def();
 				}
 				break;
@@ -282,7 +282,7 @@ public partial class ProgramParser : Parser {
 		Var_declContext _localctx = new Var_declContext(Context, State);
 		EnterRule(_localctx, 4, RULE_var_decl);
 		try {
-			State = 70;
+			State = 72;
 			ErrorHandler.Sync(this);
 			switch ( Interpreter.AdaptivePredict(TokenStream,2,Context) ) {
 			case 1:
@@ -290,11 +290,11 @@ public partial class ProgramParser : Parser {
 				EnterOuterAlt(_localctx, 1);
 				{
 				{
-				State = 59;
-				type_spec();
-				State = 60;
-				id();
 				State = 61;
+				type_spec();
+				State = 62;
+				id();
+				State = 63;
 				Match(T__0);
 				}
 				}
@@ -304,17 +304,17 @@ public partial class ProgramParser : Parser {
 				EnterOuterAlt(_localctx, 2);
 				{
 				{
-				State = 63;
-				type_spec();
-				State = 64;
-				id();
 				State = 65;
-				Match(T__1);
+				type_spec();
 				State = 66;
-				num();
+				id();
 				State = 67;
-				Match(T__2);
+				Match(T__1);
 				State = 68;
+				num();
+				State = 69;
+				Match(T__2);
+				State = 70;
 				Match(T__0);
 				}
 				}
@@ -398,18 +398,18 @@ public partial class ProgramParser : Parser {
 		Primary_exprContext _localctx = new Primary_exprContext(Context, State);
 		EnterRule(_localctx, 6, RULE_primary_expr);
 		try {
-			State = 78;
+			State = 80;
 			ErrorHandler.Sync(this);
 			switch (TokenStream.LA(1)) {
 			case T__3:
 				_localctx = new Primary_exprHasExprContext(_localctx);
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 72;
-				Match(T__3);
-				State = 73;
-				expr();
 				State = 74;
+				Match(T__3);
+				State = 75;
+				expr();
+				State = 76;
 				Match(T__4);
 				}
 				break;
@@ -417,7 +417,7 @@ public partial class ProgramParser : Parser {
 				_localctx = new Primary_exprHasIdContext(_localctx);
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 76;
+				State = 78;
 				id();
 				}
 				break;
@@ -425,7 +425,7 @@ public partial class ProgramParser : Parser {
 				_localctx = new Primary_exprHasNumContext(_localctx);
 				EnterOuterAlt(_localctx, 3);
 				{
-				State = 77;
+				State = 79;
 				num();
 				}
 				break;
@@ -532,14 +532,14 @@ public partial class ProgramParser : Parser {
 		Postfix_exprContext _localctx = new Postfix_exprContext(Context, State);
 		EnterRule(_localctx, 8, RULE_postfix_expr);
 		try {
-			State = 95;
+			State = 97;
 			ErrorHandler.Sync(this);
 			switch ( Interpreter.AdaptivePredict(TokenStream,4,Context) ) {
 			case 1:
 				_localctx = new Postfix_exprHasPrimary_exprContext(_localctx);
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 80;
+				State = 82;
 				primary_expr();
 				}
 				break;
@@ -547,13 +547,13 @@ public partial class ProgramParser : Parser {
 				_localctx = new Postfix_exprHasgetitemContext(_localctx);
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 81;
-				primary_expr();
-				State = 82;
-				Match(T__1);
 				State = 83;
-				expr();
+				primary_expr();
 				State = 84;
+				Match(T__1);
+				State = 85;
+				expr();
+				State = 86;
 				Match(T__2);
 				}
 				break;
@@ -561,11 +561,11 @@ public partial class ProgramParser : Parser {
 				_localctx = new Postfix_exprHasEmptyCallContext(_localctx);
 				EnterOuterAlt(_localctx, 3);
 				{
-				State = 86;
-				id();
-				State = 87;
-				Match(T__3);
 				State = 88;
+				id();
+				State = 89;
+				Match(T__3);
+				State = 90;
 				Match(T__4);
 				}
 				break;
@@ -573,13 +573,13 @@ public partial class ProgramParser : Parser {
 				_localctx = new Postfix_exprHasCallContext(_localctx);
 				EnterOuterAlt(_localctx, 4);
 				{
-				State = 90;
-				id();
-				State = 91;
-				Match(T__3);
 				State = 92;
-				argument_expr_list();
+				id();
 				State = 93;
+				Match(T__3);
+				State = 94;
+				argument_expr_list();
+				State = 95;
 				Match(T__4);
 				}
 				break;
@@ -628,21 +628,21 @@ public partial class ProgramParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 97;
+			State = 99;
 			expr();
-			State = 102;
+			State = 104;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			while (_la==T__5) {
 				{
 				{
-				State = 98;
+				State = 100;
 				Match(T__5);
-				State = 99;
+				State = 101;
 				expr();
 				}
 				}
-				State = 104;
+				State = 106;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			}
@@ -778,7 +778,7 @@ public partial class ProgramParser : Parser {
 		Unary_exprContext _localctx = new Unary_exprContext(Context, State);
 		EnterRule(_localctx, 12, RULE_unary_expr);
 		try {
-			State = 116;
+			State = 118;
 			ErrorHandler.Sync(this);
 			switch (TokenStream.LA(1)) {
 			case T__3:
@@ -787,7 +787,7 @@ public partial class ProgramParser : Parser {
 				_localctx = new Unary_exprHasPostfix_exprContext(_localctx);
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 105;
+				State = 107;
 				postfix_expr();
 				}
 				break;
@@ -795,9 +795,9 @@ public partial class ProgramParser : Parser {
 				_localctx = new Unary_exprHasIncContext(_localctx);
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 106;
+				State = 108;
 				((Unary_exprHasIncContext)_localctx).prefix = Match(T__6);
-				State = 107;
+				State = 109;
 				unary_expr();
 				}
 				break;
@@ -805,9 +805,9 @@ public partial class ProgramParser : Parser {
 				_localctx = new Unary_exprHasDecContext(_localctx);
 				EnterOuterAlt(_localctx, 3);
 				{
-				State = 108;
+				State = 110;
 				((Unary_exprHasDecContext)_localctx).prefix = Match(T__7);
-				State = 109;
+				State = 111;
 				unary_expr();
 				}
 				break;
@@ -815,9 +815,9 @@ public partial class ProgramParser : Parser {
 				_localctx = new Unary_exprHasDolContext(_localctx);
 				EnterOuterAlt(_localctx, 4);
 				{
-				State = 110;
+				State = 112;
 				((Unary_exprHasDolContext)_localctx).prefix = Match(T__8);
-				State = 111;
+				State = 113;
 				unary_expr();
 				}
 				break;
@@ -825,9 +825,9 @@ public partial class ProgramParser : Parser {
 				_localctx = new Unary_exprHasLNotContext(_localctx);
 				EnterOuterAlt(_localctx, 5);
 				{
-				State = 112;
+				State = 114;
 				((Unary_exprHasLNotContext)_localctx).prefix = Match(T__9);
-				State = 113;
+				State = 115;
 				unary_expr();
 				}
 				break;
@@ -835,9 +835,9 @@ public partial class ProgramParser : Parser {
 				_localctx = new Unary_exprHasNotContext(_localctx);
 				EnterOuterAlt(_localctx, 6);
 				{
-				State = 114;
+				State = 116;
 				((Unary_exprHasNotContext)_localctx).prefix = Match(T__10);
-				State = 115;
+				State = 117;
 				unary_expr();
 				}
 				break;
@@ -868,48 +868,23 @@ public partial class ProgramParser : Parser {
 			base.CopyFrom(context);
 		}
 	}
-	public partial class AssignmentExprHasLsftContext : AssignmentExprContext {
-		public IToken op;
-		[System.Diagnostics.DebuggerNonUserCode] public AssignmentExprContext[] assignmentExpr() {
-			return GetRuleContexts<AssignmentExprContext>();
+	public partial class AssignmentExprHasBinaryContext : AssignmentExprContext {
+		[System.Diagnostics.DebuggerNonUserCode] public BinaryExprContext binaryExpr() {
+			return GetRuleContext<BinaryExprContext>(0);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public AssignmentExprContext assignmentExpr(int i) {
-			return GetRuleContext<AssignmentExprContext>(i);
-		}
-		public AssignmentExprHasLsftContext(AssignmentExprContext context) { CopyFrom(context); }
+		public AssignmentExprHasBinaryContext(AssignmentExprContext context) { CopyFrom(context); }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
 			IProgramListener typedListener = listener as IProgramListener;
-			if (typedListener != null) typedListener.EnterAssignmentExprHasLsft(this);
+			if (typedListener != null) typedListener.EnterAssignmentExprHasBinary(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
 			IProgramListener typedListener = listener as IProgramListener;
-			if (typedListener != null) typedListener.ExitAssignmentExprHasLsft(this);
-		}
-	}
-	public partial class AssignmentExprHasLtContext : AssignmentExprContext {
-		public IToken op;
-		[System.Diagnostics.DebuggerNonUserCode] public AssignmentExprContext[] assignmentExpr() {
-			return GetRuleContexts<AssignmentExprContext>();
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public AssignmentExprContext assignmentExpr(int i) {
-			return GetRuleContext<AssignmentExprContext>(i);
-		}
-		public AssignmentExprHasLtContext(AssignmentExprContext context) { CopyFrom(context); }
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void EnterRule(IParseTreeListener listener) {
-			IProgramListener typedListener = listener as IProgramListener;
-			if (typedListener != null) typedListener.EnterAssignmentExprHasLt(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void ExitRule(IParseTreeListener listener) {
-			IProgramListener typedListener = listener as IProgramListener;
-			if (typedListener != null) typedListener.ExitAssignmentExprHasLt(this);
+			if (typedListener != null) typedListener.ExitAssignmentExprHasBinary(this);
 		}
 	}
 	public partial class AssignmentExprHasAssignContext : AssignmentExprContext {
-		public IToken op;
 		[System.Diagnostics.DebuggerNonUserCode] public Unary_exprContext unary_expr() {
 			return GetRuleContext<Unary_exprContext>(0);
 		}
@@ -928,646 +903,366 @@ public partial class ProgramParser : Parser {
 			if (typedListener != null) typedListener.ExitAssignmentExprHasAssign(this);
 		}
 	}
-	public partial class AssignmentExprHasEqContext : AssignmentExprContext {
-		public IToken op;
-		[System.Diagnostics.DebuggerNonUserCode] public AssignmentExprContext[] assignmentExpr() {
-			return GetRuleContexts<AssignmentExprContext>();
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public AssignmentExprContext assignmentExpr(int i) {
-			return GetRuleContext<AssignmentExprContext>(i);
-		}
-		public AssignmentExprHasEqContext(AssignmentExprContext context) { CopyFrom(context); }
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void EnterRule(IParseTreeListener listener) {
-			IProgramListener typedListener = listener as IProgramListener;
-			if (typedListener != null) typedListener.EnterAssignmentExprHasEq(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void ExitRule(IParseTreeListener listener) {
-			IProgramListener typedListener = listener as IProgramListener;
-			if (typedListener != null) typedListener.ExitAssignmentExprHasEq(this);
-		}
-	}
-	public partial class AssignmentExprHasGtContext : AssignmentExprContext {
-		public IToken op;
-		[System.Diagnostics.DebuggerNonUserCode] public AssignmentExprContext[] assignmentExpr() {
-			return GetRuleContexts<AssignmentExprContext>();
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public AssignmentExprContext assignmentExpr(int i) {
-			return GetRuleContext<AssignmentExprContext>(i);
-		}
-		public AssignmentExprHasGtContext(AssignmentExprContext context) { CopyFrom(context); }
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void EnterRule(IParseTreeListener listener) {
-			IProgramListener typedListener = listener as IProgramListener;
-			if (typedListener != null) typedListener.EnterAssignmentExprHasGt(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void ExitRule(IParseTreeListener listener) {
-			IProgramListener typedListener = listener as IProgramListener;
-			if (typedListener != null) typedListener.ExitAssignmentExprHasGt(this);
-		}
-	}
-	public partial class AssignmentExprHasUnary_exprContext : AssignmentExprContext {
-		[System.Diagnostics.DebuggerNonUserCode] public Unary_exprContext unary_expr() {
-			return GetRuleContext<Unary_exprContext>(0);
-		}
-		public AssignmentExprHasUnary_exprContext(AssignmentExprContext context) { CopyFrom(context); }
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void EnterRule(IParseTreeListener listener) {
-			IProgramListener typedListener = listener as IProgramListener;
-			if (typedListener != null) typedListener.EnterAssignmentExprHasUnary_expr(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void ExitRule(IParseTreeListener listener) {
-			IProgramListener typedListener = listener as IProgramListener;
-			if (typedListener != null) typedListener.ExitAssignmentExprHasUnary_expr(this);
-		}
-	}
-	public partial class AssignmentExprHasLOrContext : AssignmentExprContext {
-		public IToken op;
-		[System.Diagnostics.DebuggerNonUserCode] public AssignmentExprContext[] assignmentExpr() {
-			return GetRuleContexts<AssignmentExprContext>();
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public AssignmentExprContext assignmentExpr(int i) {
-			return GetRuleContext<AssignmentExprContext>(i);
-		}
-		public AssignmentExprHasLOrContext(AssignmentExprContext context) { CopyFrom(context); }
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void EnterRule(IParseTreeListener listener) {
-			IProgramListener typedListener = listener as IProgramListener;
-			if (typedListener != null) typedListener.EnterAssignmentExprHasLOr(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void ExitRule(IParseTreeListener listener) {
-			IProgramListener typedListener = listener as IProgramListener;
-			if (typedListener != null) typedListener.ExitAssignmentExprHasLOr(this);
-		}
-	}
-	public partial class AssignmentExprHasDivContext : AssignmentExprContext {
-		public IToken op;
-		[System.Diagnostics.DebuggerNonUserCode] public AssignmentExprContext[] assignmentExpr() {
-			return GetRuleContexts<AssignmentExprContext>();
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public AssignmentExprContext assignmentExpr(int i) {
-			return GetRuleContext<AssignmentExprContext>(i);
-		}
-		public AssignmentExprHasDivContext(AssignmentExprContext context) { CopyFrom(context); }
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void EnterRule(IParseTreeListener listener) {
-			IProgramListener typedListener = listener as IProgramListener;
-			if (typedListener != null) typedListener.EnterAssignmentExprHasDiv(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void ExitRule(IParseTreeListener listener) {
-			IProgramListener typedListener = listener as IProgramListener;
-			if (typedListener != null) typedListener.ExitAssignmentExprHasDiv(this);
-		}
-	}
-	public partial class AssignmentExprHasMinContext : AssignmentExprContext {
-		public IToken op;
-		[System.Diagnostics.DebuggerNonUserCode] public AssignmentExprContext[] assignmentExpr() {
-			return GetRuleContexts<AssignmentExprContext>();
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public AssignmentExprContext assignmentExpr(int i) {
-			return GetRuleContext<AssignmentExprContext>(i);
-		}
-		public AssignmentExprHasMinContext(AssignmentExprContext context) { CopyFrom(context); }
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void EnterRule(IParseTreeListener listener) {
-			IProgramListener typedListener = listener as IProgramListener;
-			if (typedListener != null) typedListener.EnterAssignmentExprHasMin(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void ExitRule(IParseTreeListener listener) {
-			IProgramListener typedListener = listener as IProgramListener;
-			if (typedListener != null) typedListener.ExitAssignmentExprHasMin(this);
-		}
-	}
-	public partial class AssignmentExprHasAndContext : AssignmentExprContext {
-		public IToken op;
-		[System.Diagnostics.DebuggerNonUserCode] public AssignmentExprContext[] assignmentExpr() {
-			return GetRuleContexts<AssignmentExprContext>();
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public AssignmentExprContext assignmentExpr(int i) {
-			return GetRuleContext<AssignmentExprContext>(i);
-		}
-		public AssignmentExprHasAndContext(AssignmentExprContext context) { CopyFrom(context); }
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void EnterRule(IParseTreeListener listener) {
-			IProgramListener typedListener = listener as IProgramListener;
-			if (typedListener != null) typedListener.EnterAssignmentExprHasAnd(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void ExitRule(IParseTreeListener listener) {
-			IProgramListener typedListener = listener as IProgramListener;
-			if (typedListener != null) typedListener.ExitAssignmentExprHasAnd(this);
-		}
-	}
-	public partial class AssignmentExprHasNeContext : AssignmentExprContext {
-		public IToken op;
-		[System.Diagnostics.DebuggerNonUserCode] public AssignmentExprContext[] assignmentExpr() {
-			return GetRuleContexts<AssignmentExprContext>();
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public AssignmentExprContext assignmentExpr(int i) {
-			return GetRuleContext<AssignmentExprContext>(i);
-		}
-		public AssignmentExprHasNeContext(AssignmentExprContext context) { CopyFrom(context); }
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void EnterRule(IParseTreeListener listener) {
-			IProgramListener typedListener = listener as IProgramListener;
-			if (typedListener != null) typedListener.EnterAssignmentExprHasNe(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void ExitRule(IParseTreeListener listener) {
-			IProgramListener typedListener = listener as IProgramListener;
-			if (typedListener != null) typedListener.ExitAssignmentExprHasNe(this);
-		}
-	}
-	public partial class AssignmentExprHasLAndContext : AssignmentExprContext {
-		public IToken op;
-		[System.Diagnostics.DebuggerNonUserCode] public AssignmentExprContext[] assignmentExpr() {
-			return GetRuleContexts<AssignmentExprContext>();
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public AssignmentExprContext assignmentExpr(int i) {
-			return GetRuleContext<AssignmentExprContext>(i);
-		}
-		public AssignmentExprHasLAndContext(AssignmentExprContext context) { CopyFrom(context); }
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void EnterRule(IParseTreeListener listener) {
-			IProgramListener typedListener = listener as IProgramListener;
-			if (typedListener != null) typedListener.EnterAssignmentExprHasLAnd(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void ExitRule(IParseTreeListener listener) {
-			IProgramListener typedListener = listener as IProgramListener;
-			if (typedListener != null) typedListener.ExitAssignmentExprHasLAnd(this);
-		}
-	}
-	public partial class AssignmentExprHasLeContext : AssignmentExprContext {
-		public IToken op;
-		[System.Diagnostics.DebuggerNonUserCode] public AssignmentExprContext[] assignmentExpr() {
-			return GetRuleContexts<AssignmentExprContext>();
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public AssignmentExprContext assignmentExpr(int i) {
-			return GetRuleContext<AssignmentExprContext>(i);
-		}
-		public AssignmentExprHasLeContext(AssignmentExprContext context) { CopyFrom(context); }
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void EnterRule(IParseTreeListener listener) {
-			IProgramListener typedListener = listener as IProgramListener;
-			if (typedListener != null) typedListener.EnterAssignmentExprHasLe(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void ExitRule(IParseTreeListener listener) {
-			IProgramListener typedListener = listener as IProgramListener;
-			if (typedListener != null) typedListener.ExitAssignmentExprHasLe(this);
-		}
-	}
-	public partial class AssignmentExprHasXorContext : AssignmentExprContext {
-		public IToken op;
-		[System.Diagnostics.DebuggerNonUserCode] public AssignmentExprContext[] assignmentExpr() {
-			return GetRuleContexts<AssignmentExprContext>();
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public AssignmentExprContext assignmentExpr(int i) {
-			return GetRuleContext<AssignmentExprContext>(i);
-		}
-		public AssignmentExprHasXorContext(AssignmentExprContext context) { CopyFrom(context); }
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void EnterRule(IParseTreeListener listener) {
-			IProgramListener typedListener = listener as IProgramListener;
-			if (typedListener != null) typedListener.EnterAssignmentExprHasXor(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void ExitRule(IParseTreeListener listener) {
-			IProgramListener typedListener = listener as IProgramListener;
-			if (typedListener != null) typedListener.ExitAssignmentExprHasXor(this);
-		}
-	}
-	public partial class AssignmentExprHasGeContext : AssignmentExprContext {
-		public IToken op;
-		[System.Diagnostics.DebuggerNonUserCode] public AssignmentExprContext[] assignmentExpr() {
-			return GetRuleContexts<AssignmentExprContext>();
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public AssignmentExprContext assignmentExpr(int i) {
-			return GetRuleContext<AssignmentExprContext>(i);
-		}
-		public AssignmentExprHasGeContext(AssignmentExprContext context) { CopyFrom(context); }
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void EnterRule(IParseTreeListener listener) {
-			IProgramListener typedListener = listener as IProgramListener;
-			if (typedListener != null) typedListener.EnterAssignmentExprHasGe(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void ExitRule(IParseTreeListener listener) {
-			IProgramListener typedListener = listener as IProgramListener;
-			if (typedListener != null) typedListener.ExitAssignmentExprHasGe(this);
-		}
-	}
-	public partial class AssignmentExprHasRsftContext : AssignmentExprContext {
-		public IToken op;
-		[System.Diagnostics.DebuggerNonUserCode] public AssignmentExprContext[] assignmentExpr() {
-			return GetRuleContexts<AssignmentExprContext>();
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public AssignmentExprContext assignmentExpr(int i) {
-			return GetRuleContext<AssignmentExprContext>(i);
-		}
-		public AssignmentExprHasRsftContext(AssignmentExprContext context) { CopyFrom(context); }
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void EnterRule(IParseTreeListener listener) {
-			IProgramListener typedListener = listener as IProgramListener;
-			if (typedListener != null) typedListener.EnterAssignmentExprHasRsft(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void ExitRule(IParseTreeListener listener) {
-			IProgramListener typedListener = listener as IProgramListener;
-			if (typedListener != null) typedListener.ExitAssignmentExprHasRsft(this);
-		}
-	}
-	public partial class AssignmentExprHasAddContext : AssignmentExprContext {
-		public IToken op;
-		[System.Diagnostics.DebuggerNonUserCode] public AssignmentExprContext[] assignmentExpr() {
-			return GetRuleContexts<AssignmentExprContext>();
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public AssignmentExprContext assignmentExpr(int i) {
-			return GetRuleContext<AssignmentExprContext>(i);
-		}
-		public AssignmentExprHasAddContext(AssignmentExprContext context) { CopyFrom(context); }
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void EnterRule(IParseTreeListener listener) {
-			IProgramListener typedListener = listener as IProgramListener;
-			if (typedListener != null) typedListener.EnterAssignmentExprHasAdd(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void ExitRule(IParseTreeListener listener) {
-			IProgramListener typedListener = listener as IProgramListener;
-			if (typedListener != null) typedListener.ExitAssignmentExprHasAdd(this);
-		}
-	}
-	public partial class AssignmentExprHasModContext : AssignmentExprContext {
-		public IToken op;
-		[System.Diagnostics.DebuggerNonUserCode] public AssignmentExprContext[] assignmentExpr() {
-			return GetRuleContexts<AssignmentExprContext>();
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public AssignmentExprContext assignmentExpr(int i) {
-			return GetRuleContext<AssignmentExprContext>(i);
-		}
-		public AssignmentExprHasModContext(AssignmentExprContext context) { CopyFrom(context); }
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void EnterRule(IParseTreeListener listener) {
-			IProgramListener typedListener = listener as IProgramListener;
-			if (typedListener != null) typedListener.EnterAssignmentExprHasMod(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void ExitRule(IParseTreeListener listener) {
-			IProgramListener typedListener = listener as IProgramListener;
-			if (typedListener != null) typedListener.ExitAssignmentExprHasMod(this);
-		}
-	}
-	public partial class AssignmentExprHasOrContext : AssignmentExprContext {
-		public IToken op;
-		[System.Diagnostics.DebuggerNonUserCode] public AssignmentExprContext[] assignmentExpr() {
-			return GetRuleContexts<AssignmentExprContext>();
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public AssignmentExprContext assignmentExpr(int i) {
-			return GetRuleContext<AssignmentExprContext>(i);
-		}
-		public AssignmentExprHasOrContext(AssignmentExprContext context) { CopyFrom(context); }
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void EnterRule(IParseTreeListener listener) {
-			IProgramListener typedListener = listener as IProgramListener;
-			if (typedListener != null) typedListener.EnterAssignmentExprHasOr(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void ExitRule(IParseTreeListener listener) {
-			IProgramListener typedListener = listener as IProgramListener;
-			if (typedListener != null) typedListener.ExitAssignmentExprHasOr(this);
-		}
-	}
-	public partial class AssignmentExprHasNumContext : AssignmentExprContext {
-		[System.Diagnostics.DebuggerNonUserCode] public NumContext num() {
-			return GetRuleContext<NumContext>(0);
-		}
-		public AssignmentExprHasNumContext(AssignmentExprContext context) { CopyFrom(context); }
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void EnterRule(IParseTreeListener listener) {
-			IProgramListener typedListener = listener as IProgramListener;
-			if (typedListener != null) typedListener.EnterAssignmentExprHasNum(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void ExitRule(IParseTreeListener listener) {
-			IProgramListener typedListener = listener as IProgramListener;
-			if (typedListener != null) typedListener.ExitAssignmentExprHasNum(this);
-		}
-	}
-	public partial class AssignmentExprHasMulContext : AssignmentExprContext {
-		public IToken op;
-		[System.Diagnostics.DebuggerNonUserCode] public AssignmentExprContext[] assignmentExpr() {
-			return GetRuleContexts<AssignmentExprContext>();
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public AssignmentExprContext assignmentExpr(int i) {
-			return GetRuleContext<AssignmentExprContext>(i);
-		}
-		public AssignmentExprHasMulContext(AssignmentExprContext context) { CopyFrom(context); }
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void EnterRule(IParseTreeListener listener) {
-			IProgramListener typedListener = listener as IProgramListener;
-			if (typedListener != null) typedListener.EnterAssignmentExprHasMul(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void ExitRule(IParseTreeListener listener) {
-			IProgramListener typedListener = listener as IProgramListener;
-			if (typedListener != null) typedListener.ExitAssignmentExprHasMul(this);
-		}
-	}
 
 	[RuleVersion(0)]
 	public AssignmentExprContext assignmentExpr() {
-		return assignmentExpr(0);
-	}
-
-	private AssignmentExprContext assignmentExpr(int _p) {
-		ParserRuleContext _parentctx = Context;
-		int _parentState = State;
-		AssignmentExprContext _localctx = new AssignmentExprContext(Context, _parentState);
-		AssignmentExprContext _prevctx = _localctx;
-		int _startState = 14;
-		EnterRecursionRule(_localctx, 14, RULE_assignmentExpr, _p);
+		AssignmentExprContext _localctx = new AssignmentExprContext(Context, State);
+		EnterRule(_localctx, 14, RULE_assignmentExpr);
 		try {
-			int _alt;
-			EnterOuterAlt(_localctx, 1);
-			{
 			State = 125;
 			ErrorHandler.Sync(this);
 			switch ( Interpreter.AdaptivePredict(TokenStream,7,Context) ) {
 			case 1:
+				_localctx = new AssignmentExprHasBinaryContext(_localctx);
+				EnterOuterAlt(_localctx, 1);
 				{
-				_localctx = new AssignmentExprHasAssignContext(_localctx);
-				Context = _localctx;
-				_prevctx = _localctx;
-
-				State = 119;
-				unary_expr();
 				State = 120;
-				((AssignmentExprHasAssignContext)_localctx).op = Match(T__29);
+				binaryExpr(0);
+				}
+				break;
+			case 2:
+				_localctx = new AssignmentExprHasAssignContext(_localctx);
+				EnterOuterAlt(_localctx, 2);
+				{
 				State = 121;
-				assignmentExpr(3);
+				unary_expr();
+				State = 122;
+				Match(T__11);
+				State = 123;
+				assignmentExpr();
+				}
+				break;
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			ErrorHandler.ReportError(this, re);
+			ErrorHandler.Recover(this, re);
+		}
+		finally {
+			ExitRule();
+		}
+		return _localctx;
+	}
+
+	public partial class BinaryExprContext : ParserRuleContext {
+		public BinaryExprContext left;
+		public IToken op;
+		public BinaryExprContext right;
+		[System.Diagnostics.DebuggerNonUserCode] public Unary_exprContext unary_expr() {
+			return GetRuleContext<Unary_exprContext>(0);
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public NumContext num() {
+			return GetRuleContext<NumContext>(0);
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public BinaryExprContext[] binaryExpr() {
+			return GetRuleContexts<BinaryExprContext>();
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public BinaryExprContext binaryExpr(int i) {
+			return GetRuleContext<BinaryExprContext>(i);
+		}
+		public BinaryExprContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_binaryExpr; } }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void EnterRule(IParseTreeListener listener) {
+			IProgramListener typedListener = listener as IProgramListener;
+			if (typedListener != null) typedListener.EnterBinaryExpr(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void ExitRule(IParseTreeListener listener) {
+			IProgramListener typedListener = listener as IProgramListener;
+			if (typedListener != null) typedListener.ExitBinaryExpr(this);
+		}
+	}
+
+	[RuleVersion(0)]
+	public BinaryExprContext binaryExpr() {
+		return binaryExpr(0);
+	}
+
+	private BinaryExprContext binaryExpr(int _p) {
+		ParserRuleContext _parentctx = Context;
+		int _parentState = State;
+		BinaryExprContext _localctx = new BinaryExprContext(Context, _parentState);
+		BinaryExprContext _prevctx = _localctx;
+		int _startState = 16;
+		EnterRecursionRule(_localctx, 16, RULE_binaryExpr, _p);
+		try {
+			int _alt;
+			EnterOuterAlt(_localctx, 1);
+			{
+			State = 130;
+			ErrorHandler.Sync(this);
+			switch ( Interpreter.AdaptivePredict(TokenStream,8,Context) ) {
+			case 1:
+				{
+				State = 128;
+				unary_expr();
 				}
 				break;
 			case 2:
 				{
-				_localctx = new AssignmentExprHasUnary_exprContext(_localctx);
-				Context = _localctx;
-				_prevctx = _localctx;
-				State = 123;
-				unary_expr();
-				}
-				break;
-			case 3:
-				{
-				_localctx = new AssignmentExprHasNumContext(_localctx);
-				Context = _localctx;
-				_prevctx = _localctx;
-				State = 124;
+				State = 129;
 				num();
 				}
 				break;
 			}
 			Context.Stop = TokenStream.LT(-1);
-			State = 183;
+			State = 188;
 			ErrorHandler.Sync(this);
-			_alt = Interpreter.AdaptivePredict(TokenStream,9,Context);
+			_alt = Interpreter.AdaptivePredict(TokenStream,10,Context);
 			while ( _alt!=2 && _alt!=global::Antlr4.Runtime.Atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					if ( ParseListeners!=null )
 						TriggerExitRuleEvent();
 					_prevctx = _localctx;
 					{
-					State = 181;
+					State = 186;
 					ErrorHandler.Sync(this);
-					switch ( Interpreter.AdaptivePredict(TokenStream,8,Context) ) {
+					switch ( Interpreter.AdaptivePredict(TokenStream,9,Context) ) {
 					case 1:
 						{
-						_localctx = new AssignmentExprHasMulContext(new AssignmentExprContext(_parentctx, _parentState));
-						PushNewRecursionContext(_localctx, _startState, RULE_assignmentExpr);
-						State = 127;
-						if (!(Precpred(Context, 21))) throw new FailedPredicateException(this, "Precpred(Context, 21)");
-						State = 128;
-						((AssignmentExprHasMulContext)_localctx).op = Match(T__11);
-						State = 129;
-						assignmentExpr(22);
+						_localctx = new BinaryExprContext(_parentctx, _parentState);
+						_localctx.left = _prevctx;
+						PushNewRecursionContext(_localctx, _startState, RULE_binaryExpr);
+						State = 132;
+						if (!(Precpred(Context, 20))) throw new FailedPredicateException(this, "Precpred(Context, 20)");
+						State = 133;
+						_localctx.op = Match(T__12);
+						State = 134;
+						_localctx.right = binaryExpr(21);
 						}
 						break;
 					case 2:
 						{
-						_localctx = new AssignmentExprHasModContext(new AssignmentExprContext(_parentctx, _parentState));
-						PushNewRecursionContext(_localctx, _startState, RULE_assignmentExpr);
-						State = 130;
-						if (!(Precpred(Context, 20))) throw new FailedPredicateException(this, "Precpred(Context, 20)");
-						State = 131;
-						((AssignmentExprHasModContext)_localctx).op = Match(T__12);
-						State = 132;
-						assignmentExpr(21);
+						_localctx = new BinaryExprContext(_parentctx, _parentState);
+						_localctx.left = _prevctx;
+						PushNewRecursionContext(_localctx, _startState, RULE_binaryExpr);
+						State = 135;
+						if (!(Precpred(Context, 19))) throw new FailedPredicateException(this, "Precpred(Context, 19)");
+						State = 136;
+						_localctx.op = Match(T__13);
+						State = 137;
+						_localctx.right = binaryExpr(20);
 						}
 						break;
 					case 3:
 						{
-						_localctx = new AssignmentExprHasDivContext(new AssignmentExprContext(_parentctx, _parentState));
-						PushNewRecursionContext(_localctx, _startState, RULE_assignmentExpr);
-						State = 133;
-						if (!(Precpred(Context, 19))) throw new FailedPredicateException(this, "Precpred(Context, 19)");
-						State = 134;
-						((AssignmentExprHasDivContext)_localctx).op = Match(T__13);
-						State = 135;
-						assignmentExpr(20);
+						_localctx = new BinaryExprContext(_parentctx, _parentState);
+						_localctx.left = _prevctx;
+						PushNewRecursionContext(_localctx, _startState, RULE_binaryExpr);
+						State = 138;
+						if (!(Precpred(Context, 18))) throw new FailedPredicateException(this, "Precpred(Context, 18)");
+						State = 139;
+						_localctx.op = Match(T__14);
+						State = 140;
+						_localctx.right = binaryExpr(19);
 						}
 						break;
 					case 4:
 						{
-						_localctx = new AssignmentExprHasAddContext(new AssignmentExprContext(_parentctx, _parentState));
-						PushNewRecursionContext(_localctx, _startState, RULE_assignmentExpr);
-						State = 136;
-						if (!(Precpred(Context, 18))) throw new FailedPredicateException(this, "Precpred(Context, 18)");
-						State = 137;
-						((AssignmentExprHasAddContext)_localctx).op = Match(T__14);
-						State = 138;
-						assignmentExpr(19);
+						_localctx = new BinaryExprContext(_parentctx, _parentState);
+						_localctx.left = _prevctx;
+						PushNewRecursionContext(_localctx, _startState, RULE_binaryExpr);
+						State = 141;
+						if (!(Precpred(Context, 17))) throw new FailedPredicateException(this, "Precpred(Context, 17)");
+						State = 142;
+						_localctx.op = Match(T__15);
+						State = 143;
+						_localctx.right = binaryExpr(18);
 						}
 						break;
 					case 5:
 						{
-						_localctx = new AssignmentExprHasMinContext(new AssignmentExprContext(_parentctx, _parentState));
-						PushNewRecursionContext(_localctx, _startState, RULE_assignmentExpr);
-						State = 139;
-						if (!(Precpred(Context, 17))) throw new FailedPredicateException(this, "Precpred(Context, 17)");
-						State = 140;
-						((AssignmentExprHasMinContext)_localctx).op = Match(T__15);
-						State = 141;
-						assignmentExpr(18);
+						_localctx = new BinaryExprContext(_parentctx, _parentState);
+						_localctx.left = _prevctx;
+						PushNewRecursionContext(_localctx, _startState, RULE_binaryExpr);
+						State = 144;
+						if (!(Precpred(Context, 16))) throw new FailedPredicateException(this, "Precpred(Context, 16)");
+						State = 145;
+						_localctx.op = Match(T__16);
+						State = 146;
+						_localctx.right = binaryExpr(17);
 						}
 						break;
 					case 6:
 						{
-						_localctx = new AssignmentExprHasLsftContext(new AssignmentExprContext(_parentctx, _parentState));
-						PushNewRecursionContext(_localctx, _startState, RULE_assignmentExpr);
-						State = 142;
-						if (!(Precpred(Context, 16))) throw new FailedPredicateException(this, "Precpred(Context, 16)");
-						State = 143;
-						((AssignmentExprHasLsftContext)_localctx).op = Match(T__16);
-						State = 144;
-						assignmentExpr(17);
+						_localctx = new BinaryExprContext(_parentctx, _parentState);
+						_localctx.left = _prevctx;
+						PushNewRecursionContext(_localctx, _startState, RULE_binaryExpr);
+						State = 147;
+						if (!(Precpred(Context, 15))) throw new FailedPredicateException(this, "Precpred(Context, 15)");
+						State = 148;
+						_localctx.op = Match(T__17);
+						State = 149;
+						_localctx.right = binaryExpr(16);
 						}
 						break;
 					case 7:
 						{
-						_localctx = new AssignmentExprHasRsftContext(new AssignmentExprContext(_parentctx, _parentState));
-						PushNewRecursionContext(_localctx, _startState, RULE_assignmentExpr);
-						State = 145;
-						if (!(Precpred(Context, 15))) throw new FailedPredicateException(this, "Precpred(Context, 15)");
-						State = 146;
-						((AssignmentExprHasRsftContext)_localctx).op = Match(T__17);
-						State = 147;
-						assignmentExpr(16);
+						_localctx = new BinaryExprContext(_parentctx, _parentState);
+						_localctx.left = _prevctx;
+						PushNewRecursionContext(_localctx, _startState, RULE_binaryExpr);
+						State = 150;
+						if (!(Precpred(Context, 14))) throw new FailedPredicateException(this, "Precpred(Context, 14)");
+						State = 151;
+						_localctx.op = Match(T__18);
+						State = 152;
+						_localctx.right = binaryExpr(15);
 						}
 						break;
 					case 8:
 						{
-						_localctx = new AssignmentExprHasLeContext(new AssignmentExprContext(_parentctx, _parentState));
-						PushNewRecursionContext(_localctx, _startState, RULE_assignmentExpr);
-						State = 148;
-						if (!(Precpred(Context, 14))) throw new FailedPredicateException(this, "Precpred(Context, 14)");
-						State = 149;
-						((AssignmentExprHasLeContext)_localctx).op = Match(T__18);
-						State = 150;
-						assignmentExpr(15);
+						_localctx = new BinaryExprContext(_parentctx, _parentState);
+						_localctx.left = _prevctx;
+						PushNewRecursionContext(_localctx, _startState, RULE_binaryExpr);
+						State = 153;
+						if (!(Precpred(Context, 13))) throw new FailedPredicateException(this, "Precpred(Context, 13)");
+						State = 154;
+						_localctx.op = Match(T__19);
+						State = 155;
+						_localctx.right = binaryExpr(14);
 						}
 						break;
 					case 9:
 						{
-						_localctx = new AssignmentExprHasGeContext(new AssignmentExprContext(_parentctx, _parentState));
-						PushNewRecursionContext(_localctx, _startState, RULE_assignmentExpr);
-						State = 151;
-						if (!(Precpred(Context, 13))) throw new FailedPredicateException(this, "Precpred(Context, 13)");
-						State = 152;
-						((AssignmentExprHasGeContext)_localctx).op = Match(T__19);
-						State = 153;
-						assignmentExpr(14);
+						_localctx = new BinaryExprContext(_parentctx, _parentState);
+						_localctx.left = _prevctx;
+						PushNewRecursionContext(_localctx, _startState, RULE_binaryExpr);
+						State = 156;
+						if (!(Precpred(Context, 12))) throw new FailedPredicateException(this, "Precpred(Context, 12)");
+						State = 157;
+						_localctx.op = Match(T__20);
+						State = 158;
+						_localctx.right = binaryExpr(13);
 						}
 						break;
 					case 10:
 						{
-						_localctx = new AssignmentExprHasLtContext(new AssignmentExprContext(_parentctx, _parentState));
-						PushNewRecursionContext(_localctx, _startState, RULE_assignmentExpr);
-						State = 154;
-						if (!(Precpred(Context, 12))) throw new FailedPredicateException(this, "Precpred(Context, 12)");
-						State = 155;
-						((AssignmentExprHasLtContext)_localctx).op = Match(T__20);
-						State = 156;
-						assignmentExpr(13);
+						_localctx = new BinaryExprContext(_parentctx, _parentState);
+						_localctx.left = _prevctx;
+						PushNewRecursionContext(_localctx, _startState, RULE_binaryExpr);
+						State = 159;
+						if (!(Precpred(Context, 11))) throw new FailedPredicateException(this, "Precpred(Context, 11)");
+						State = 160;
+						_localctx.op = Match(T__21);
+						State = 161;
+						_localctx.right = binaryExpr(12);
 						}
 						break;
 					case 11:
 						{
-						_localctx = new AssignmentExprHasGtContext(new AssignmentExprContext(_parentctx, _parentState));
-						PushNewRecursionContext(_localctx, _startState, RULE_assignmentExpr);
-						State = 157;
-						if (!(Precpred(Context, 11))) throw new FailedPredicateException(this, "Precpred(Context, 11)");
-						State = 158;
-						((AssignmentExprHasGtContext)_localctx).op = Match(T__21);
-						State = 159;
-						assignmentExpr(12);
+						_localctx = new BinaryExprContext(_parentctx, _parentState);
+						_localctx.left = _prevctx;
+						PushNewRecursionContext(_localctx, _startState, RULE_binaryExpr);
+						State = 162;
+						if (!(Precpred(Context, 10))) throw new FailedPredicateException(this, "Precpred(Context, 10)");
+						State = 163;
+						_localctx.op = Match(T__22);
+						State = 164;
+						_localctx.right = binaryExpr(11);
 						}
 						break;
 					case 12:
 						{
-						_localctx = new AssignmentExprHasEqContext(new AssignmentExprContext(_parentctx, _parentState));
-						PushNewRecursionContext(_localctx, _startState, RULE_assignmentExpr);
-						State = 160;
-						if (!(Precpred(Context, 10))) throw new FailedPredicateException(this, "Precpred(Context, 10)");
-						State = 161;
-						((AssignmentExprHasEqContext)_localctx).op = Match(T__22);
-						State = 162;
-						assignmentExpr(11);
+						_localctx = new BinaryExprContext(_parentctx, _parentState);
+						_localctx.left = _prevctx;
+						PushNewRecursionContext(_localctx, _startState, RULE_binaryExpr);
+						State = 165;
+						if (!(Precpred(Context, 9))) throw new FailedPredicateException(this, "Precpred(Context, 9)");
+						State = 166;
+						_localctx.op = Match(T__23);
+						State = 167;
+						_localctx.right = binaryExpr(10);
 						}
 						break;
 					case 13:
 						{
-						_localctx = new AssignmentExprHasNeContext(new AssignmentExprContext(_parentctx, _parentState));
-						PushNewRecursionContext(_localctx, _startState, RULE_assignmentExpr);
-						State = 163;
-						if (!(Precpred(Context, 9))) throw new FailedPredicateException(this, "Precpred(Context, 9)");
-						State = 164;
-						((AssignmentExprHasNeContext)_localctx).op = Match(T__23);
-						State = 165;
-						assignmentExpr(10);
+						_localctx = new BinaryExprContext(_parentctx, _parentState);
+						_localctx.left = _prevctx;
+						PushNewRecursionContext(_localctx, _startState, RULE_binaryExpr);
+						State = 168;
+						if (!(Precpred(Context, 8))) throw new FailedPredicateException(this, "Precpred(Context, 8)");
+						State = 169;
+						_localctx.op = Match(T__24);
+						State = 170;
+						_localctx.right = binaryExpr(9);
 						}
 						break;
 					case 14:
 						{
-						_localctx = new AssignmentExprHasAndContext(new AssignmentExprContext(_parentctx, _parentState));
-						PushNewRecursionContext(_localctx, _startState, RULE_assignmentExpr);
-						State = 166;
-						if (!(Precpred(Context, 8))) throw new FailedPredicateException(this, "Precpred(Context, 8)");
-						State = 167;
-						((AssignmentExprHasAndContext)_localctx).op = Match(T__24);
-						State = 168;
-						assignmentExpr(9);
+						_localctx = new BinaryExprContext(_parentctx, _parentState);
+						_localctx.left = _prevctx;
+						PushNewRecursionContext(_localctx, _startState, RULE_binaryExpr);
+						State = 171;
+						if (!(Precpred(Context, 7))) throw new FailedPredicateException(this, "Precpred(Context, 7)");
+						State = 172;
+						_localctx.op = Match(T__25);
+						State = 173;
+						_localctx.right = binaryExpr(8);
 						}
 						break;
 					case 15:
 						{
-						_localctx = new AssignmentExprHasXorContext(new AssignmentExprContext(_parentctx, _parentState));
-						PushNewRecursionContext(_localctx, _startState, RULE_assignmentExpr);
-						State = 169;
-						if (!(Precpred(Context, 7))) throw new FailedPredicateException(this, "Precpred(Context, 7)");
-						State = 170;
-						((AssignmentExprHasXorContext)_localctx).op = Match(T__25);
-						State = 171;
-						assignmentExpr(8);
+						_localctx = new BinaryExprContext(_parentctx, _parentState);
+						_localctx.left = _prevctx;
+						PushNewRecursionContext(_localctx, _startState, RULE_binaryExpr);
+						State = 174;
+						if (!(Precpred(Context, 6))) throw new FailedPredicateException(this, "Precpred(Context, 6)");
+						State = 175;
+						_localctx.op = Match(T__26);
+						State = 176;
+						_localctx.right = binaryExpr(7);
 						}
 						break;
 					case 16:
 						{
-						_localctx = new AssignmentExprHasOrContext(new AssignmentExprContext(_parentctx, _parentState));
-						PushNewRecursionContext(_localctx, _startState, RULE_assignmentExpr);
-						State = 172;
-						if (!(Precpred(Context, 6))) throw new FailedPredicateException(this, "Precpred(Context, 6)");
-						State = 173;
-						((AssignmentExprHasOrContext)_localctx).op = Match(T__26);
-						State = 174;
-						assignmentExpr(7);
+						_localctx = new BinaryExprContext(_parentctx, _parentState);
+						_localctx.left = _prevctx;
+						PushNewRecursionContext(_localctx, _startState, RULE_binaryExpr);
+						State = 177;
+						if (!(Precpred(Context, 5))) throw new FailedPredicateException(this, "Precpred(Context, 5)");
+						State = 178;
+						_localctx.op = Match(T__27);
+						State = 179;
+						_localctx.right = binaryExpr(6);
 						}
 						break;
 					case 17:
 						{
-						_localctx = new AssignmentExprHasLAndContext(new AssignmentExprContext(_parentctx, _parentState));
-						PushNewRecursionContext(_localctx, _startState, RULE_assignmentExpr);
-						State = 175;
-						if (!(Precpred(Context, 5))) throw new FailedPredicateException(this, "Precpred(Context, 5)");
-						State = 176;
-						((AssignmentExprHasLAndContext)_localctx).op = Match(T__27);
-						State = 177;
-						assignmentExpr(6);
+						_localctx = new BinaryExprContext(_parentctx, _parentState);
+						_localctx.left = _prevctx;
+						PushNewRecursionContext(_localctx, _startState, RULE_binaryExpr);
+						State = 180;
+						if (!(Precpred(Context, 4))) throw new FailedPredicateException(this, "Precpred(Context, 4)");
+						State = 181;
+						_localctx.op = Match(T__28);
+						State = 182;
+						_localctx.right = binaryExpr(5);
 						}
 						break;
 					case 18:
 						{
-						_localctx = new AssignmentExprHasLOrContext(new AssignmentExprContext(_parentctx, _parentState));
-						PushNewRecursionContext(_localctx, _startState, RULE_assignmentExpr);
-						State = 178;
-						if (!(Precpred(Context, 4))) throw new FailedPredicateException(this, "Precpred(Context, 4)");
-						State = 179;
-						((AssignmentExprHasLOrContext)_localctx).op = Match(T__28);
-						State = 180;
-						assignmentExpr(5);
+						_localctx = new BinaryExprContext(_parentctx, _parentState);
+						_localctx.left = _prevctx;
+						PushNewRecursionContext(_localctx, _startState, RULE_binaryExpr);
+						State = 183;
+						if (!(Precpred(Context, 3))) throw new FailedPredicateException(this, "Precpred(Context, 3)");
+						State = 184;
+						_localctx.op = Match(T__29);
+						State = 185;
+						_localctx.right = binaryExpr(4);
 						}
 						break;
 					}
 					} 
 				}
-				State = 185;
+				State = 190;
 				ErrorHandler.Sync(this);
-				_alt = Interpreter.AdaptivePredict(TokenStream,9,Context);
+				_alt = Interpreter.AdaptivePredict(TokenStream,10,Context);
 			}
 			}
 		}
@@ -1606,12 +1301,12 @@ public partial class ProgramParser : Parser {
 	[RuleVersion(0)]
 	public ExprContext expr() {
 		ExprContext _localctx = new ExprContext(Context, State);
-		EnterRule(_localctx, 16, RULE_expr);
+		EnterRule(_localctx, 18, RULE_expr);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 186;
-			assignmentExpr(0);
+			State = 191;
+			assignmentExpr();
 			}
 		}
 		catch (RecognitionException re) {
@@ -1659,35 +1354,35 @@ public partial class ProgramParser : Parser {
 	[RuleVersion(0)]
 	public Func_defContext func_def() {
 		Func_defContext _localctx = new Func_defContext(Context, State);
-		EnterRule(_localctx, 18, RULE_func_def);
+		EnterRule(_localctx, 20, RULE_func_def);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 190;
+			State = 195;
 			ErrorHandler.Sync(this);
 			switch (TokenStream.LA(1)) {
 			case INT:
 			case SHORT:
 			case CHAR:
 				{
-				State = 188;
+				State = 193;
 				type_spec();
 				}
 				break;
 			case VOID:
 				{
-				State = 189;
+				State = 194;
 				Match(VOID);
 				}
 				break;
 			default:
 				throw new NoViableAltException(this);
 			}
-			State = 192;
+			State = 197;
 			id();
-			State = 193;
+			State = 198;
 			param_list();
-			State = 194;
+			State = 199;
 			compound_stmt();
 			}
 		}
@@ -1747,18 +1442,18 @@ public partial class ProgramParser : Parser {
 	[RuleVersion(0)]
 	public Compound_stmtContext compound_stmt() {
 		Compound_stmtContext _localctx = new Compound_stmtContext(Context, State);
-		EnterRule(_localctx, 20, RULE_compound_stmt);
+		EnterRule(_localctx, 22, RULE_compound_stmt);
 		try {
-			State = 202;
+			State = 207;
 			ErrorHandler.Sync(this);
-			switch ( Interpreter.AdaptivePredict(TokenStream,11,Context) ) {
+			switch ( Interpreter.AdaptivePredict(TokenStream,12,Context) ) {
 			case 1:
 				_localctx = new Compound_stmtHasEmptyContext(_localctx);
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 196;
+				State = 201;
 				Match(T__30);
-				State = 197;
+				State = 202;
 				Match(T__31);
 				}
 				break;
@@ -1766,11 +1461,11 @@ public partial class ProgramParser : Parser {
 				_localctx = new Compound_stmtHasBodyContext(_localctx);
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 198;
+				State = 203;
 				Match(T__30);
-				State = 199;
+				State = 204;
 				block_item_list();
-				State = 200;
+				State = 205;
 				Match(T__31);
 				}
 				break;
@@ -1814,22 +1509,22 @@ public partial class ProgramParser : Parser {
 	[RuleVersion(0)]
 	public Block_item_listContext block_item_list() {
 		Block_item_listContext _localctx = new Block_item_listContext(Context, State);
-		EnterRule(_localctx, 22, RULE_block_item_list);
+		EnterRule(_localctx, 24, RULE_block_item_list);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 205;
+			State = 210;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			do {
 				{
 				{
-				State = 204;
+				State = 209;
 				block_item();
 				}
 				}
-				State = 207;
+				State = 212;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__3) | (1L << T__6) | (1L << T__7) | (1L << T__8) | (1L << T__9) | (1L << T__10) | (1L << T__30) | (1L << INT) | (1L << SHORT) | (1L << CHAR) | (1L << IF) | (1L << WHILE) | (1L << BREAK) | (1L << CONTINUE) | (1L << RETURN) | (1L << Id) | (1L << Num))) != 0) );
@@ -1873,9 +1568,9 @@ public partial class ProgramParser : Parser {
 	[RuleVersion(0)]
 	public Block_itemContext block_item() {
 		Block_itemContext _localctx = new Block_itemContext(Context, State);
-		EnterRule(_localctx, 24, RULE_block_item);
+		EnterRule(_localctx, 26, RULE_block_item);
 		try {
-			State = 211;
+			State = 216;
 			ErrorHandler.Sync(this);
 			switch (TokenStream.LA(1)) {
 			case INT:
@@ -1884,7 +1579,7 @@ public partial class ProgramParser : Parser {
 				EnterOuterAlt(_localctx, 1);
 				{
 				{
-				State = 209;
+				State = 214;
 				var_decl();
 				}
 				}
@@ -1906,7 +1601,7 @@ public partial class ProgramParser : Parser {
 				EnterOuterAlt(_localctx, 2);
 				{
 				{
-				State = 210;
+				State = 215;
 				stmt();
 				}
 				}
@@ -1975,29 +1670,29 @@ public partial class ProgramParser : Parser {
 	[RuleVersion(0)]
 	public Param_listContext param_list() {
 		Param_listContext _localctx = new Param_listContext(Context, State);
-		EnterRule(_localctx, 26, RULE_param_list);
+		EnterRule(_localctx, 28, RULE_param_list);
 		int _la;
 		try {
-			State = 229;
+			State = 234;
 			ErrorHandler.Sync(this);
-			switch ( Interpreter.AdaptivePredict(TokenStream,16,Context) ) {
+			switch ( Interpreter.AdaptivePredict(TokenStream,17,Context) ) {
 			case 1:
 				_localctx = new Param_listHasEmptyContext(_localctx);
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 213;
+				State = 218;
 				Match(T__3);
-				State = 215;
+				State = 220;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 				if (_la==VOID) {
 					{
-					State = 214;
+					State = 219;
 					Match(VOID);
 					}
 				}
 
-				State = 217;
+				State = 222;
 				Match(T__4);
 				}
 				break;
@@ -2005,27 +1700,27 @@ public partial class ProgramParser : Parser {
 				_localctx = new Param_listHasBodyContext(_localctx);
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 218;
+				State = 223;
 				Match(T__3);
-				State = 219;
-				param();
 				State = 224;
+				param();
+				State = 229;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 				while (_la==T__5) {
 					{
 					{
-					State = 220;
+					State = 225;
 					Match(T__5);
-					State = 221;
+					State = 226;
 					param();
 					}
 					}
-					State = 226;
+					State = 231;
 					ErrorHandler.Sync(this);
 					_la = TokenStream.LA(1);
 				}
-				State = 227;
+				State = 232;
 				Match(T__4);
 				}
 				break;
@@ -2072,41 +1767,41 @@ public partial class ProgramParser : Parser {
 	[RuleVersion(0)]
 	public ParamContext param() {
 		ParamContext _localctx = new ParamContext(Context, State);
-		EnterRule(_localctx, 28, RULE_param);
+		EnterRule(_localctx, 30, RULE_param);
 		int _la;
 		try {
-			State = 242;
+			State = 247;
 			ErrorHandler.Sync(this);
-			switch ( Interpreter.AdaptivePredict(TokenStream,18,Context) ) {
+			switch ( Interpreter.AdaptivePredict(TokenStream,19,Context) ) {
 			case 1:
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 231;
+				State = 236;
 				type_spec();
-				State = 232;
+				State = 237;
 				id();
 				}
 				break;
 			case 2:
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 234;
+				State = 239;
 				type_spec();
-				State = 235;
+				State = 240;
 				id();
-				State = 236;
+				State = 241;
 				Match(T__1);
-				State = 238;
+				State = 243;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 				if (_la==Num) {
 					{
-					State = 237;
+					State = 242;
 					num();
 					}
 				}
 
-				State = 240;
+				State = 245;
 				Match(T__2);
 				}
 				break;
@@ -2165,50 +1860,50 @@ public partial class ProgramParser : Parser {
 	[RuleVersion(0)]
 	public StmtContext stmt() {
 		StmtContext _localctx = new StmtContext(Context, State);
-		EnterRule(_localctx, 30, RULE_stmt);
+		EnterRule(_localctx, 32, RULE_stmt);
 		try {
-			State = 251;
+			State = 256;
 			ErrorHandler.Sync(this);
 			switch (TokenStream.LA(1)) {
 			case IF:
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 244;
+				State = 249;
 				selection_stmt();
 				}
 				break;
 			case WHILE:
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 245;
+				State = 250;
 				iteration_stmt();
 				}
 				break;
 			case RETURN:
 				EnterOuterAlt(_localctx, 3);
 				{
-				State = 246;
+				State = 251;
 				return_stmt();
 				}
 				break;
 			case CONTINUE:
 				EnterOuterAlt(_localctx, 4);
 				{
-				State = 247;
+				State = 252;
 				continue_stmt();
 				}
 				break;
 			case BREAK:
 				EnterOuterAlt(_localctx, 5);
 				{
-				State = 248;
+				State = 253;
 				break_stmt();
 				}
 				break;
 			case T__30:
 				EnterOuterAlt(_localctx, 6);
 				{
-				State = 249;
+				State = 254;
 				compound_stmt();
 				}
 				break;
@@ -2222,7 +1917,7 @@ public partial class ProgramParser : Parser {
 			case Num:
 				EnterOuterAlt(_localctx, 7);
 				{
-				State = 250;
+				State = 255;
 				expr_stmt();
 				}
 				break;
@@ -2263,13 +1958,13 @@ public partial class ProgramParser : Parser {
 	[RuleVersion(0)]
 	public Continue_stmtContext continue_stmt() {
 		Continue_stmtContext _localctx = new Continue_stmtContext(Context, State);
-		EnterRule(_localctx, 32, RULE_continue_stmt);
+		EnterRule(_localctx, 34, RULE_continue_stmt);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 253;
+			State = 258;
 			Match(CONTINUE);
-			State = 254;
+			State = 259;
 			Match(T__0);
 			}
 		}
@@ -2306,13 +2001,13 @@ public partial class ProgramParser : Parser {
 	[RuleVersion(0)]
 	public Break_stmtContext break_stmt() {
 		Break_stmtContext _localctx = new Break_stmtContext(Context, State);
-		EnterRule(_localctx, 34, RULE_break_stmt);
+		EnterRule(_localctx, 36, RULE_break_stmt);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 256;
+			State = 261;
 			Match(BREAK);
-			State = 257;
+			State = 262;
 			Match(T__0);
 			}
 		}
@@ -2352,15 +2047,15 @@ public partial class ProgramParser : Parser {
 	[RuleVersion(0)]
 	public Return_stmtContext return_stmt() {
 		Return_stmtContext _localctx = new Return_stmtContext(Context, State);
-		EnterRule(_localctx, 36, RULE_return_stmt);
+		EnterRule(_localctx, 38, RULE_return_stmt);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 259;
+			State = 264;
 			Match(RETURN);
-			State = 260;
+			State = 265;
 			expr();
-			State = 261;
+			State = 266;
 			Match(T__0);
 			}
 		}
@@ -2399,13 +2094,13 @@ public partial class ProgramParser : Parser {
 	[RuleVersion(0)]
 	public Expr_stmtContext expr_stmt() {
 		Expr_stmtContext _localctx = new Expr_stmtContext(Context, State);
-		EnterRule(_localctx, 38, RULE_expr_stmt);
+		EnterRule(_localctx, 40, RULE_expr_stmt);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 263;
+			State = 268;
 			expr();
-			State = 264;
+			State = 269;
 			Match(T__0);
 			}
 		}
@@ -2480,28 +2175,28 @@ public partial class ProgramParser : Parser {
 	[RuleVersion(0)]
 	public Selection_stmtContext selection_stmt() {
 		Selection_stmtContext _localctx = new Selection_stmtContext(Context, State);
-		EnterRule(_localctx, 40, RULE_selection_stmt);
+		EnterRule(_localctx, 42, RULE_selection_stmt);
 		try {
-			State = 280;
+			State = 285;
 			ErrorHandler.Sync(this);
-			switch ( Interpreter.AdaptivePredict(TokenStream,20,Context) ) {
+			switch ( Interpreter.AdaptivePredict(TokenStream,21,Context) ) {
 			case 1:
 				_localctx = new Selection_stmtHasElseContext(_localctx);
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 266;
-				Match(IF);
-				State = 267;
-				Match(T__3);
-				State = 268;
-				expr();
-				State = 269;
-				Match(T__4);
-				State = 270;
-				stmt();
 				State = 271;
-				Match(ELSE);
+				Match(IF);
 				State = 272;
+				Match(T__3);
+				State = 273;
+				expr();
+				State = 274;
+				Match(T__4);
+				State = 275;
+				stmt();
+				State = 276;
+				Match(ELSE);
+				State = 277;
 				stmt();
 				}
 				break;
@@ -2509,15 +2204,15 @@ public partial class ProgramParser : Parser {
 				_localctx = new Selection_stmtHasEmptyContext(_localctx);
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 274;
+				State = 279;
 				Match(IF);
-				State = 275;
+				State = 280;
 				Match(T__3);
-				State = 276;
+				State = 281;
 				expr();
-				State = 277;
+				State = 282;
 				Match(T__4);
-				State = 278;
+				State = 283;
 				stmt();
 				}
 				break;
@@ -2562,19 +2257,19 @@ public partial class ProgramParser : Parser {
 	[RuleVersion(0)]
 	public Iteration_stmtContext iteration_stmt() {
 		Iteration_stmtContext _localctx = new Iteration_stmtContext(Context, State);
-		EnterRule(_localctx, 42, RULE_iteration_stmt);
+		EnterRule(_localctx, 44, RULE_iteration_stmt);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 282;
+			State = 287;
 			Match(WHILE);
-			State = 283;
+			State = 288;
 			Match(T__3);
-			State = 284;
+			State = 289;
 			expr();
-			State = 285;
+			State = 290;
 			Match(T__4);
-			State = 286;
+			State = 291;
 			stmt();
 			}
 		}
@@ -2611,11 +2306,11 @@ public partial class ProgramParser : Parser {
 	[RuleVersion(0)]
 	public NumContext num() {
 		NumContext _localctx = new NumContext(Context, State);
-		EnterRule(_localctx, 44, RULE_num);
+		EnterRule(_localctx, 46, RULE_num);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 288;
+			State = 293;
 			Match(Num);
 			}
 		}
@@ -2652,11 +2347,11 @@ public partial class ProgramParser : Parser {
 	[RuleVersion(0)]
 	public IdContext id() {
 		IdContext _localctx = new IdContext(Context, State);
-		EnterRule(_localctx, 46, RULE_id);
+		EnterRule(_localctx, 48, RULE_id);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 290;
+			State = 295;
 			Match(Id);
 			}
 		}
@@ -2695,12 +2390,12 @@ public partial class ProgramParser : Parser {
 	[RuleVersion(0)]
 	public Type_specContext type_spec() {
 		Type_specContext _localctx = new Type_specContext(Context, State);
-		EnterRule(_localctx, 48, RULE_type_spec);
+		EnterRule(_localctx, 50, RULE_type_spec);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 292;
+			State = 297;
 			_la = TokenStream.LA(1);
 			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << INT) | (1L << SHORT) | (1L << CHAR))) != 0)) ) {
 			ErrorHandler.RecoverInline(this);
@@ -2724,37 +2419,37 @@ public partial class ProgramParser : Parser {
 
 	public override bool Sempred(RuleContext _localctx, int ruleIndex, int predIndex) {
 		switch (ruleIndex) {
-		case 7: return assignmentExpr_sempred((AssignmentExprContext)_localctx, predIndex);
+		case 8: return binaryExpr_sempred((BinaryExprContext)_localctx, predIndex);
 		}
 		return true;
 	}
-	private bool assignmentExpr_sempred(AssignmentExprContext _localctx, int predIndex) {
+	private bool binaryExpr_sempred(BinaryExprContext _localctx, int predIndex) {
 		switch (predIndex) {
-		case 0: return Precpred(Context, 21);
-		case 1: return Precpred(Context, 20);
-		case 2: return Precpred(Context, 19);
-		case 3: return Precpred(Context, 18);
-		case 4: return Precpred(Context, 17);
-		case 5: return Precpred(Context, 16);
-		case 6: return Precpred(Context, 15);
-		case 7: return Precpred(Context, 14);
-		case 8: return Precpred(Context, 13);
-		case 9: return Precpred(Context, 12);
-		case 10: return Precpred(Context, 11);
-		case 11: return Precpred(Context, 10);
-		case 12: return Precpred(Context, 9);
-		case 13: return Precpred(Context, 8);
-		case 14: return Precpred(Context, 7);
-		case 15: return Precpred(Context, 6);
-		case 16: return Precpred(Context, 5);
-		case 17: return Precpred(Context, 4);
+		case 0: return Precpred(Context, 20);
+		case 1: return Precpred(Context, 19);
+		case 2: return Precpred(Context, 18);
+		case 3: return Precpred(Context, 17);
+		case 4: return Precpred(Context, 16);
+		case 5: return Precpred(Context, 15);
+		case 6: return Precpred(Context, 14);
+		case 7: return Precpred(Context, 13);
+		case 8: return Precpred(Context, 12);
+		case 9: return Precpred(Context, 11);
+		case 10: return Precpred(Context, 10);
+		case 11: return Precpred(Context, 9);
+		case 12: return Precpred(Context, 8);
+		case 13: return Precpred(Context, 7);
+		case 14: return Precpred(Context, 6);
+		case 15: return Precpred(Context, 5);
+		case 16: return Precpred(Context, 4);
+		case 17: return Precpred(Context, 3);
 		}
 		return true;
 	}
 
 	private static char[] _serializedATN = {
 		'\x3', '\x608B', '\xA72A', '\x8133', '\xB9ED', '\x417C', '\x3BE7', '\x7786', 
-		'\x5964', '\x3', '\x32', '\x129', '\x4', '\x2', '\t', '\x2', '\x4', '\x3', 
+		'\x5964', '\x3', '\x32', '\x12E', '\x4', '\x2', '\t', '\x2', '\x4', '\x3', 
 		'\t', '\x3', '\x4', '\x4', '\t', '\x4', '\x4', '\x5', '\t', '\x5', '\x4', 
 		'\x6', '\t', '\x6', '\x4', '\a', '\t', '\a', '\x4', '\b', '\t', '\b', 
 		'\x4', '\t', '\t', '\t', '\x4', '\n', '\t', '\n', '\x4', '\v', '\t', '\v', 
@@ -2763,247 +2458,252 @@ public partial class ProgramParser : Parser {
 		'\x11', '\t', '\x11', '\x4', '\x12', '\t', '\x12', '\x4', '\x13', '\t', 
 		'\x13', '\x4', '\x14', '\t', '\x14', '\x4', '\x15', '\t', '\x15', '\x4', 
 		'\x16', '\t', '\x16', '\x4', '\x17', '\t', '\x17', '\x4', '\x18', '\t', 
-		'\x18', '\x4', '\x19', '\t', '\x19', '\x4', '\x1A', '\t', '\x1A', '\x3', 
-		'\x2', '\x6', '\x2', '\x36', '\n', '\x2', '\r', '\x2', '\xE', '\x2', '\x37', 
-		'\x3', '\x3', '\x3', '\x3', '\x5', '\x3', '<', '\n', '\x3', '\x3', '\x4', 
-		'\x3', '\x4', '\x3', '\x4', '\x3', '\x4', '\x3', '\x4', '\x3', '\x4', 
-		'\x3', '\x4', '\x3', '\x4', '\x3', '\x4', '\x3', '\x4', '\x3', '\x4', 
-		'\x5', '\x4', 'I', '\n', '\x4', '\x3', '\x5', '\x3', '\x5', '\x3', '\x5', 
-		'\x3', '\x5', '\x3', '\x5', '\x3', '\x5', '\x5', '\x5', 'Q', '\n', '\x5', 
-		'\x3', '\x6', '\x3', '\x6', '\x3', '\x6', '\x3', '\x6', '\x3', '\x6', 
-		'\x3', '\x6', '\x3', '\x6', '\x3', '\x6', '\x3', '\x6', '\x3', '\x6', 
-		'\x3', '\x6', '\x3', '\x6', '\x3', '\x6', '\x3', '\x6', '\x3', '\x6', 
-		'\x5', '\x6', '\x62', '\n', '\x6', '\x3', '\a', '\x3', '\a', '\x3', '\a', 
-		'\a', '\a', 'g', '\n', '\a', '\f', '\a', '\xE', '\a', 'j', '\v', '\a', 
+		'\x18', '\x4', '\x19', '\t', '\x19', '\x4', '\x1A', '\t', '\x1A', '\x4', 
+		'\x1B', '\t', '\x1B', '\x3', '\x2', '\x6', '\x2', '\x38', '\n', '\x2', 
+		'\r', '\x2', '\xE', '\x2', '\x39', '\x3', '\x3', '\x3', '\x3', '\x5', 
+		'\x3', '>', '\n', '\x3', '\x3', '\x4', '\x3', '\x4', '\x3', '\x4', '\x3', 
+		'\x4', '\x3', '\x4', '\x3', '\x4', '\x3', '\x4', '\x3', '\x4', '\x3', 
+		'\x4', '\x3', '\x4', '\x3', '\x4', '\x5', '\x4', 'K', '\n', '\x4', '\x3', 
+		'\x5', '\x3', '\x5', '\x3', '\x5', '\x3', '\x5', '\x3', '\x5', '\x3', 
+		'\x5', '\x5', '\x5', 'S', '\n', '\x5', '\x3', '\x6', '\x3', '\x6', '\x3', 
+		'\x6', '\x3', '\x6', '\x3', '\x6', '\x3', '\x6', '\x3', '\x6', '\x3', 
+		'\x6', '\x3', '\x6', '\x3', '\x6', '\x3', '\x6', '\x3', '\x6', '\x3', 
+		'\x6', '\x3', '\x6', '\x3', '\x6', '\x5', '\x6', '\x64', '\n', '\x6', 
+		'\x3', '\a', '\x3', '\a', '\x3', '\a', '\a', '\a', 'i', '\n', '\a', '\f', 
+		'\a', '\xE', '\a', 'l', '\v', '\a', '\x3', '\b', '\x3', '\b', '\x3', '\b', 
 		'\x3', '\b', '\x3', '\b', '\x3', '\b', '\x3', '\b', '\x3', '\b', '\x3', 
-		'\b', '\x3', '\b', '\x3', '\b', '\x3', '\b', '\x3', '\b', '\x3', '\b', 
-		'\x5', '\b', 'w', '\n', '\b', '\x3', '\t', '\x3', '\t', '\x3', '\t', '\x3', 
-		'\t', '\x3', '\t', '\x3', '\t', '\x3', '\t', '\x5', '\t', '\x80', '\n', 
-		'\t', '\x3', '\t', '\x3', '\t', '\x3', '\t', '\x3', '\t', '\x3', '\t', 
-		'\x3', '\t', '\x3', '\t', '\x3', '\t', '\x3', '\t', '\x3', '\t', '\x3', 
-		'\t', '\x3', '\t', '\x3', '\t', '\x3', '\t', '\x3', '\t', '\x3', '\t', 
-		'\x3', '\t', '\x3', '\t', '\x3', '\t', '\x3', '\t', '\x3', '\t', '\x3', 
-		'\t', '\x3', '\t', '\x3', '\t', '\x3', '\t', '\x3', '\t', '\x3', '\t', 
-		'\x3', '\t', '\x3', '\t', '\x3', '\t', '\x3', '\t', '\x3', '\t', '\x3', 
-		'\t', '\x3', '\t', '\x3', '\t', '\x3', '\t', '\x3', '\t', '\x3', '\t', 
-		'\x3', '\t', '\x3', '\t', '\x3', '\t', '\x3', '\t', '\x3', '\t', '\x3', 
-		'\t', '\x3', '\t', '\x3', '\t', '\x3', '\t', '\x3', '\t', '\x3', '\t', 
-		'\x3', '\t', '\x3', '\t', '\x3', '\t', '\x3', '\t', '\x3', '\t', '\a', 
-		'\t', '\xB8', '\n', '\t', '\f', '\t', '\xE', '\t', '\xBB', '\v', '\t', 
-		'\x3', '\n', '\x3', '\n', '\x3', '\v', '\x3', '\v', '\x5', '\v', '\xC1', 
-		'\n', '\v', '\x3', '\v', '\x3', '\v', '\x3', '\v', '\x3', '\v', '\x3', 
-		'\f', '\x3', '\f', '\x3', '\f', '\x3', '\f', '\x3', '\f', '\x3', '\f', 
-		'\x5', '\f', '\xCD', '\n', '\f', '\x3', '\r', '\x6', '\r', '\xD0', '\n', 
-		'\r', '\r', '\r', '\xE', '\r', '\xD1', '\x3', '\xE', '\x3', '\xE', '\x5', 
-		'\xE', '\xD6', '\n', '\xE', '\x3', '\xF', '\x3', '\xF', '\x5', '\xF', 
-		'\xDA', '\n', '\xF', '\x3', '\xF', '\x3', '\xF', '\x3', '\xF', '\x3', 
-		'\xF', '\x3', '\xF', '\a', '\xF', '\xE1', '\n', '\xF', '\f', '\xF', '\xE', 
-		'\xF', '\xE4', '\v', '\xF', '\x3', '\xF', '\x3', '\xF', '\x5', '\xF', 
-		'\xE8', '\n', '\xF', '\x3', '\x10', '\x3', '\x10', '\x3', '\x10', '\x3', 
-		'\x10', '\x3', '\x10', '\x3', '\x10', '\x3', '\x10', '\x5', '\x10', '\xF1', 
-		'\n', '\x10', '\x3', '\x10', '\x3', '\x10', '\x5', '\x10', '\xF5', '\n', 
-		'\x10', '\x3', '\x11', '\x3', '\x11', '\x3', '\x11', '\x3', '\x11', '\x3', 
-		'\x11', '\x3', '\x11', '\x3', '\x11', '\x5', '\x11', '\xFE', '\n', '\x11', 
-		'\x3', '\x12', '\x3', '\x12', '\x3', '\x12', '\x3', '\x13', '\x3', '\x13', 
-		'\x3', '\x13', '\x3', '\x14', '\x3', '\x14', '\x3', '\x14', '\x3', '\x14', 
-		'\x3', '\x15', '\x3', '\x15', '\x3', '\x15', '\x3', '\x16', '\x3', '\x16', 
-		'\x3', '\x16', '\x3', '\x16', '\x3', '\x16', '\x3', '\x16', '\x3', '\x16', 
-		'\x3', '\x16', '\x3', '\x16', '\x3', '\x16', '\x3', '\x16', '\x3', '\x16', 
-		'\x3', '\x16', '\x3', '\x16', '\x5', '\x16', '\x11B', '\n', '\x16', '\x3', 
-		'\x17', '\x3', '\x17', '\x3', '\x17', '\x3', '\x17', '\x3', '\x17', '\x3', 
-		'\x17', '\x3', '\x18', '\x3', '\x18', '\x3', '\x19', '\x3', '\x19', '\x3', 
-		'\x1A', '\x3', '\x1A', '\x3', '\x1A', '\x2', '\x3', '\x10', '\x1B', '\x2', 
-		'\x4', '\x6', '\b', '\n', '\f', '\xE', '\x10', '\x12', '\x14', '\x16', 
-		'\x18', '\x1A', '\x1C', '\x1E', ' ', '\"', '$', '&', '(', '*', ',', '.', 
-		'\x30', '\x32', '\x2', '\x3', '\x3', '\x2', '\'', ')', '\x2', '\x141', 
-		'\x2', '\x35', '\x3', '\x2', '\x2', '\x2', '\x4', ';', '\x3', '\x2', '\x2', 
-		'\x2', '\x6', 'H', '\x3', '\x2', '\x2', '\x2', '\b', 'P', '\x3', '\x2', 
-		'\x2', '\x2', '\n', '\x61', '\x3', '\x2', '\x2', '\x2', '\f', '\x63', 
-		'\x3', '\x2', '\x2', '\x2', '\xE', 'v', '\x3', '\x2', '\x2', '\x2', '\x10', 
-		'\x7F', '\x3', '\x2', '\x2', '\x2', '\x12', '\xBC', '\x3', '\x2', '\x2', 
-		'\x2', '\x14', '\xC0', '\x3', '\x2', '\x2', '\x2', '\x16', '\xCC', '\x3', 
-		'\x2', '\x2', '\x2', '\x18', '\xCF', '\x3', '\x2', '\x2', '\x2', '\x1A', 
-		'\xD5', '\x3', '\x2', '\x2', '\x2', '\x1C', '\xE7', '\x3', '\x2', '\x2', 
-		'\x2', '\x1E', '\xF4', '\x3', '\x2', '\x2', '\x2', ' ', '\xFD', '\x3', 
-		'\x2', '\x2', '\x2', '\"', '\xFF', '\x3', '\x2', '\x2', '\x2', '$', '\x102', 
-		'\x3', '\x2', '\x2', '\x2', '&', '\x105', '\x3', '\x2', '\x2', '\x2', 
-		'(', '\x109', '\x3', '\x2', '\x2', '\x2', '*', '\x11A', '\x3', '\x2', 
-		'\x2', '\x2', ',', '\x11C', '\x3', '\x2', '\x2', '\x2', '.', '\x122', 
-		'\x3', '\x2', '\x2', '\x2', '\x30', '\x124', '\x3', '\x2', '\x2', '\x2', 
-		'\x32', '\x126', '\x3', '\x2', '\x2', '\x2', '\x34', '\x36', '\x5', '\x4', 
-		'\x3', '\x2', '\x35', '\x34', '\x3', '\x2', '\x2', '\x2', '\x36', '\x37', 
-		'\x3', '\x2', '\x2', '\x2', '\x37', '\x35', '\x3', '\x2', '\x2', '\x2', 
-		'\x37', '\x38', '\x3', '\x2', '\x2', '\x2', '\x38', '\x3', '\x3', '\x2', 
-		'\x2', '\x2', '\x39', '<', '\x5', '\x6', '\x4', '\x2', ':', '<', '\x5', 
-		'\x14', '\v', '\x2', ';', '\x39', '\x3', '\x2', '\x2', '\x2', ';', ':', 
-		'\x3', '\x2', '\x2', '\x2', '<', '\x5', '\x3', '\x2', '\x2', '\x2', '=', 
-		'>', '\x5', '\x32', '\x1A', '\x2', '>', '?', '\x5', '\x30', '\x19', '\x2', 
-		'?', '@', '\a', '\x3', '\x2', '\x2', '@', 'I', '\x3', '\x2', '\x2', '\x2', 
-		'\x41', '\x42', '\x5', '\x32', '\x1A', '\x2', '\x42', '\x43', '\x5', '\x30', 
-		'\x19', '\x2', '\x43', '\x44', '\a', '\x4', '\x2', '\x2', '\x44', '\x45', 
-		'\x5', '.', '\x18', '\x2', '\x45', '\x46', '\a', '\x5', '\x2', '\x2', 
-		'\x46', 'G', '\a', '\x3', '\x2', '\x2', 'G', 'I', '\x3', '\x2', '\x2', 
-		'\x2', 'H', '=', '\x3', '\x2', '\x2', '\x2', 'H', '\x41', '\x3', '\x2', 
-		'\x2', '\x2', 'I', '\a', '\x3', '\x2', '\x2', '\x2', 'J', 'K', '\a', '\x6', 
-		'\x2', '\x2', 'K', 'L', '\x5', '\x12', '\n', '\x2', 'L', 'M', '\a', '\a', 
-		'\x2', '\x2', 'M', 'Q', '\x3', '\x2', '\x2', '\x2', 'N', 'Q', '\x5', '\x30', 
-		'\x19', '\x2', 'O', 'Q', '\x5', '.', '\x18', '\x2', 'P', 'J', '\x3', '\x2', 
-		'\x2', '\x2', 'P', 'N', '\x3', '\x2', '\x2', '\x2', 'P', 'O', '\x3', '\x2', 
-		'\x2', '\x2', 'Q', '\t', '\x3', '\x2', '\x2', '\x2', 'R', '\x62', '\x5', 
-		'\b', '\x5', '\x2', 'S', 'T', '\x5', '\b', '\x5', '\x2', 'T', 'U', '\a', 
-		'\x4', '\x2', '\x2', 'U', 'V', '\x5', '\x12', '\n', '\x2', 'V', 'W', '\a', 
-		'\x5', '\x2', '\x2', 'W', '\x62', '\x3', '\x2', '\x2', '\x2', 'X', 'Y', 
-		'\x5', '\x30', '\x19', '\x2', 'Y', 'Z', '\a', '\x6', '\x2', '\x2', 'Z', 
-		'[', '\a', '\a', '\x2', '\x2', '[', '\x62', '\x3', '\x2', '\x2', '\x2', 
-		'\\', ']', '\x5', '\x30', '\x19', '\x2', ']', '^', '\a', '\x6', '\x2', 
-		'\x2', '^', '_', '\x5', '\f', '\a', '\x2', '_', '`', '\a', '\a', '\x2', 
-		'\x2', '`', '\x62', '\x3', '\x2', '\x2', '\x2', '\x61', 'R', '\x3', '\x2', 
-		'\x2', '\x2', '\x61', 'S', '\x3', '\x2', '\x2', '\x2', '\x61', 'X', '\x3', 
-		'\x2', '\x2', '\x2', '\x61', '\\', '\x3', '\x2', '\x2', '\x2', '\x62', 
-		'\v', '\x3', '\x2', '\x2', '\x2', '\x63', 'h', '\x5', '\x12', '\n', '\x2', 
-		'\x64', '\x65', '\a', '\b', '\x2', '\x2', '\x65', 'g', '\x5', '\x12', 
-		'\n', '\x2', '\x66', '\x64', '\x3', '\x2', '\x2', '\x2', 'g', 'j', '\x3', 
-		'\x2', '\x2', '\x2', 'h', '\x66', '\x3', '\x2', '\x2', '\x2', 'h', 'i', 
-		'\x3', '\x2', '\x2', '\x2', 'i', '\r', '\x3', '\x2', '\x2', '\x2', 'j', 
-		'h', '\x3', '\x2', '\x2', '\x2', 'k', 'w', '\x5', '\n', '\x6', '\x2', 
-		'l', 'm', '\a', '\t', '\x2', '\x2', 'm', 'w', '\x5', '\xE', '\b', '\x2', 
-		'n', 'o', '\a', '\n', '\x2', '\x2', 'o', 'w', '\x5', '\xE', '\b', '\x2', 
-		'p', 'q', '\a', '\v', '\x2', '\x2', 'q', 'w', '\x5', '\xE', '\b', '\x2', 
-		'r', 's', '\a', '\f', '\x2', '\x2', 's', 'w', '\x5', '\xE', '\b', '\x2', 
-		't', 'u', '\a', '\r', '\x2', '\x2', 'u', 'w', '\x5', '\xE', '\b', '\x2', 
-		'v', 'k', '\x3', '\x2', '\x2', '\x2', 'v', 'l', '\x3', '\x2', '\x2', '\x2', 
-		'v', 'n', '\x3', '\x2', '\x2', '\x2', 'v', 'p', '\x3', '\x2', '\x2', '\x2', 
-		'v', 'r', '\x3', '\x2', '\x2', '\x2', 'v', 't', '\x3', '\x2', '\x2', '\x2', 
-		'w', '\xF', '\x3', '\x2', '\x2', '\x2', 'x', 'y', '\b', '\t', '\x1', '\x2', 
-		'y', 'z', '\x5', '\xE', '\b', '\x2', 'z', '{', '\a', ' ', '\x2', '\x2', 
-		'{', '|', '\x5', '\x10', '\t', '\x5', '|', '\x80', '\x3', '\x2', '\x2', 
-		'\x2', '}', '\x80', '\x5', '\xE', '\b', '\x2', '~', '\x80', '\x5', '.', 
-		'\x18', '\x2', '\x7F', 'x', '\x3', '\x2', '\x2', '\x2', '\x7F', '}', '\x3', 
-		'\x2', '\x2', '\x2', '\x7F', '~', '\x3', '\x2', '\x2', '\x2', '\x80', 
-		'\xB9', '\x3', '\x2', '\x2', '\x2', '\x81', '\x82', '\f', '\x17', '\x2', 
-		'\x2', '\x82', '\x83', '\a', '\xE', '\x2', '\x2', '\x83', '\xB8', '\x5', 
-		'\x10', '\t', '\x18', '\x84', '\x85', '\f', '\x16', '\x2', '\x2', '\x85', 
-		'\x86', '\a', '\xF', '\x2', '\x2', '\x86', '\xB8', '\x5', '\x10', '\t', 
-		'\x17', '\x87', '\x88', '\f', '\x15', '\x2', '\x2', '\x88', '\x89', '\a', 
-		'\x10', '\x2', '\x2', '\x89', '\xB8', '\x5', '\x10', '\t', '\x16', '\x8A', 
-		'\x8B', '\f', '\x14', '\x2', '\x2', '\x8B', '\x8C', '\a', '\x11', '\x2', 
-		'\x2', '\x8C', '\xB8', '\x5', '\x10', '\t', '\x15', '\x8D', '\x8E', '\f', 
-		'\x13', '\x2', '\x2', '\x8E', '\x8F', '\a', '\x12', '\x2', '\x2', '\x8F', 
-		'\xB8', '\x5', '\x10', '\t', '\x14', '\x90', '\x91', '\f', '\x12', '\x2', 
-		'\x2', '\x91', '\x92', '\a', '\x13', '\x2', '\x2', '\x92', '\xB8', '\x5', 
-		'\x10', '\t', '\x13', '\x93', '\x94', '\f', '\x11', '\x2', '\x2', '\x94', 
-		'\x95', '\a', '\x14', '\x2', '\x2', '\x95', '\xB8', '\x5', '\x10', '\t', 
-		'\x12', '\x96', '\x97', '\f', '\x10', '\x2', '\x2', '\x97', '\x98', '\a', 
-		'\x15', '\x2', '\x2', '\x98', '\xB8', '\x5', '\x10', '\t', '\x11', '\x99', 
-		'\x9A', '\f', '\xF', '\x2', '\x2', '\x9A', '\x9B', '\a', '\x16', '\x2', 
-		'\x2', '\x9B', '\xB8', '\x5', '\x10', '\t', '\x10', '\x9C', '\x9D', '\f', 
-		'\xE', '\x2', '\x2', '\x9D', '\x9E', '\a', '\x17', '\x2', '\x2', '\x9E', 
-		'\xB8', '\x5', '\x10', '\t', '\xF', '\x9F', '\xA0', '\f', '\r', '\x2', 
-		'\x2', '\xA0', '\xA1', '\a', '\x18', '\x2', '\x2', '\xA1', '\xB8', '\x5', 
-		'\x10', '\t', '\xE', '\xA2', '\xA3', '\f', '\f', '\x2', '\x2', '\xA3', 
-		'\xA4', '\a', '\x19', '\x2', '\x2', '\xA4', '\xB8', '\x5', '\x10', '\t', 
-		'\r', '\xA5', '\xA6', '\f', '\v', '\x2', '\x2', '\xA6', '\xA7', '\a', 
-		'\x1A', '\x2', '\x2', '\xA7', '\xB8', '\x5', '\x10', '\t', '\f', '\xA8', 
-		'\xA9', '\f', '\n', '\x2', '\x2', '\xA9', '\xAA', '\a', '\x1B', '\x2', 
-		'\x2', '\xAA', '\xB8', '\x5', '\x10', '\t', '\v', '\xAB', '\xAC', '\f', 
-		'\t', '\x2', '\x2', '\xAC', '\xAD', '\a', '\x1C', '\x2', '\x2', '\xAD', 
-		'\xB8', '\x5', '\x10', '\t', '\n', '\xAE', '\xAF', '\f', '\b', '\x2', 
-		'\x2', '\xAF', '\xB0', '\a', '\x1D', '\x2', '\x2', '\xB0', '\xB8', '\x5', 
-		'\x10', '\t', '\t', '\xB1', '\xB2', '\f', '\a', '\x2', '\x2', '\xB2', 
-		'\xB3', '\a', '\x1E', '\x2', '\x2', '\xB3', '\xB8', '\x5', '\x10', '\t', 
-		'\b', '\xB4', '\xB5', '\f', '\x6', '\x2', '\x2', '\xB5', '\xB6', '\a', 
-		'\x1F', '\x2', '\x2', '\xB6', '\xB8', '\x5', '\x10', '\t', '\a', '\xB7', 
-		'\x81', '\x3', '\x2', '\x2', '\x2', '\xB7', '\x84', '\x3', '\x2', '\x2', 
-		'\x2', '\xB7', '\x87', '\x3', '\x2', '\x2', '\x2', '\xB7', '\x8A', '\x3', 
-		'\x2', '\x2', '\x2', '\xB7', '\x8D', '\x3', '\x2', '\x2', '\x2', '\xB7', 
-		'\x90', '\x3', '\x2', '\x2', '\x2', '\xB7', '\x93', '\x3', '\x2', '\x2', 
-		'\x2', '\xB7', '\x96', '\x3', '\x2', '\x2', '\x2', '\xB7', '\x99', '\x3', 
-		'\x2', '\x2', '\x2', '\xB7', '\x9C', '\x3', '\x2', '\x2', '\x2', '\xB7', 
-		'\x9F', '\x3', '\x2', '\x2', '\x2', '\xB7', '\xA2', '\x3', '\x2', '\x2', 
-		'\x2', '\xB7', '\xA5', '\x3', '\x2', '\x2', '\x2', '\xB7', '\xA8', '\x3', 
-		'\x2', '\x2', '\x2', '\xB7', '\xAB', '\x3', '\x2', '\x2', '\x2', '\xB7', 
-		'\xAE', '\x3', '\x2', '\x2', '\x2', '\xB7', '\xB1', '\x3', '\x2', '\x2', 
-		'\x2', '\xB7', '\xB4', '\x3', '\x2', '\x2', '\x2', '\xB8', '\xBB', '\x3', 
-		'\x2', '\x2', '\x2', '\xB9', '\xB7', '\x3', '\x2', '\x2', '\x2', '\xB9', 
-		'\xBA', '\x3', '\x2', '\x2', '\x2', '\xBA', '\x11', '\x3', '\x2', '\x2', 
-		'\x2', '\xBB', '\xB9', '\x3', '\x2', '\x2', '\x2', '\xBC', '\xBD', '\x5', 
-		'\x10', '\t', '\x2', '\xBD', '\x13', '\x3', '\x2', '\x2', '\x2', '\xBE', 
-		'\xC1', '\x5', '\x32', '\x1A', '\x2', '\xBF', '\xC1', '\a', '*', '\x2', 
-		'\x2', '\xC0', '\xBE', '\x3', '\x2', '\x2', '\x2', '\xC0', '\xBF', '\x3', 
-		'\x2', '\x2', '\x2', '\xC1', '\xC2', '\x3', '\x2', '\x2', '\x2', '\xC2', 
-		'\xC3', '\x5', '\x30', '\x19', '\x2', '\xC3', '\xC4', '\x5', '\x1C', '\xF', 
-		'\x2', '\xC4', '\xC5', '\x5', '\x16', '\f', '\x2', '\xC5', '\x15', '\x3', 
-		'\x2', '\x2', '\x2', '\xC6', '\xC7', '\a', '!', '\x2', '\x2', '\xC7', 
-		'\xCD', '\a', '\"', '\x2', '\x2', '\xC8', '\xC9', '\a', '!', '\x2', '\x2', 
-		'\xC9', '\xCA', '\x5', '\x18', '\r', '\x2', '\xCA', '\xCB', '\a', '\"', 
-		'\x2', '\x2', '\xCB', '\xCD', '\x3', '\x2', '\x2', '\x2', '\xCC', '\xC6', 
-		'\x3', '\x2', '\x2', '\x2', '\xCC', '\xC8', '\x3', '\x2', '\x2', '\x2', 
-		'\xCD', '\x17', '\x3', '\x2', '\x2', '\x2', '\xCE', '\xD0', '\x5', '\x1A', 
-		'\xE', '\x2', '\xCF', '\xCE', '\x3', '\x2', '\x2', '\x2', '\xD0', '\xD1', 
-		'\x3', '\x2', '\x2', '\x2', '\xD1', '\xCF', '\x3', '\x2', '\x2', '\x2', 
-		'\xD1', '\xD2', '\x3', '\x2', '\x2', '\x2', '\xD2', '\x19', '\x3', '\x2', 
-		'\x2', '\x2', '\xD3', '\xD6', '\x5', '\x6', '\x4', '\x2', '\xD4', '\xD6', 
-		'\x5', ' ', '\x11', '\x2', '\xD5', '\xD3', '\x3', '\x2', '\x2', '\x2', 
-		'\xD5', '\xD4', '\x3', '\x2', '\x2', '\x2', '\xD6', '\x1B', '\x3', '\x2', 
-		'\x2', '\x2', '\xD7', '\xD9', '\a', '\x6', '\x2', '\x2', '\xD8', '\xDA', 
-		'\a', '*', '\x2', '\x2', '\xD9', '\xD8', '\x3', '\x2', '\x2', '\x2', '\xD9', 
-		'\xDA', '\x3', '\x2', '\x2', '\x2', '\xDA', '\xDB', '\x3', '\x2', '\x2', 
-		'\x2', '\xDB', '\xE8', '\a', '\a', '\x2', '\x2', '\xDC', '\xDD', '\a', 
-		'\x6', '\x2', '\x2', '\xDD', '\xE2', '\x5', '\x1E', '\x10', '\x2', '\xDE', 
-		'\xDF', '\a', '\b', '\x2', '\x2', '\xDF', '\xE1', '\x5', '\x1E', '\x10', 
-		'\x2', '\xE0', '\xDE', '\x3', '\x2', '\x2', '\x2', '\xE1', '\xE4', '\x3', 
-		'\x2', '\x2', '\x2', '\xE2', '\xE0', '\x3', '\x2', '\x2', '\x2', '\xE2', 
-		'\xE3', '\x3', '\x2', '\x2', '\x2', '\xE3', '\xE5', '\x3', '\x2', '\x2', 
-		'\x2', '\xE4', '\xE2', '\x3', '\x2', '\x2', '\x2', '\xE5', '\xE6', '\a', 
-		'\a', '\x2', '\x2', '\xE6', '\xE8', '\x3', '\x2', '\x2', '\x2', '\xE7', 
-		'\xD7', '\x3', '\x2', '\x2', '\x2', '\xE7', '\xDC', '\x3', '\x2', '\x2', 
-		'\x2', '\xE8', '\x1D', '\x3', '\x2', '\x2', '\x2', '\xE9', '\xEA', '\x5', 
-		'\x32', '\x1A', '\x2', '\xEA', '\xEB', '\x5', '\x30', '\x19', '\x2', '\xEB', 
-		'\xF5', '\x3', '\x2', '\x2', '\x2', '\xEC', '\xED', '\x5', '\x32', '\x1A', 
-		'\x2', '\xED', '\xEE', '\x5', '\x30', '\x19', '\x2', '\xEE', '\xF0', '\a', 
-		'\x4', '\x2', '\x2', '\xEF', '\xF1', '\x5', '.', '\x18', '\x2', '\xF0', 
-		'\xEF', '\x3', '\x2', '\x2', '\x2', '\xF0', '\xF1', '\x3', '\x2', '\x2', 
-		'\x2', '\xF1', '\xF2', '\x3', '\x2', '\x2', '\x2', '\xF2', '\xF3', '\a', 
-		'\x5', '\x2', '\x2', '\xF3', '\xF5', '\x3', '\x2', '\x2', '\x2', '\xF4', 
-		'\xE9', '\x3', '\x2', '\x2', '\x2', '\xF4', '\xEC', '\x3', '\x2', '\x2', 
-		'\x2', '\xF5', '\x1F', '\x3', '\x2', '\x2', '\x2', '\xF6', '\xFE', '\x5', 
-		'*', '\x16', '\x2', '\xF7', '\xFE', '\x5', ',', '\x17', '\x2', '\xF8', 
-		'\xFE', '\x5', '&', '\x14', '\x2', '\xF9', '\xFE', '\x5', '\"', '\x12', 
-		'\x2', '\xFA', '\xFE', '\x5', '$', '\x13', '\x2', '\xFB', '\xFE', '\x5', 
-		'\x16', '\f', '\x2', '\xFC', '\xFE', '\x5', '(', '\x15', '\x2', '\xFD', 
-		'\xF6', '\x3', '\x2', '\x2', '\x2', '\xFD', '\xF7', '\x3', '\x2', '\x2', 
-		'\x2', '\xFD', '\xF8', '\x3', '\x2', '\x2', '\x2', '\xFD', '\xF9', '\x3', 
-		'\x2', '\x2', '\x2', '\xFD', '\xFA', '\x3', '\x2', '\x2', '\x2', '\xFD', 
-		'\xFB', '\x3', '\x2', '\x2', '\x2', '\xFD', '\xFC', '\x3', '\x2', '\x2', 
-		'\x2', '\xFE', '!', '\x3', '\x2', '\x2', '\x2', '\xFF', '\x100', '\a', 
-		'/', '\x2', '\x2', '\x100', '\x101', '\a', '\x3', '\x2', '\x2', '\x101', 
-		'#', '\x3', '\x2', '\x2', '\x2', '\x102', '\x103', '\a', '.', '\x2', '\x2', 
-		'\x103', '\x104', '\a', '\x3', '\x2', '\x2', '\x104', '%', '\x3', '\x2', 
-		'\x2', '\x2', '\x105', '\x106', '\a', '\x30', '\x2', '\x2', '\x106', '\x107', 
-		'\x5', '\x12', '\n', '\x2', '\x107', '\x108', '\a', '\x3', '\x2', '\x2', 
-		'\x108', '\'', '\x3', '\x2', '\x2', '\x2', '\x109', '\x10A', '\x5', '\x12', 
-		'\n', '\x2', '\x10A', '\x10B', '\a', '\x3', '\x2', '\x2', '\x10B', ')', 
-		'\x3', '\x2', '\x2', '\x2', '\x10C', '\x10D', '\a', '+', '\x2', '\x2', 
-		'\x10D', '\x10E', '\a', '\x6', '\x2', '\x2', '\x10E', '\x10F', '\x5', 
-		'\x12', '\n', '\x2', '\x10F', '\x110', '\a', '\a', '\x2', '\x2', '\x110', 
-		'\x111', '\x5', ' ', '\x11', '\x2', '\x111', '\x112', '\a', ',', '\x2', 
-		'\x2', '\x112', '\x113', '\x5', ' ', '\x11', '\x2', '\x113', '\x11B', 
-		'\x3', '\x2', '\x2', '\x2', '\x114', '\x115', '\a', '+', '\x2', '\x2', 
-		'\x115', '\x116', '\a', '\x6', '\x2', '\x2', '\x116', '\x117', '\x5', 
-		'\x12', '\n', '\x2', '\x117', '\x118', '\a', '\a', '\x2', '\x2', '\x118', 
-		'\x119', '\x5', ' ', '\x11', '\x2', '\x119', '\x11B', '\x3', '\x2', '\x2', 
-		'\x2', '\x11A', '\x10C', '\x3', '\x2', '\x2', '\x2', '\x11A', '\x114', 
-		'\x3', '\x2', '\x2', '\x2', '\x11B', '+', '\x3', '\x2', '\x2', '\x2', 
-		'\x11C', '\x11D', '\a', '-', '\x2', '\x2', '\x11D', '\x11E', '\a', '\x6', 
-		'\x2', '\x2', '\x11E', '\x11F', '\x5', '\x12', '\n', '\x2', '\x11F', '\x120', 
-		'\a', '\a', '\x2', '\x2', '\x120', '\x121', '\x5', ' ', '\x11', '\x2', 
-		'\x121', '-', '\x3', '\x2', '\x2', '\x2', '\x122', '\x123', '\a', '\x32', 
-		'\x2', '\x2', '\x123', '/', '\x3', '\x2', '\x2', '\x2', '\x124', '\x125', 
-		'\a', '\x31', '\x2', '\x2', '\x125', '\x31', '\x3', '\x2', '\x2', '\x2', 
-		'\x126', '\x127', '\t', '\x2', '\x2', '\x2', '\x127', '\x33', '\x3', '\x2', 
-		'\x2', '\x2', '\x17', '\x37', ';', 'H', 'P', '\x61', 'h', 'v', '\x7F', 
-		'\xB7', '\xB9', '\xC0', '\xCC', '\xD1', '\xD5', '\xD9', '\xE2', '\xE7', 
-		'\xF0', '\xF4', '\xFD', '\x11A',
+		'\b', '\x3', '\b', '\x3', '\b', '\x5', '\b', 'y', '\n', '\b', '\x3', '\t', 
+		'\x3', '\t', '\x3', '\t', '\x3', '\t', '\x3', '\t', '\x5', '\t', '\x80', 
+		'\n', '\t', '\x3', '\n', '\x3', '\n', '\x3', '\n', '\x5', '\n', '\x85', 
+		'\n', '\n', '\x3', '\n', '\x3', '\n', '\x3', '\n', '\x3', '\n', '\x3', 
+		'\n', '\x3', '\n', '\x3', '\n', '\x3', '\n', '\x3', '\n', '\x3', '\n', 
+		'\x3', '\n', '\x3', '\n', '\x3', '\n', '\x3', '\n', '\x3', '\n', '\x3', 
+		'\n', '\x3', '\n', '\x3', '\n', '\x3', '\n', '\x3', '\n', '\x3', '\n', 
+		'\x3', '\n', '\x3', '\n', '\x3', '\n', '\x3', '\n', '\x3', '\n', '\x3', 
+		'\n', '\x3', '\n', '\x3', '\n', '\x3', '\n', '\x3', '\n', '\x3', '\n', 
+		'\x3', '\n', '\x3', '\n', '\x3', '\n', '\x3', '\n', '\x3', '\n', '\x3', 
+		'\n', '\x3', '\n', '\x3', '\n', '\x3', '\n', '\x3', '\n', '\x3', '\n', 
+		'\x3', '\n', '\x3', '\n', '\x3', '\n', '\x3', '\n', '\x3', '\n', '\x3', 
+		'\n', '\x3', '\n', '\x3', '\n', '\x3', '\n', '\x3', '\n', '\x3', '\n', 
+		'\a', '\n', '\xBD', '\n', '\n', '\f', '\n', '\xE', '\n', '\xC0', '\v', 
+		'\n', '\x3', '\v', '\x3', '\v', '\x3', '\f', '\x3', '\f', '\x5', '\f', 
+		'\xC6', '\n', '\f', '\x3', '\f', '\x3', '\f', '\x3', '\f', '\x3', '\f', 
+		'\x3', '\r', '\x3', '\r', '\x3', '\r', '\x3', '\r', '\x3', '\r', '\x3', 
+		'\r', '\x5', '\r', '\xD2', '\n', '\r', '\x3', '\xE', '\x6', '\xE', '\xD5', 
+		'\n', '\xE', '\r', '\xE', '\xE', '\xE', '\xD6', '\x3', '\xF', '\x3', '\xF', 
+		'\x5', '\xF', '\xDB', '\n', '\xF', '\x3', '\x10', '\x3', '\x10', '\x5', 
+		'\x10', '\xDF', '\n', '\x10', '\x3', '\x10', '\x3', '\x10', '\x3', '\x10', 
+		'\x3', '\x10', '\x3', '\x10', '\a', '\x10', '\xE6', '\n', '\x10', '\f', 
+		'\x10', '\xE', '\x10', '\xE9', '\v', '\x10', '\x3', '\x10', '\x3', '\x10', 
+		'\x5', '\x10', '\xED', '\n', '\x10', '\x3', '\x11', '\x3', '\x11', '\x3', 
+		'\x11', '\x3', '\x11', '\x3', '\x11', '\x3', '\x11', '\x3', '\x11', '\x5', 
+		'\x11', '\xF6', '\n', '\x11', '\x3', '\x11', '\x3', '\x11', '\x5', '\x11', 
+		'\xFA', '\n', '\x11', '\x3', '\x12', '\x3', '\x12', '\x3', '\x12', '\x3', 
+		'\x12', '\x3', '\x12', '\x3', '\x12', '\x3', '\x12', '\x5', '\x12', '\x103', 
+		'\n', '\x12', '\x3', '\x13', '\x3', '\x13', '\x3', '\x13', '\x3', '\x14', 
+		'\x3', '\x14', '\x3', '\x14', '\x3', '\x15', '\x3', '\x15', '\x3', '\x15', 
+		'\x3', '\x15', '\x3', '\x16', '\x3', '\x16', '\x3', '\x16', '\x3', '\x17', 
+		'\x3', '\x17', '\x3', '\x17', '\x3', '\x17', '\x3', '\x17', '\x3', '\x17', 
+		'\x3', '\x17', '\x3', '\x17', '\x3', '\x17', '\x3', '\x17', '\x3', '\x17', 
+		'\x3', '\x17', '\x3', '\x17', '\x3', '\x17', '\x5', '\x17', '\x120', '\n', 
+		'\x17', '\x3', '\x18', '\x3', '\x18', '\x3', '\x18', '\x3', '\x18', '\x3', 
+		'\x18', '\x3', '\x18', '\x3', '\x19', '\x3', '\x19', '\x3', '\x1A', '\x3', 
+		'\x1A', '\x3', '\x1B', '\x3', '\x1B', '\x3', '\x1B', '\x2', '\x3', '\x12', 
+		'\x1C', '\x2', '\x4', '\x6', '\b', '\n', '\f', '\xE', '\x10', '\x12', 
+		'\x14', '\x16', '\x18', '\x1A', '\x1C', '\x1E', ' ', '\"', '$', '&', '(', 
+		'*', ',', '.', '\x30', '\x32', '\x34', '\x2', '\x3', '\x3', '\x2', '\'', 
+		')', '\x2', '\x145', '\x2', '\x37', '\x3', '\x2', '\x2', '\x2', '\x4', 
+		'=', '\x3', '\x2', '\x2', '\x2', '\x6', 'J', '\x3', '\x2', '\x2', '\x2', 
+		'\b', 'R', '\x3', '\x2', '\x2', '\x2', '\n', '\x63', '\x3', '\x2', '\x2', 
+		'\x2', '\f', '\x65', '\x3', '\x2', '\x2', '\x2', '\xE', 'x', '\x3', '\x2', 
+		'\x2', '\x2', '\x10', '\x7F', '\x3', '\x2', '\x2', '\x2', '\x12', '\x84', 
+		'\x3', '\x2', '\x2', '\x2', '\x14', '\xC1', '\x3', '\x2', '\x2', '\x2', 
+		'\x16', '\xC5', '\x3', '\x2', '\x2', '\x2', '\x18', '\xD1', '\x3', '\x2', 
+		'\x2', '\x2', '\x1A', '\xD4', '\x3', '\x2', '\x2', '\x2', '\x1C', '\xDA', 
+		'\x3', '\x2', '\x2', '\x2', '\x1E', '\xEC', '\x3', '\x2', '\x2', '\x2', 
+		' ', '\xF9', '\x3', '\x2', '\x2', '\x2', '\"', '\x102', '\x3', '\x2', 
+		'\x2', '\x2', '$', '\x104', '\x3', '\x2', '\x2', '\x2', '&', '\x107', 
+		'\x3', '\x2', '\x2', '\x2', '(', '\x10A', '\x3', '\x2', '\x2', '\x2', 
+		'*', '\x10E', '\x3', '\x2', '\x2', '\x2', ',', '\x11F', '\x3', '\x2', 
+		'\x2', '\x2', '.', '\x121', '\x3', '\x2', '\x2', '\x2', '\x30', '\x127', 
+		'\x3', '\x2', '\x2', '\x2', '\x32', '\x129', '\x3', '\x2', '\x2', '\x2', 
+		'\x34', '\x12B', '\x3', '\x2', '\x2', '\x2', '\x36', '\x38', '\x5', '\x4', 
+		'\x3', '\x2', '\x37', '\x36', '\x3', '\x2', '\x2', '\x2', '\x38', '\x39', 
+		'\x3', '\x2', '\x2', '\x2', '\x39', '\x37', '\x3', '\x2', '\x2', '\x2', 
+		'\x39', ':', '\x3', '\x2', '\x2', '\x2', ':', '\x3', '\x3', '\x2', '\x2', 
+		'\x2', ';', '>', '\x5', '\x6', '\x4', '\x2', '<', '>', '\x5', '\x16', 
+		'\f', '\x2', '=', ';', '\x3', '\x2', '\x2', '\x2', '=', '<', '\x3', '\x2', 
+		'\x2', '\x2', '>', '\x5', '\x3', '\x2', '\x2', '\x2', '?', '@', '\x5', 
+		'\x34', '\x1B', '\x2', '@', '\x41', '\x5', '\x32', '\x1A', '\x2', '\x41', 
+		'\x42', '\a', '\x3', '\x2', '\x2', '\x42', 'K', '\x3', '\x2', '\x2', '\x2', 
+		'\x43', '\x44', '\x5', '\x34', '\x1B', '\x2', '\x44', '\x45', '\x5', '\x32', 
+		'\x1A', '\x2', '\x45', '\x46', '\a', '\x4', '\x2', '\x2', '\x46', 'G', 
+		'\x5', '\x30', '\x19', '\x2', 'G', 'H', '\a', '\x5', '\x2', '\x2', 'H', 
+		'I', '\a', '\x3', '\x2', '\x2', 'I', 'K', '\x3', '\x2', '\x2', '\x2', 
+		'J', '?', '\x3', '\x2', '\x2', '\x2', 'J', '\x43', '\x3', '\x2', '\x2', 
+		'\x2', 'K', '\a', '\x3', '\x2', '\x2', '\x2', 'L', 'M', '\a', '\x6', '\x2', 
+		'\x2', 'M', 'N', '\x5', '\x14', '\v', '\x2', 'N', 'O', '\a', '\a', '\x2', 
+		'\x2', 'O', 'S', '\x3', '\x2', '\x2', '\x2', 'P', 'S', '\x5', '\x32', 
+		'\x1A', '\x2', 'Q', 'S', '\x5', '\x30', '\x19', '\x2', 'R', 'L', '\x3', 
+		'\x2', '\x2', '\x2', 'R', 'P', '\x3', '\x2', '\x2', '\x2', 'R', 'Q', '\x3', 
+		'\x2', '\x2', '\x2', 'S', '\t', '\x3', '\x2', '\x2', '\x2', 'T', '\x64', 
+		'\x5', '\b', '\x5', '\x2', 'U', 'V', '\x5', '\b', '\x5', '\x2', 'V', 'W', 
+		'\a', '\x4', '\x2', '\x2', 'W', 'X', '\x5', '\x14', '\v', '\x2', 'X', 
+		'Y', '\a', '\x5', '\x2', '\x2', 'Y', '\x64', '\x3', '\x2', '\x2', '\x2', 
+		'Z', '[', '\x5', '\x32', '\x1A', '\x2', '[', '\\', '\a', '\x6', '\x2', 
+		'\x2', '\\', ']', '\a', '\a', '\x2', '\x2', ']', '\x64', '\x3', '\x2', 
+		'\x2', '\x2', '^', '_', '\x5', '\x32', '\x1A', '\x2', '_', '`', '\a', 
+		'\x6', '\x2', '\x2', '`', '\x61', '\x5', '\f', '\a', '\x2', '\x61', '\x62', 
+		'\a', '\a', '\x2', '\x2', '\x62', '\x64', '\x3', '\x2', '\x2', '\x2', 
+		'\x63', 'T', '\x3', '\x2', '\x2', '\x2', '\x63', 'U', '\x3', '\x2', '\x2', 
+		'\x2', '\x63', 'Z', '\x3', '\x2', '\x2', '\x2', '\x63', '^', '\x3', '\x2', 
+		'\x2', '\x2', '\x64', '\v', '\x3', '\x2', '\x2', '\x2', '\x65', 'j', '\x5', 
+		'\x14', '\v', '\x2', '\x66', 'g', '\a', '\b', '\x2', '\x2', 'g', 'i', 
+		'\x5', '\x14', '\v', '\x2', 'h', '\x66', '\x3', '\x2', '\x2', '\x2', 'i', 
+		'l', '\x3', '\x2', '\x2', '\x2', 'j', 'h', '\x3', '\x2', '\x2', '\x2', 
+		'j', 'k', '\x3', '\x2', '\x2', '\x2', 'k', '\r', '\x3', '\x2', '\x2', 
+		'\x2', 'l', 'j', '\x3', '\x2', '\x2', '\x2', 'm', 'y', '\x5', '\n', '\x6', 
+		'\x2', 'n', 'o', '\a', '\t', '\x2', '\x2', 'o', 'y', '\x5', '\xE', '\b', 
+		'\x2', 'p', 'q', '\a', '\n', '\x2', '\x2', 'q', 'y', '\x5', '\xE', '\b', 
+		'\x2', 'r', 's', '\a', '\v', '\x2', '\x2', 's', 'y', '\x5', '\xE', '\b', 
+		'\x2', 't', 'u', '\a', '\f', '\x2', '\x2', 'u', 'y', '\x5', '\xE', '\b', 
+		'\x2', 'v', 'w', '\a', '\r', '\x2', '\x2', 'w', 'y', '\x5', '\xE', '\b', 
+		'\x2', 'x', 'm', '\x3', '\x2', '\x2', '\x2', 'x', 'n', '\x3', '\x2', '\x2', 
+		'\x2', 'x', 'p', '\x3', '\x2', '\x2', '\x2', 'x', 'r', '\x3', '\x2', '\x2', 
+		'\x2', 'x', 't', '\x3', '\x2', '\x2', '\x2', 'x', 'v', '\x3', '\x2', '\x2', 
+		'\x2', 'y', '\xF', '\x3', '\x2', '\x2', '\x2', 'z', '\x80', '\x5', '\x12', 
+		'\n', '\x2', '{', '|', '\x5', '\xE', '\b', '\x2', '|', '}', '\a', '\xE', 
+		'\x2', '\x2', '}', '~', '\x5', '\x10', '\t', '\x2', '~', '\x80', '\x3', 
+		'\x2', '\x2', '\x2', '\x7F', 'z', '\x3', '\x2', '\x2', '\x2', '\x7F', 
+		'{', '\x3', '\x2', '\x2', '\x2', '\x80', '\x11', '\x3', '\x2', '\x2', 
+		'\x2', '\x81', '\x82', '\b', '\n', '\x1', '\x2', '\x82', '\x85', '\x5', 
+		'\xE', '\b', '\x2', '\x83', '\x85', '\x5', '\x30', '\x19', '\x2', '\x84', 
+		'\x81', '\x3', '\x2', '\x2', '\x2', '\x84', '\x83', '\x3', '\x2', '\x2', 
+		'\x2', '\x85', '\xBE', '\x3', '\x2', '\x2', '\x2', '\x86', '\x87', '\f', 
+		'\x16', '\x2', '\x2', '\x87', '\x88', '\a', '\xF', '\x2', '\x2', '\x88', 
+		'\xBD', '\x5', '\x12', '\n', '\x17', '\x89', '\x8A', '\f', '\x15', '\x2', 
+		'\x2', '\x8A', '\x8B', '\a', '\x10', '\x2', '\x2', '\x8B', '\xBD', '\x5', 
+		'\x12', '\n', '\x16', '\x8C', '\x8D', '\f', '\x14', '\x2', '\x2', '\x8D', 
+		'\x8E', '\a', '\x11', '\x2', '\x2', '\x8E', '\xBD', '\x5', '\x12', '\n', 
+		'\x15', '\x8F', '\x90', '\f', '\x13', '\x2', '\x2', '\x90', '\x91', '\a', 
+		'\x12', '\x2', '\x2', '\x91', '\xBD', '\x5', '\x12', '\n', '\x14', '\x92', 
+		'\x93', '\f', '\x12', '\x2', '\x2', '\x93', '\x94', '\a', '\x13', '\x2', 
+		'\x2', '\x94', '\xBD', '\x5', '\x12', '\n', '\x13', '\x95', '\x96', '\f', 
+		'\x11', '\x2', '\x2', '\x96', '\x97', '\a', '\x14', '\x2', '\x2', '\x97', 
+		'\xBD', '\x5', '\x12', '\n', '\x12', '\x98', '\x99', '\f', '\x10', '\x2', 
+		'\x2', '\x99', '\x9A', '\a', '\x15', '\x2', '\x2', '\x9A', '\xBD', '\x5', 
+		'\x12', '\n', '\x11', '\x9B', '\x9C', '\f', '\xF', '\x2', '\x2', '\x9C', 
+		'\x9D', '\a', '\x16', '\x2', '\x2', '\x9D', '\xBD', '\x5', '\x12', '\n', 
+		'\x10', '\x9E', '\x9F', '\f', '\xE', '\x2', '\x2', '\x9F', '\xA0', '\a', 
+		'\x17', '\x2', '\x2', '\xA0', '\xBD', '\x5', '\x12', '\n', '\xF', '\xA1', 
+		'\xA2', '\f', '\r', '\x2', '\x2', '\xA2', '\xA3', '\a', '\x18', '\x2', 
+		'\x2', '\xA3', '\xBD', '\x5', '\x12', '\n', '\xE', '\xA4', '\xA5', '\f', 
+		'\f', '\x2', '\x2', '\xA5', '\xA6', '\a', '\x19', '\x2', '\x2', '\xA6', 
+		'\xBD', '\x5', '\x12', '\n', '\r', '\xA7', '\xA8', '\f', '\v', '\x2', 
+		'\x2', '\xA8', '\xA9', '\a', '\x1A', '\x2', '\x2', '\xA9', '\xBD', '\x5', 
+		'\x12', '\n', '\f', '\xAA', '\xAB', '\f', '\n', '\x2', '\x2', '\xAB', 
+		'\xAC', '\a', '\x1B', '\x2', '\x2', '\xAC', '\xBD', '\x5', '\x12', '\n', 
+		'\v', '\xAD', '\xAE', '\f', '\t', '\x2', '\x2', '\xAE', '\xAF', '\a', 
+		'\x1C', '\x2', '\x2', '\xAF', '\xBD', '\x5', '\x12', '\n', '\n', '\xB0', 
+		'\xB1', '\f', '\b', '\x2', '\x2', '\xB1', '\xB2', '\a', '\x1D', '\x2', 
+		'\x2', '\xB2', '\xBD', '\x5', '\x12', '\n', '\t', '\xB3', '\xB4', '\f', 
+		'\a', '\x2', '\x2', '\xB4', '\xB5', '\a', '\x1E', '\x2', '\x2', '\xB5', 
+		'\xBD', '\x5', '\x12', '\n', '\b', '\xB6', '\xB7', '\f', '\x6', '\x2', 
+		'\x2', '\xB7', '\xB8', '\a', '\x1F', '\x2', '\x2', '\xB8', '\xBD', '\x5', 
+		'\x12', '\n', '\a', '\xB9', '\xBA', '\f', '\x5', '\x2', '\x2', '\xBA', 
+		'\xBB', '\a', ' ', '\x2', '\x2', '\xBB', '\xBD', '\x5', '\x12', '\n', 
+		'\x6', '\xBC', '\x86', '\x3', '\x2', '\x2', '\x2', '\xBC', '\x89', '\x3', 
+		'\x2', '\x2', '\x2', '\xBC', '\x8C', '\x3', '\x2', '\x2', '\x2', '\xBC', 
+		'\x8F', '\x3', '\x2', '\x2', '\x2', '\xBC', '\x92', '\x3', '\x2', '\x2', 
+		'\x2', '\xBC', '\x95', '\x3', '\x2', '\x2', '\x2', '\xBC', '\x98', '\x3', 
+		'\x2', '\x2', '\x2', '\xBC', '\x9B', '\x3', '\x2', '\x2', '\x2', '\xBC', 
+		'\x9E', '\x3', '\x2', '\x2', '\x2', '\xBC', '\xA1', '\x3', '\x2', '\x2', 
+		'\x2', '\xBC', '\xA4', '\x3', '\x2', '\x2', '\x2', '\xBC', '\xA7', '\x3', 
+		'\x2', '\x2', '\x2', '\xBC', '\xAA', '\x3', '\x2', '\x2', '\x2', '\xBC', 
+		'\xAD', '\x3', '\x2', '\x2', '\x2', '\xBC', '\xB0', '\x3', '\x2', '\x2', 
+		'\x2', '\xBC', '\xB3', '\x3', '\x2', '\x2', '\x2', '\xBC', '\xB6', '\x3', 
+		'\x2', '\x2', '\x2', '\xBC', '\xB9', '\x3', '\x2', '\x2', '\x2', '\xBD', 
+		'\xC0', '\x3', '\x2', '\x2', '\x2', '\xBE', '\xBC', '\x3', '\x2', '\x2', 
+		'\x2', '\xBE', '\xBF', '\x3', '\x2', '\x2', '\x2', '\xBF', '\x13', '\x3', 
+		'\x2', '\x2', '\x2', '\xC0', '\xBE', '\x3', '\x2', '\x2', '\x2', '\xC1', 
+		'\xC2', '\x5', '\x10', '\t', '\x2', '\xC2', '\x15', '\x3', '\x2', '\x2', 
+		'\x2', '\xC3', '\xC6', '\x5', '\x34', '\x1B', '\x2', '\xC4', '\xC6', '\a', 
+		'*', '\x2', '\x2', '\xC5', '\xC3', '\x3', '\x2', '\x2', '\x2', '\xC5', 
+		'\xC4', '\x3', '\x2', '\x2', '\x2', '\xC6', '\xC7', '\x3', '\x2', '\x2', 
+		'\x2', '\xC7', '\xC8', '\x5', '\x32', '\x1A', '\x2', '\xC8', '\xC9', '\x5', 
+		'\x1E', '\x10', '\x2', '\xC9', '\xCA', '\x5', '\x18', '\r', '\x2', '\xCA', 
+		'\x17', '\x3', '\x2', '\x2', '\x2', '\xCB', '\xCC', '\a', '!', '\x2', 
+		'\x2', '\xCC', '\xD2', '\a', '\"', '\x2', '\x2', '\xCD', '\xCE', '\a', 
+		'!', '\x2', '\x2', '\xCE', '\xCF', '\x5', '\x1A', '\xE', '\x2', '\xCF', 
+		'\xD0', '\a', '\"', '\x2', '\x2', '\xD0', '\xD2', '\x3', '\x2', '\x2', 
+		'\x2', '\xD1', '\xCB', '\x3', '\x2', '\x2', '\x2', '\xD1', '\xCD', '\x3', 
+		'\x2', '\x2', '\x2', '\xD2', '\x19', '\x3', '\x2', '\x2', '\x2', '\xD3', 
+		'\xD5', '\x5', '\x1C', '\xF', '\x2', '\xD4', '\xD3', '\x3', '\x2', '\x2', 
+		'\x2', '\xD5', '\xD6', '\x3', '\x2', '\x2', '\x2', '\xD6', '\xD4', '\x3', 
+		'\x2', '\x2', '\x2', '\xD6', '\xD7', '\x3', '\x2', '\x2', '\x2', '\xD7', 
+		'\x1B', '\x3', '\x2', '\x2', '\x2', '\xD8', '\xDB', '\x5', '\x6', '\x4', 
+		'\x2', '\xD9', '\xDB', '\x5', '\"', '\x12', '\x2', '\xDA', '\xD8', '\x3', 
+		'\x2', '\x2', '\x2', '\xDA', '\xD9', '\x3', '\x2', '\x2', '\x2', '\xDB', 
+		'\x1D', '\x3', '\x2', '\x2', '\x2', '\xDC', '\xDE', '\a', '\x6', '\x2', 
+		'\x2', '\xDD', '\xDF', '\a', '*', '\x2', '\x2', '\xDE', '\xDD', '\x3', 
+		'\x2', '\x2', '\x2', '\xDE', '\xDF', '\x3', '\x2', '\x2', '\x2', '\xDF', 
+		'\xE0', '\x3', '\x2', '\x2', '\x2', '\xE0', '\xED', '\a', '\a', '\x2', 
+		'\x2', '\xE1', '\xE2', '\a', '\x6', '\x2', '\x2', '\xE2', '\xE7', '\x5', 
+		' ', '\x11', '\x2', '\xE3', '\xE4', '\a', '\b', '\x2', '\x2', '\xE4', 
+		'\xE6', '\x5', ' ', '\x11', '\x2', '\xE5', '\xE3', '\x3', '\x2', '\x2', 
+		'\x2', '\xE6', '\xE9', '\x3', '\x2', '\x2', '\x2', '\xE7', '\xE5', '\x3', 
+		'\x2', '\x2', '\x2', '\xE7', '\xE8', '\x3', '\x2', '\x2', '\x2', '\xE8', 
+		'\xEA', '\x3', '\x2', '\x2', '\x2', '\xE9', '\xE7', '\x3', '\x2', '\x2', 
+		'\x2', '\xEA', '\xEB', '\a', '\a', '\x2', '\x2', '\xEB', '\xED', '\x3', 
+		'\x2', '\x2', '\x2', '\xEC', '\xDC', '\x3', '\x2', '\x2', '\x2', '\xEC', 
+		'\xE1', '\x3', '\x2', '\x2', '\x2', '\xED', '\x1F', '\x3', '\x2', '\x2', 
+		'\x2', '\xEE', '\xEF', '\x5', '\x34', '\x1B', '\x2', '\xEF', '\xF0', '\x5', 
+		'\x32', '\x1A', '\x2', '\xF0', '\xFA', '\x3', '\x2', '\x2', '\x2', '\xF1', 
+		'\xF2', '\x5', '\x34', '\x1B', '\x2', '\xF2', '\xF3', '\x5', '\x32', '\x1A', 
+		'\x2', '\xF3', '\xF5', '\a', '\x4', '\x2', '\x2', '\xF4', '\xF6', '\x5', 
+		'\x30', '\x19', '\x2', '\xF5', '\xF4', '\x3', '\x2', '\x2', '\x2', '\xF5', 
+		'\xF6', '\x3', '\x2', '\x2', '\x2', '\xF6', '\xF7', '\x3', '\x2', '\x2', 
+		'\x2', '\xF7', '\xF8', '\a', '\x5', '\x2', '\x2', '\xF8', '\xFA', '\x3', 
+		'\x2', '\x2', '\x2', '\xF9', '\xEE', '\x3', '\x2', '\x2', '\x2', '\xF9', 
+		'\xF1', '\x3', '\x2', '\x2', '\x2', '\xFA', '!', '\x3', '\x2', '\x2', 
+		'\x2', '\xFB', '\x103', '\x5', ',', '\x17', '\x2', '\xFC', '\x103', '\x5', 
+		'.', '\x18', '\x2', '\xFD', '\x103', '\x5', '(', '\x15', '\x2', '\xFE', 
+		'\x103', '\x5', '$', '\x13', '\x2', '\xFF', '\x103', '\x5', '&', '\x14', 
+		'\x2', '\x100', '\x103', '\x5', '\x18', '\r', '\x2', '\x101', '\x103', 
+		'\x5', '*', '\x16', '\x2', '\x102', '\xFB', '\x3', '\x2', '\x2', '\x2', 
+		'\x102', '\xFC', '\x3', '\x2', '\x2', '\x2', '\x102', '\xFD', '\x3', '\x2', 
+		'\x2', '\x2', '\x102', '\xFE', '\x3', '\x2', '\x2', '\x2', '\x102', '\xFF', 
+		'\x3', '\x2', '\x2', '\x2', '\x102', '\x100', '\x3', '\x2', '\x2', '\x2', 
+		'\x102', '\x101', '\x3', '\x2', '\x2', '\x2', '\x103', '#', '\x3', '\x2', 
+		'\x2', '\x2', '\x104', '\x105', '\a', '/', '\x2', '\x2', '\x105', '\x106', 
+		'\a', '\x3', '\x2', '\x2', '\x106', '%', '\x3', '\x2', '\x2', '\x2', '\x107', 
+		'\x108', '\a', '.', '\x2', '\x2', '\x108', '\x109', '\a', '\x3', '\x2', 
+		'\x2', '\x109', '\'', '\x3', '\x2', '\x2', '\x2', '\x10A', '\x10B', '\a', 
+		'\x30', '\x2', '\x2', '\x10B', '\x10C', '\x5', '\x14', '\v', '\x2', '\x10C', 
+		'\x10D', '\a', '\x3', '\x2', '\x2', '\x10D', ')', '\x3', '\x2', '\x2', 
+		'\x2', '\x10E', '\x10F', '\x5', '\x14', '\v', '\x2', '\x10F', '\x110', 
+		'\a', '\x3', '\x2', '\x2', '\x110', '+', '\x3', '\x2', '\x2', '\x2', '\x111', 
+		'\x112', '\a', '+', '\x2', '\x2', '\x112', '\x113', '\a', '\x6', '\x2', 
+		'\x2', '\x113', '\x114', '\x5', '\x14', '\v', '\x2', '\x114', '\x115', 
+		'\a', '\a', '\x2', '\x2', '\x115', '\x116', '\x5', '\"', '\x12', '\x2', 
+		'\x116', '\x117', '\a', ',', '\x2', '\x2', '\x117', '\x118', '\x5', '\"', 
+		'\x12', '\x2', '\x118', '\x120', '\x3', '\x2', '\x2', '\x2', '\x119', 
+		'\x11A', '\a', '+', '\x2', '\x2', '\x11A', '\x11B', '\a', '\x6', '\x2', 
+		'\x2', '\x11B', '\x11C', '\x5', '\x14', '\v', '\x2', '\x11C', '\x11D', 
+		'\a', '\a', '\x2', '\x2', '\x11D', '\x11E', '\x5', '\"', '\x12', '\x2', 
+		'\x11E', '\x120', '\x3', '\x2', '\x2', '\x2', '\x11F', '\x111', '\x3', 
+		'\x2', '\x2', '\x2', '\x11F', '\x119', '\x3', '\x2', '\x2', '\x2', '\x120', 
+		'-', '\x3', '\x2', '\x2', '\x2', '\x121', '\x122', '\a', '-', '\x2', '\x2', 
+		'\x122', '\x123', '\a', '\x6', '\x2', '\x2', '\x123', '\x124', '\x5', 
+		'\x14', '\v', '\x2', '\x124', '\x125', '\a', '\a', '\x2', '\x2', '\x125', 
+		'\x126', '\x5', '\"', '\x12', '\x2', '\x126', '/', '\x3', '\x2', '\x2', 
+		'\x2', '\x127', '\x128', '\a', '\x32', '\x2', '\x2', '\x128', '\x31', 
+		'\x3', '\x2', '\x2', '\x2', '\x129', '\x12A', '\a', '\x31', '\x2', '\x2', 
+		'\x12A', '\x33', '\x3', '\x2', '\x2', '\x2', '\x12B', '\x12C', '\t', '\x2', 
+		'\x2', '\x2', '\x12C', '\x35', '\x3', '\x2', '\x2', '\x2', '\x18', '\x39', 
+		'=', 'J', 'R', '\x63', 'j', 'x', '\x7F', '\x84', '\xBC', '\xBE', '\xC5', 
+		'\xD1', '\xD6', '\xDA', '\xDE', '\xE7', '\xEC', '\xF5', '\xF9', '\x102', 
+		'\x11F',
 	};
 
 	public static readonly ATN _ATN =

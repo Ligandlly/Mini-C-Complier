@@ -241,29 +241,17 @@ public interface IProgramListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitUnary_exprHasNot([NotNull] ProgramParser.Unary_exprHasNotContext context);
 	/// <summary>
-	/// Enter a parse tree produced by the <c>assignmentExprHasLsft</c>
+	/// Enter a parse tree produced by the <c>assignmentExprHasBinary</c>
 	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterAssignmentExprHasLsft([NotNull] ProgramParser.AssignmentExprHasLsftContext context);
+	void EnterAssignmentExprHasBinary([NotNull] ProgramParser.AssignmentExprHasBinaryContext context);
 	/// <summary>
-	/// Exit a parse tree produced by the <c>assignmentExprHasLsft</c>
+	/// Exit a parse tree produced by the <c>assignmentExprHasBinary</c>
 	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitAssignmentExprHasLsft([NotNull] ProgramParser.AssignmentExprHasLsftContext context);
-	/// <summary>
-	/// Enter a parse tree produced by the <c>assignmentExprHasLt</c>
-	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterAssignmentExprHasLt([NotNull] ProgramParser.AssignmentExprHasLtContext context);
-	/// <summary>
-	/// Exit a parse tree produced by the <c>assignmentExprHasLt</c>
-	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitAssignmentExprHasLt([NotNull] ProgramParser.AssignmentExprHasLtContext context);
+	void ExitAssignmentExprHasBinary([NotNull] ProgramParser.AssignmentExprHasBinaryContext context);
 	/// <summary>
 	/// Enter a parse tree produced by the <c>assignmentExprHasAssign</c>
 	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
@@ -277,221 +265,15 @@ public interface IProgramListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitAssignmentExprHasAssign([NotNull] ProgramParser.AssignmentExprHasAssignContext context);
 	/// <summary>
-	/// Enter a parse tree produced by the <c>assignmentExprHasEq</c>
-	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
+	/// Enter a parse tree produced by <see cref="ProgramParser.binaryExpr"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterAssignmentExprHasEq([NotNull] ProgramParser.AssignmentExprHasEqContext context);
+	void EnterBinaryExpr([NotNull] ProgramParser.BinaryExprContext context);
 	/// <summary>
-	/// Exit a parse tree produced by the <c>assignmentExprHasEq</c>
-	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
+	/// Exit a parse tree produced by <see cref="ProgramParser.binaryExpr"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitAssignmentExprHasEq([NotNull] ProgramParser.AssignmentExprHasEqContext context);
-	/// <summary>
-	/// Enter a parse tree produced by the <c>assignmentExprHasGt</c>
-	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterAssignmentExprHasGt([NotNull] ProgramParser.AssignmentExprHasGtContext context);
-	/// <summary>
-	/// Exit a parse tree produced by the <c>assignmentExprHasGt</c>
-	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitAssignmentExprHasGt([NotNull] ProgramParser.AssignmentExprHasGtContext context);
-	/// <summary>
-	/// Enter a parse tree produced by the <c>assignmentExprHasUnary_expr</c>
-	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterAssignmentExprHasUnary_expr([NotNull] ProgramParser.AssignmentExprHasUnary_exprContext context);
-	/// <summary>
-	/// Exit a parse tree produced by the <c>assignmentExprHasUnary_expr</c>
-	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitAssignmentExprHasUnary_expr([NotNull] ProgramParser.AssignmentExprHasUnary_exprContext context);
-	/// <summary>
-	/// Enter a parse tree produced by the <c>assignmentExprHasLOr</c>
-	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterAssignmentExprHasLOr([NotNull] ProgramParser.AssignmentExprHasLOrContext context);
-	/// <summary>
-	/// Exit a parse tree produced by the <c>assignmentExprHasLOr</c>
-	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitAssignmentExprHasLOr([NotNull] ProgramParser.AssignmentExprHasLOrContext context);
-	/// <summary>
-	/// Enter a parse tree produced by the <c>assignmentExprHasDiv</c>
-	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterAssignmentExprHasDiv([NotNull] ProgramParser.AssignmentExprHasDivContext context);
-	/// <summary>
-	/// Exit a parse tree produced by the <c>assignmentExprHasDiv</c>
-	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitAssignmentExprHasDiv([NotNull] ProgramParser.AssignmentExprHasDivContext context);
-	/// <summary>
-	/// Enter a parse tree produced by the <c>assignmentExprHasMin</c>
-	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterAssignmentExprHasMin([NotNull] ProgramParser.AssignmentExprHasMinContext context);
-	/// <summary>
-	/// Exit a parse tree produced by the <c>assignmentExprHasMin</c>
-	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitAssignmentExprHasMin([NotNull] ProgramParser.AssignmentExprHasMinContext context);
-	/// <summary>
-	/// Enter a parse tree produced by the <c>assignmentExprHasAnd</c>
-	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterAssignmentExprHasAnd([NotNull] ProgramParser.AssignmentExprHasAndContext context);
-	/// <summary>
-	/// Exit a parse tree produced by the <c>assignmentExprHasAnd</c>
-	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitAssignmentExprHasAnd([NotNull] ProgramParser.AssignmentExprHasAndContext context);
-	/// <summary>
-	/// Enter a parse tree produced by the <c>assignmentExprHasNe</c>
-	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterAssignmentExprHasNe([NotNull] ProgramParser.AssignmentExprHasNeContext context);
-	/// <summary>
-	/// Exit a parse tree produced by the <c>assignmentExprHasNe</c>
-	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitAssignmentExprHasNe([NotNull] ProgramParser.AssignmentExprHasNeContext context);
-	/// <summary>
-	/// Enter a parse tree produced by the <c>assignmentExprHasLAnd</c>
-	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterAssignmentExprHasLAnd([NotNull] ProgramParser.AssignmentExprHasLAndContext context);
-	/// <summary>
-	/// Exit a parse tree produced by the <c>assignmentExprHasLAnd</c>
-	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitAssignmentExprHasLAnd([NotNull] ProgramParser.AssignmentExprHasLAndContext context);
-	/// <summary>
-	/// Enter a parse tree produced by the <c>assignmentExprHasLe</c>
-	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterAssignmentExprHasLe([NotNull] ProgramParser.AssignmentExprHasLeContext context);
-	/// <summary>
-	/// Exit a parse tree produced by the <c>assignmentExprHasLe</c>
-	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitAssignmentExprHasLe([NotNull] ProgramParser.AssignmentExprHasLeContext context);
-	/// <summary>
-	/// Enter a parse tree produced by the <c>assignmentExprHasXor</c>
-	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterAssignmentExprHasXor([NotNull] ProgramParser.AssignmentExprHasXorContext context);
-	/// <summary>
-	/// Exit a parse tree produced by the <c>assignmentExprHasXor</c>
-	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitAssignmentExprHasXor([NotNull] ProgramParser.AssignmentExprHasXorContext context);
-	/// <summary>
-	/// Enter a parse tree produced by the <c>assignmentExprHasGe</c>
-	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterAssignmentExprHasGe([NotNull] ProgramParser.AssignmentExprHasGeContext context);
-	/// <summary>
-	/// Exit a parse tree produced by the <c>assignmentExprHasGe</c>
-	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitAssignmentExprHasGe([NotNull] ProgramParser.AssignmentExprHasGeContext context);
-	/// <summary>
-	/// Enter a parse tree produced by the <c>assignmentExprHasRsft</c>
-	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterAssignmentExprHasRsft([NotNull] ProgramParser.AssignmentExprHasRsftContext context);
-	/// <summary>
-	/// Exit a parse tree produced by the <c>assignmentExprHasRsft</c>
-	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitAssignmentExprHasRsft([NotNull] ProgramParser.AssignmentExprHasRsftContext context);
-	/// <summary>
-	/// Enter a parse tree produced by the <c>assignmentExprHasAdd</c>
-	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterAssignmentExprHasAdd([NotNull] ProgramParser.AssignmentExprHasAddContext context);
-	/// <summary>
-	/// Exit a parse tree produced by the <c>assignmentExprHasAdd</c>
-	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitAssignmentExprHasAdd([NotNull] ProgramParser.AssignmentExprHasAddContext context);
-	/// <summary>
-	/// Enter a parse tree produced by the <c>assignmentExprHasMod</c>
-	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterAssignmentExprHasMod([NotNull] ProgramParser.AssignmentExprHasModContext context);
-	/// <summary>
-	/// Exit a parse tree produced by the <c>assignmentExprHasMod</c>
-	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitAssignmentExprHasMod([NotNull] ProgramParser.AssignmentExprHasModContext context);
-	/// <summary>
-	/// Enter a parse tree produced by the <c>assignmentExprHasOr</c>
-	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterAssignmentExprHasOr([NotNull] ProgramParser.AssignmentExprHasOrContext context);
-	/// <summary>
-	/// Exit a parse tree produced by the <c>assignmentExprHasOr</c>
-	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitAssignmentExprHasOr([NotNull] ProgramParser.AssignmentExprHasOrContext context);
-	/// <summary>
-	/// Enter a parse tree produced by the <c>assignmentExprHasNum</c>
-	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterAssignmentExprHasNum([NotNull] ProgramParser.AssignmentExprHasNumContext context);
-	/// <summary>
-	/// Exit a parse tree produced by the <c>assignmentExprHasNum</c>
-	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitAssignmentExprHasNum([NotNull] ProgramParser.AssignmentExprHasNumContext context);
-	/// <summary>
-	/// Enter a parse tree produced by the <c>assignmentExprHasMul</c>
-	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterAssignmentExprHasMul([NotNull] ProgramParser.AssignmentExprHasMulContext context);
-	/// <summary>
-	/// Exit a parse tree produced by the <c>assignmentExprHasMul</c>
-	/// labeled alternative in <see cref="ProgramParser.assignmentExpr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitAssignmentExprHasMul([NotNull] ProgramParser.AssignmentExprHasMulContext context);
+	void ExitBinaryExpr([NotNull] ProgramParser.BinaryExprContext context);
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="ProgramParser.expr"/>.
 	/// </summary>

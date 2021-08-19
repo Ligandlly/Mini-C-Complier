@@ -28,28 +28,31 @@ unary_expr:
 	| prefix='~' unary_expr    # unary_exprHasNot;
 
 assignmentExpr:
-	assignmentExpr   op='*' assignmentExpr         # assignmentExprHasMul
-	| assignmentExpr op='%' assignmentExpr         # assignmentExprHasMod
-	| assignmentExpr op='/' assignmentExpr         # assignmentExprHasDiv
-	| assignmentExpr op='+' assignmentExpr         # assignmentExprHasAdd
-	| assignmentExpr op='-' assignmentExpr         # assignmentExprHasMin
-	| assignmentExpr op='<<' assignmentExpr        # assignmentExprHasLsft
-	| assignmentExpr op='>>' assignmentExpr        # assignmentExprHasRsft
-	| assignmentExpr op='<=' assignmentExpr        # assignmentExprHasLe
-	| assignmentExpr op='>=' assignmentExpr        # assignmentExprHasGe
-	| assignmentExpr op='<' assignmentExpr         # assignmentExprHasLt
-	| assignmentExpr op='>' assignmentExpr         # assignmentExprHasGt
-	| assignmentExpr op='==' assignmentExpr        # assignmentExprHasEq
-	| assignmentExpr op='!=' assignmentExpr        # assignmentExprHasNe
-	| assignmentExpr op='&' assignmentExpr         # assignmentExprHasAnd
-	| assignmentExpr op='^' assignmentExpr         # assignmentExprHasXor
-	| assignmentExpr op='|' assignmentExpr         # assignmentExprHasOr
-	| assignmentExpr op='&&' assignmentExpr        # assignmentExprHasLAnd
-	| assignmentExpr op='||' assignmentExpr        # assignmentExprHasLOr
-	| unary_expr op='=' assignmentExpr             # assignmentExprHasAssign
-	| unary_expr                                # assignmentExprHasUnary_expr
-	| num                                       # assignmentExprHasNum ;
+    binaryExpr                                      # assignmentExprHasBinary
+	| unary_expr '=' assignmentExpr                 # assignmentExprHasAssign ;
 
+binaryExpr :
+	  left=binaryExpr op='*'    right=binaryExpr        
+	| left=binaryExpr op='%'    right=binaryExpr        
+	| left=binaryExpr op='/'    right=binaryExpr        
+	| left=binaryExpr op='+'    right=binaryExpr        
+	| left=binaryExpr op='-'    right=binaryExpr        
+	| left=binaryExpr op='<<'   right=binaryExpr       
+	| left=binaryExpr op='>>'   right=binaryExpr       
+	| left=binaryExpr op='<='   right=binaryExpr       
+	| left=binaryExpr op='>='   right=binaryExpr       
+	| left=binaryExpr op='<'    right=binaryExpr        
+	| left=binaryExpr op='>'    right=binaryExpr        
+	| left=binaryExpr op='=='   right=binaryExpr       
+	| left=binaryExpr op='!='   right=binaryExpr       
+	| left=binaryExpr op='&'    right=binaryExpr        
+	| left=binaryExpr op='^'    right=binaryExpr        
+	| left=binaryExpr op='|'    right=binaryExpr        
+	| left=binaryExpr op='&&'   right=binaryExpr       
+	| left=binaryExpr op='||'   right=binaryExpr
+    | unary_expr
+    | num;
+	
 //assignmentOperator: '=';
 
 expr: assignmentExpr;
