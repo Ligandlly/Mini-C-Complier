@@ -55,7 +55,7 @@ namespace MiniC
         /// </summary>
         /// <param name="type">The type of temporary variable</param>
         /// <returns>Identity object</returns>
-        private Identity NewTmpVar(string type, bool mutable=true)
+        private Identity NewTmpVar(string type, bool mutable = true)
         {
             var rlt = _tmpVariables.Count;
             var name = $"{rlt}t";
@@ -70,24 +70,27 @@ namespace MiniC
             _currentScopeNameStack.Push(Global);
         }
 
+        private void CopyIrAndValue(IParseTree context, IParseTree child)
+        {
+            Ir.Put(context, Ir.Get(child));
+            _values.Put(context, _values.Get(child));
+        }
+
         #region Primary_expr
 
         public override void ExitPrimary_exprHasExpr(ProgramParser.Primary_exprHasExprContext context)
         {
-            Ir.Put(context, Ir.Get(context.expr()));
-            _values.Put(context, _values.Get(context.expr()));
+            CopyIrAndValue(context, context.expr());
         }
 
         public override void ExitPrimary_exprHasId(ProgramParser.Primary_exprHasIdContext context)
         {
-            Ir.Put(context, Ir.Get(context.id()));
-            _values.Put(context, _values.Get(context.id()));
+            CopyIrAndValue(context, context.id());
         }
 
         public override void ExitPrimary_exprHasNum(ProgramParser.Primary_exprHasNumContext context)
         {
-            Ir.Put(context, Ir.Get(context.num()));
-            _values.Put(context, _values.Get(context.num()));
+            CopyIrAndValue(context, context.num());
         }
 
         #endregion
@@ -283,7 +286,7 @@ namespace MiniC
             }
 
             var id = table[name];
-            
+
             Ir.Put(context, name);
             _values.Put(context, new Identity(name, id.Type));
         }
@@ -401,8 +404,7 @@ namespace MiniC
         /// <param name="context"></param>
         public override void ExitPostfix_exprHasPrimary_expr(ProgramParser.Postfix_exprHasPrimary_exprContext context)
         {
-            Ir.Put(context, Ir.Get(context.primary_expr()));
-            _values.Put(context, _values.Get(context.primary_expr()));
+            CopyIrAndValue(context, context.primary_expr());
         }
 
 
@@ -560,6 +562,26 @@ namespace MiniC
         #endregion
 
         #region Assignment_expr
+
+        public override void ExitAssignmentExprHasBinary([NotNull] ProgramParser.AssignmentExprHasBinaryContext context)
+            => CopyIrAndValue(context, context.binaryExpr());
+
+
+        /// <summary>
+        /// Assignment
+        /// </summary>
+        /// <param name="context"></param>
+        public override void ExitAssignmentExprHasAssign([NotNull] ProgramParser.AssignmentExprHasAssignContext context)
+        {
+            var unaryVal = _values.Get(context.unary_expr());
+            var assVal = _values.Get(context.assignmentExpr());
+
+            if (unaryVal.Mutable == false)
+                throw new MyListenerException("Change Value of an Immutable Variable");
+
+            Ir.Put(context, _irBuilder.GenerateIr("=", assVal.Name, dist: unaryVal.Name));
+            _values.Put(context, assVal);
+        }
 
         #endregion
     }
