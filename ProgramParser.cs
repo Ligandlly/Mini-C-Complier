@@ -2148,17 +2148,19 @@ public partial class ProgramParser : Parser {
 		}
 	}
 	public partial class Selection_stmtHasElseContext : Selection_stmtContext {
+		public StmtContext ifStmt;
+		public StmtContext elseStmt;
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode IF() { return GetToken(ProgramParser.IF, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public ExprContext expr() {
 			return GetRuleContext<ExprContext>(0);
 		}
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode ELSE() { return GetToken(ProgramParser.ELSE, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public StmtContext[] stmt() {
 			return GetRuleContexts<StmtContext>();
 		}
 		[System.Diagnostics.DebuggerNonUserCode] public StmtContext stmt(int i) {
 			return GetRuleContext<StmtContext>(i);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode ELSE() { return GetToken(ProgramParser.ELSE, 0); }
 		public Selection_stmtHasElseContext(Selection_stmtContext context) { CopyFrom(context); }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
@@ -2193,11 +2195,11 @@ public partial class ProgramParser : Parser {
 				State = 274;
 				Match(T__4);
 				State = 275;
-				stmt();
+				((Selection_stmtHasElseContext)_localctx).ifStmt = stmt();
 				State = 276;
 				Match(ELSE);
 				State = 277;
-				stmt();
+				((Selection_stmtHasElseContext)_localctx).elseStmt = stmt();
 				}
 				break;
 			case 2:

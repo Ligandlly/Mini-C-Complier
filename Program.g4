@@ -86,7 +86,7 @@ return_stmt: RETURN expr ';';
 expr_stmt: expr ';';
 
 selection_stmt:
-	IF '(' expr ')' stmt ELSE stmt      # selection_stmtHasElse
+	IF '(' expr ')' ifStmt=stmt ELSE elseStmt=stmt      # selection_stmtHasElse
 	| IF '(' expr ')' stmt              # selection_stmtHasEmpty;
 	
 iteration_stmt: WHILE '(' expr ')' stmt;

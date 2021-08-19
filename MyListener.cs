@@ -13,11 +13,7 @@ namespace MiniC
 
     public class MyListenerException : Exception
     {
-        public MyListenerException(string message)
-            : base(message)
-        {
-
-        }
+        public MyListenerException(string message) : base(message) { }
     }
 
 
@@ -45,6 +41,10 @@ namespace MiniC
 
         private const string Global = "0_global";
 
+        private int _labelNumber;
+
+        private int LabelNumber => _labelNumber++;
+        
         /// <summary>
         /// Template Variables List
         /// </summary>
@@ -54,11 +54,12 @@ namespace MiniC
         /// Create a new temporary variable
         /// </summary>
         /// <param name="type">The type of temporary variable</param>
+        /// <param name="mutable"></param>
         /// <returns>Identity object</returns>
         private Identity NewTmpVar(string type, bool mutable = true)
         {
             var rlt = _tmpVariables.Count;
-            var name = $"{rlt}t";
+            var name = $"{rlt}_t";
             _tmpVariables.Add(new Identity(name, type, mutable));
 
             return _tmpVariables.Last();
@@ -137,7 +138,11 @@ namespace MiniC
 
             if (_tables[Global].Keys.Contains(funcName))
                 throw new MyListenerException("Duplicate Function Name");
-
+            
+            _currentScopeNameStack.Push(funcName);
+            var table = new SymbolTable();
+            _tables.Add(funcName, table);
+            
             // Add parameter list
             var tmpList = new List<(string, string)>();
             foreach (var child in context.param_list().children)
@@ -145,14 +150,13 @@ namespace MiniC
                 if (child is not ProgramParser.ParamContext tmpParam) continue;
                 var type = tmpParam.type_spec().GetText();
                 var name = tmpParam.id().GetText();
-
+                
+                table.Add(name, new Identity(name, type));
                 tmpList.Add((type, name));
+                
             }
 
             _tables[Global].Add(funcName, new FuncIdentity(funcName, rltType, tmpList.ToArray()));
-
-            _currentScopeNameStack.Push(funcName);
-            _tables.Add(funcName, new SymbolTable());
         }
 
         /// <summary>
@@ -576,13 +580,16 @@ namespace MiniC
         /// <param name="context"></param>
         public override void ExitAssignmentExprHasAssign([NotNull] ProgramParser.AssignmentExprHasAssignContext context)
         {
+            StringBuilder stringBuilder = new();
             var unaryVal = _values.Get(context.unary_expr());
             var assVal = _values.Get(context.assignmentExpr());
-
             if (unaryVal.Mutable == false)
                 throw new MyListenerException("Change Value of an Immutable Variable");
 
-            Ir.Put(context, _irBuilder.GenerateIr("=", assVal.Name, dist: unaryVal.Name));
+            stringBuilder.AppendLine(Ir.Get(context.assignmentExpr()));
+            stringBuilder.AppendLine(_irBuilder.GenerateIr("=", assVal.Name, dist: unaryVal.Name));
+            
+            Ir.Put(context, stringBuilder.ToString());
             _values.Put(context, assVal);
         }
 
@@ -632,7 +639,116 @@ namespace MiniC
 
         #endregion
 
+        #region Selection_stmt
 
+        /// <summary>
+        /// if (expr) stmt
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// if (a) {
+        ///     b += 1;
+        ///     if (c) {
+        ///         b += 2;
+        ///     }
+        /// }
+        /// b+= 3;
+        /// </code>
+        /// 
+        /// =>
+        /// 
+        /// <code>
+        ///     Je a 0 label_0 -------------|
+        ///     + b 1 b                     |
+        ///     Je c 0 label_1 ---------|   |
+        ///     + b 2 b                 |   |
+        /// label_1:   -----------------|   |
+        /// label_0:    --------------------|
+        ///     + b 3 b
+        /// </code>
+        /// </example>
+        /// <param name="context"></param>
+        public override void ExitSelection_stmtHasEmpty([NotNull] ProgramParser.Selection_stmtHasEmptyContext context)
+        {
+            var exprVal = _values.Get(context.expr());
+            var endIf = LabelNumber;
+            var head = _irBuilder.GenerateIr("Je", exprVal.Name, "0", $"label_{endIf}");
+            var tail = _irBuilder.GenerateIr(labelNumber: endIf);
 
+            StringBuilder stringBuilder = new();
+            stringBuilder.AppendLine(head);
+            stringBuilder.AppendLine(Ir.Get(context.stmt()));
+            stringBuilder.AppendLine(tail);
+
+            Ir.Put(context, stringBuilder.ToString());
+        }
+
+        /// <summary>
+        /// IF '(' expr ')' ifStmt=stmt ELSE elseStmt=stmt
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// if (a) {
+        ///     b += 1;
+        ///     if (c) {
+        ///         b += 2;
+        ///     } else {
+        ///         b += 3;
+        ///     }
+        /// } else {
+        ///     b += 4;
+        /// }
+        /// b += 5;
+        /// </code>
+        /// 
+        /// =>
+        /// 
+        /// <code>
+        ///         Je  a   0   label_0  -------------|
+        ///         +   b   1   b                     |
+        ///         Je  b   0   label_2               |
+        ///         +   b   2   b                     |
+        ///         J label_3                         |
+        /// label_2:                                  |
+        ///         +   b   3   b                     |
+        /// label_3:                                  |
+        ///         J label_1     --------------------|
+        /// label_0:    ------------------------------|
+        ///         +   b   4   b                     |
+        /// label_1:  --------------------------------|
+        ///         +   b   5   b
+        /// </code>
+        /// </example>
+        /// <param name="context"></param>
+        public override void ExitSelection_stmtHasElse([NotNull] ProgramParser.Selection_stmtHasElseContext context)
+        {
+            var exprVal = _values.Get(context.expr());
+            var endIf = LabelNumber;
+            var endElse = LabelNumber;
+
+            var head = _irBuilder.GenerateIr("Je", exprVal.Name, "0", $"label_{endIf}");
+            var middle = _irBuilder.GenerateIr("J", $"label_{endElse}") + "\n" 
+                + _irBuilder.GenerateIr(labelNumber:endIf);
+            var tail = _irBuilder.GenerateIr(_irBuilder.GenerateIr(labelNumber: endElse));
+
+            StringBuilder stringBuilder = new();
+            stringBuilder.AppendLine(head);
+            stringBuilder.AppendLine(Ir.Get(context.ifStmt));
+            stringBuilder.AppendLine(middle);
+            stringBuilder.AppendLine(Ir.Get(context.elseStmt));
+            stringBuilder.AppendLine(tail);
+
+            Ir.Put(context, stringBuilder.ToString());
+        }
+        #endregion
+
+        #region Expr_stmt
+
+        public override void ExitExpr_stmt(ProgramParser.Expr_stmtContext context)
+        {
+            Ir.Put(context, Ir.Get(context.expr()));
+        }
+
+        #endregion
     }
 }
