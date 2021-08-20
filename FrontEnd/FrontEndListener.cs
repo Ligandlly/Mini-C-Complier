@@ -63,7 +63,7 @@ namespace FrontEnd
         private Identity NewTmpVar(string type, bool mutable = true)
         {
             var rlt = _tmpVariables.Count;
-            var name = $"{rlt}_t";
+            var name = $"@t{rlt}";
             _tmpVariables.Add(new Identity(name, type, mutable));
 
             return _tmpVariables.Last();
