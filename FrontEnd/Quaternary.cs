@@ -1,7 +1,7 @@
 #nullable enable
 using System;
 
-namespace MiniC
+namespace FrontEnd
 {
     public interface IIrBuilder
     {

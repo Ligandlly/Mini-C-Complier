@@ -6,7 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 
-namespace MiniC
+namespace FrontEnd
 {
     using SymbolTable = Dictionary<string, Identity>;
 

@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.810.7
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "minic-antlr", "minic-antlr.csproj", "{AC47BE72-926E-4AF1-B85E-01BDC92729F8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrontEnd", "FrontEnd\FrontEnd.csproj", "{395590F3-D2A0-4551-A205-8F8BA9759799}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniCCli", "MiniCCli\MiniCCli.csproj", "{3FECB49B-8FF9-4A89-A41D-E646CE0DAA6F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{AC47BE72-926E-4AF1-B85E-01BDC92729F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AC47BE72-926E-4AF1-B85E-01BDC92729F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AC47BE72-926E-4AF1-B85E-01BDC92729F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AC47BE72-926E-4AF1-B85E-01BDC92729F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{395590F3-D2A0-4551-A205-8F8BA9759799}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{395590F3-D2A0-4551-A205-8F8BA9759799}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{395590F3-D2A0-4551-A205-8F8BA9759799}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{395590F3-D2A0-4551-A205-8F8BA9759799}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3FECB49B-8FF9-4A89-A41D-E646CE0DAA6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FECB49B-8FF9-4A89-A41D-E646CE0DAA6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FECB49B-8FF9-4A89-A41D-E646CE0DAA6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FECB49B-8FF9-4A89-A41D-E646CE0DAA6F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

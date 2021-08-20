@@ -1,6 +1,6 @@
 using System;
 
-namespace MiniC
+namespace FrontEnd
 {
     public class Identity
     {
