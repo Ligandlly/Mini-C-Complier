@@ -13,7 +13,7 @@ int a;
 void foo(int b) {
     if (a) {
         b = b + 1;
-        if (b) {
+        if (b==1) {
             b = b + 2;
         } else {
             b = b + 3;
@@ -37,7 +37,10 @@ void foo(int b) {
             IParseTree tree = parser.program();
 
             var walker = new ParseTreeWalker();
-            walker.Walk(new MyListener(), tree);
+
+            var frontEndListener = new FrontEndListener();
+            walker.Walk(frontEndListener, tree);
+            Console.WriteLine(frontEndListener.Result);            
         }
     }
 }

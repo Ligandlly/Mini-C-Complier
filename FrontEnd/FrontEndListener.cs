@@ -3,28 +3,32 @@ using Antlr4.Runtime.Tree;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace FrontEnd
 {
     using SymbolTable = Dictionary<string, Identity>;
 
 
-    public class MyListenerException : Exception
+    public class FrontEndException : Exception
     {
-        public MyListenerException(string message) : base(message) { }
+        public FrontEndException(string message) : base(message) { }
     }
 
 
-    public class MyListener
+    public class FrontEndListener
         : ProgramBaseListener
     {
         /// <summary>
         /// Intermediate Representation
         /// </summary>
-        public ParseTreeProperty<string> Ir { get; } = new();
+        private readonly ParseTreeProperty<string> _ir = new();
 
+        public string Result { get; private set; }
+        
         /// <summary>
         /// Value of expressions
         /// </summary>
@@ -67,7 +71,7 @@ namespace FrontEnd
 
         private void CopyIrAndValue(IParseTree context, IParseTree child)
         {
-            Ir.Put(context, Ir.Get(child));
+            _ir.Put(context, _ir.Get(child));
             _values.Put(context, _values.Get(child));
         }
 
@@ -87,10 +91,14 @@ namespace FrontEnd
                 stringBuilder.AppendLine(_irBuilder.GenerateIr("global", tmpVariable.Type, tmpVariable.Name));
 
             foreach (var declContext in context.decl())
-                stringBuilder.AppendLine(Ir.Get(declContext));
+                stringBuilder.AppendLine(_ir.Get(declContext));
             
-            Ir.Put(context, stringBuilder.ToString());
-            Console.WriteLine(stringBuilder.ToString());
+            _ir.Put(context, stringBuilder.ToString());
+
+            Result = stringBuilder.ToString();
+            
+            // FIXME: There are blank lines that can only remove manually
+            Result = Regex.Replace(Result, @"^\s+$[\r\n]*", string.Empty, RegexOptions.Multiline);
         }
 
         #endregion
@@ -133,13 +141,13 @@ namespace FrontEnd
             // Check if the name has already in Symbol table
             if (table.ContainsKey(name))
             {
-                throw new MyListenerException("Duplicate Variable Name");
+                throw new FrontEndException("Duplicate Variable Name");
             }
 
             table.Add(name, new Identity(name, type));
 
             var irCode = _irBuilder.GenerateIr(_currentScopeNameStack.Peek() == Global ? "global" : "decl_var", type, name);
-            Ir.Put(context, irCode);
+            _ir.Put(context, irCode);
             _values.Put(context.id(), new Identity(name, type));
         }
 
@@ -155,7 +163,7 @@ namespace FrontEnd
             var rltType = context.type_spec() != null ? context.type_spec().GetText() : context.VOID().GetText();
 
             if (_tables[Global].Keys.Contains(funcName))
-                throw new MyListenerException("Duplicate Function Name");
+                throw new FrontEndException("Duplicate Function Name");
             
             _currentScopeNameStack.Push(funcName);
             var table = new SymbolTable();
@@ -197,9 +205,9 @@ namespace FrontEnd
         /// </summary>
         /// <example><c>int func1(int a, char b) { return a + b; } </c> =>
         /// <code>
-        /// param; int; a; ;
-        /// param; char; b; ;
-        /// func; int; func1; ;
+        /// param_decl; int; a; ;
+        /// param_decl; char; b; ;
+        /// func; int; func1; 2;
         ///     +; a; b; 0_t;
         ///     return; 0_t; ; ;
         /// end_func; ; ; ;
@@ -213,15 +221,19 @@ namespace FrontEnd
             var funcName = context.id().GetText();
             var rltType = context.type_spec() != null ? context.type_spec().GetText() : context.VOID().GetText();
 
-            var paramList = context.param_list();
+            var funcIdent = _tables[Global][funcName] as FuncIdentity;
+            
+            Debug.Assert(funcIdent != null, nameof(funcIdent) + " != null");
+            foreach (var (paramType, paramName) in funcIdent.Params)
+                rltBuilder.AppendLine(_irBuilder.GenerateIr("param_decl", paramType, paramName));
 
-            rltBuilder.AppendLine(_irBuilder.GenerateIr("func", rltType, funcName));
+            rltBuilder.AppendLine(_irBuilder.GenerateIr("func", rltType, funcName, $"{funcIdent.Params.Length}"));
 
-            rltBuilder.AppendLine(Ir.Get(context.compound_stmt()));
+            rltBuilder.AppendLine(_ir.Get(context.compound_stmt()));
 
             rltBuilder.AppendLine(_irBuilder.GenerateIr("end_func"));
             var rlt = rltBuilder.ToString();
-            Ir.Put(context, rlt);
+            _ir.Put(context, rlt);
             _currentScopeNameStack.Pop();
         }
 
@@ -240,13 +252,13 @@ namespace FrontEnd
             _tables[Global].Add(name, arr);
             var irCode = _irBuilder.GenerateIr(_currentScopeNameStack.Peek() == Global ? "global_arr" : "decl_arr", type, name, length.ToString());
 
-            Ir.Put(context, irCode);
+            _ir.Put(context, irCode);
 
         }
 
         public override void ExitDecl(ProgramParser.DeclContext context)
         {
-            Ir.Put(context, Ir.Get(context.GetChild(0)));
+            _ir.Put(context, _ir.Get(context.GetChild(0)));
         }
 
         #endregion
@@ -255,7 +267,7 @@ namespace FrontEnd
 
         public override void ExitType_spec(ProgramParser.Type_specContext context)
         {
-            Ir.Put(context, context.GetText());
+            _ir.Put(context, context.GetText());
         }
 
 
@@ -292,7 +304,7 @@ namespace FrontEnd
                 }
             }
 
-            Ir.Put(context, text);
+            _ir.Put(context, text);
             _values.Put(context, new Literal(text));
         }
 
@@ -315,7 +327,7 @@ namespace FrontEnd
 
             var id = table[name];
 
-            Ir.Put(context, name);
+            _ir.Put(context, name);
             _values.Put(context, id);
         }
 
@@ -347,7 +359,7 @@ namespace FrontEnd
             // check whether the function is defined correctly
             if (!table.ContainsKey(funcName) || table[funcName] is not FuncIdentity func)
             {
-                throw new MyListenerException("Function Undefined");
+                throw new FrontEndException("Function Undefined");
             }
 
             var paramsCount = 0;
@@ -357,20 +369,20 @@ namespace FrontEnd
                 if (child is not ProgramParser.ExprContext expr) continue;
 
                 // Add expr to IR result
-                stringBuilder.AppendLine(Ir.Get(child));
+                stringBuilder.AppendLine(_ir.Get(child));
 
                 var identity = _values.Get(expr);
 
                 // Check Type
                 if (identity.Type != "literal" && func.Params[paramsCount++].paramType != identity.Type)
-                    throw new MyListenerException("Arguments Type Not Match");
+                    throw new FrontEndException("Arguments Type Not Match");
 
                 stringBuilder.AppendLine(_irBuilder.GenerateIr("param", identity.Name));
             }
 
             // Check Number
             if (paramsCount != func.Params.Length)
-                throw new MyListenerException("Arguments Number Not Match");
+                throw new FrontEndException("Arguments Number Not Match");
 
             if (func.Type == FuncIdentity.Void)
             {
@@ -384,7 +396,7 @@ namespace FrontEnd
                 _values.Put(context, tmpVar);
             }
 
-            Ir.Put(context, stringBuilder.ToString());
+            _ir.Put(context, stringBuilder.ToString());
         }
 
         /// <summary>
@@ -415,13 +427,13 @@ namespace FrontEnd
             // All right
             if (func.Type == "void")
             {
-                Ir.Put(context, _irBuilder.GenerateIr("call", funcName, "0"));
+                _ir.Put(context, _irBuilder.GenerateIr("call", funcName, "0"));
                 _values.Put(context, new Literal("0"));
                 return;
             }
             var type = func.Type;
             var tmpVar = NewTmpVar(type);
-            Ir.Put(context, _irBuilder.GenerateIr("call", funcName, "0", tmpVar.Name));
+            _ir.Put(context, _irBuilder.GenerateIr("call", funcName, "0", tmpVar.Name));
             _values.Put(context, tmpVar);
 
         }
@@ -470,7 +482,7 @@ namespace FrontEnd
             // Check identity first
             var identity = _values.Get(context.primary_expr());
             if (identity is not ArrIdentity arrIdentity)
-                throw new MyListenerException("Get Item From Non-array Variable");
+                throw new FrontEndException("Get Item From Non-array Variable");
 
             var tmpRltId = NewTmpVar(arrIdentity.Type);
             stringBuilder.AppendLine(_irBuilder.GenerateIr("cp", arrIdentity.Name, dist: tmpRltId.Name));
@@ -489,7 +501,7 @@ namespace FrontEnd
                 stringBuilder.AppendLine(_irBuilder.GenerateIr("inc", tmpOffsetId.Name, dist: tmpRltId.Name));
             }
 
-            Ir.Put(context, stringBuilder.ToString());
+            _ir.Put(context, stringBuilder.ToString());
             _values.Put(context, tmpRltId);
         }
 
@@ -514,13 +526,13 @@ namespace FrontEnd
         /// </code>
         /// </example>
         /// <param name="context"></param>
-        /// <exception cref="MyListenerException">Increase a Immutable Value</exception>
+        /// <exception cref="FrontEndException">Increase a Immutable Value</exception>
         public override void ExitUnary_exprHasInc(ProgramParser.Unary_exprHasIncContext context)
         {
             var unaryExprVal = _values.Get(context.unary_expr());
             if (unaryExprVal.Mutable == false)
-                throw new MyListenerException("Increase a Immutable Value");
-            Ir.Put(context, _irBuilder.GenerateIr("+", unaryExprVal.Name, "1", unaryExprVal.Name));
+                throw new FrontEndException("Increase a Immutable Value");
+            _ir.Put(context, _irBuilder.GenerateIr("+", unaryExprVal.Name, "1", unaryExprVal.Name));
             _values.Put(context, unaryExprVal);
         }
 
@@ -529,13 +541,13 @@ namespace FrontEnd
         /// </summary>
         /// <param name="context"></param>
         /// <seealso cref="ExitUnary_exprHasInc"/>
-        /// <exception cref="MyListenerException">Decrease a Immutable Value</exception>
+        /// <exception cref="FrontEndException">Decrease a Immutable Value</exception>
         public override void ExitUnary_exprHasDec(ProgramParser.Unary_exprHasDecContext context)
         {
             var unaryExprVal = _values.Get(context.unary_expr());
             if (unaryExprVal.Mutable == false)
-                throw new MyListenerException("Decrease a Immutable Value");
-            Ir.Put(context, _irBuilder.GenerateIr("-", unaryExprVal.Name, "1", unaryExprVal.Name));
+                throw new FrontEndException("Decrease a Immutable Value");
+            _ir.Put(context, _irBuilder.GenerateIr("-", unaryExprVal.Name, "1", unaryExprVal.Name));
             _values.Put(context, unaryExprVal);
         }
 
@@ -555,7 +567,7 @@ namespace FrontEnd
             var exprValue = _values.Get(context.unary_expr());
             var tmpRlt = NewTmpVar(Identity.Int);
 
-            Ir.Put(context, _irBuilder.GenerateIr("$", exprValue.Name, dist: tmpRlt.Name));
+            _ir.Put(context, _irBuilder.GenerateIr("$", exprValue.Name, dist: tmpRlt.Name));
             _values.Put(context, tmpRlt);
         }
 
@@ -573,7 +585,7 @@ namespace FrontEnd
             var unaryId = _values.Get(context.unary_expr());
             var tmpRlt = NewTmpVar(unaryId.Type, false);
 
-            Ir.Put(context, _irBuilder.GenerateIr("!", unaryId.Name, dist: tmpRlt.Name));
+            _ir.Put(context, _irBuilder.GenerateIr("!", unaryId.Name, dist: tmpRlt.Name));
             _values.Put(context, tmpRlt);
         }
 
@@ -582,7 +594,7 @@ namespace FrontEnd
             var unaryId = _values.Get(context.unary_expr());
             var tmpRlt = NewTmpVar(unaryId.Type, false);
 
-            Ir.Put(context, _irBuilder.GenerateIr("!", unaryId.Name, dist: tmpRlt.Name));
+            _ir.Put(context, _irBuilder.GenerateIr("!", unaryId.Name, dist: tmpRlt.Name));
             _values.Put(context, tmpRlt);
         }
 
@@ -604,12 +616,12 @@ namespace FrontEnd
             var unaryVal = _values.Get(context.unary_expr());
             var assVal = _values.Get(context.assignmentExpr());
             if (unaryVal.Mutable == false)
-                throw new MyListenerException("Change Value of an Immutable Variable");
+                throw new FrontEndException("Change Value of an Immutable Variable");
 
-            stringBuilder.AppendLine(Ir.Get(context.assignmentExpr()));
+            stringBuilder.AppendLine(_ir.Get(context.assignmentExpr()));
             stringBuilder.AppendLine(_irBuilder.GenerateIr("=", assVal.Name, dist: unaryVal.Name));
             
-            Ir.Put(context, stringBuilder.ToString());
+            _ir.Put(context, stringBuilder.ToString());
             _values.Put(context, assVal);
         }
 
@@ -643,7 +655,7 @@ namespace FrontEnd
                 var rightVal = _values.Get(context.right);
                 var tmpRlt = NewTmpVar(leftVal.Type);
 
-                Ir.Put(context, _irBuilder.GenerateIr(context.op.Text, leftVal.Name, rightVal.Name, tmpRlt.Name));
+                _ir.Put(context, _irBuilder.GenerateIr(context.op.Text, leftVal.Name, rightVal.Name, tmpRlt.Name));
                 _values.Put(context, tmpRlt);
             }
         }
@@ -696,12 +708,12 @@ namespace FrontEnd
             var tail = _irBuilder.GenerateIr(labelNumber: endIf);
 
             StringBuilder stringBuilder = new();
-            stringBuilder.AppendLine(Ir.Get(context.expr()));
+            stringBuilder.AppendLine(_ir.Get(context.expr()));
             stringBuilder.AppendLine(head);
-            stringBuilder.AppendLine(Ir.Get(context.stmt()));
+            stringBuilder.AppendLine(_ir.Get(context.stmt()));
             stringBuilder.AppendLine(tail);
 
-            Ir.Put(context, stringBuilder.ToString());
+            _ir.Put(context, stringBuilder.ToString());
         }
 
         /// <summary>
@@ -750,17 +762,21 @@ namespace FrontEnd
             var head = _irBuilder.GenerateIr("Je", exprVal.Name, "0", $"label_{endIf}");
             var middle = _irBuilder.GenerateIr("J", $"label_{endElse}") + "\n" 
                 + _irBuilder.GenerateIr(labelNumber:endIf);
-            var tail = _irBuilder.GenerateIr(_irBuilder.GenerateIr(labelNumber: endElse));
+            var tail = _irBuilder.GenerateIr(labelNumber: endElse);
 
             StringBuilder stringBuilder = new();
-            stringBuilder.AppendLine(Ir.Get(context.expr()));
+            
+            var exprIr = _ir.Get(context.expr());
+            if (exprIr.Contains(";"))
+                stringBuilder.AppendLine(exprIr);
+            
             stringBuilder.AppendLine(head);
-            stringBuilder.AppendLine(Ir.Get(context.ifStmt));
+            stringBuilder.AppendLine(_ir.Get(context.ifStmt));
             stringBuilder.AppendLine(middle);
-            stringBuilder.AppendLine(Ir.Get(context.elseStmt));
+            stringBuilder.AppendLine(_ir.Get(context.elseStmt));
             stringBuilder.AppendLine(tail);
 
-            Ir.Put(context, stringBuilder.ToString());
+            _ir.Put(context, stringBuilder.ToString());
         }
         #endregion
 
@@ -768,7 +784,7 @@ namespace FrontEnd
 
         public override void ExitExpr_stmt(ProgramParser.Expr_stmtContext context)
         {
-            Ir.Put(context, Ir.Get(context.expr()));
+            _ir.Put(context, _ir.Get(context.expr()));
         }
 
         #endregion
@@ -797,12 +813,12 @@ namespace FrontEnd
 
             StringBuilder stringBuilder = new();
 
-            stringBuilder.AppendLine(Ir.Get(context.expr()));
+            stringBuilder.AppendLine(_ir.Get(context.expr()));
             stringBuilder.AppendLine(head);
-            stringBuilder.AppendLine(Ir.Get(context.stmt()));
+            stringBuilder.AppendLine(_ir.Get(context.stmt()));
             stringBuilder.AppendLine(tail);
             
-            Ir.Put(context, stringBuilder.ToString());
+            _ir.Put(context, stringBuilder.ToString());
         }
 
         #endregion
@@ -812,24 +828,24 @@ namespace FrontEnd
         public override void ExitContinue_stmt(ProgramParser.Continue_stmtContext context)
         {
             if (_labelStack.TryPeek(out (int, int) labels) == false)
-                throw new MyListenerException("Use Continue Outside While Statement");
-            Ir.Put(context, _irBuilder.GenerateIr("J", $"label_{labels.Item1}"));
+                throw new FrontEndException("Use Continue Outside While Statement");
+            _ir.Put(context, _irBuilder.GenerateIr("J", $"label_{labels.Item1}"));
         }
 
         public override void ExitBreak_stmt(ProgramParser.Break_stmtContext context)
         {
             if (_labelStack.TryPeek(out (int, int) labels) == false)
-                throw new MyListenerException("Use Break Outside While Statement");
-            Ir.Put(context, _irBuilder.GenerateIr("J", $"label_{labels.Item2}"));
+                throw new FrontEndException("Use Break Outside While Statement");
+            _ir.Put(context, _irBuilder.GenerateIr("J", $"label_{labels.Item2}"));
         }
 
         public override void ExitReturn_stmt(ProgramParser.Return_stmtContext context)
         {
             StringBuilder stringBuilder = new();
-            stringBuilder.AppendLine(Ir.Get(context.expr()));
+            stringBuilder.AppendLine(_ir.Get(context.expr()));
             var exprVal = _values.Get(context.expr());
             stringBuilder.AppendLine(_irBuilder.GenerateIr("return", exprVal.Name));
-            Ir.Put(context, stringBuilder.ToString());
+            _ir.Put(context, stringBuilder.ToString());
         }
 
         #endregion
@@ -838,25 +854,25 @@ namespace FrontEnd
 
         public override void ExitCompound_stmtHasBody(ProgramParser.Compound_stmtHasBodyContext context)
         {
-            Ir.Put(context, Ir.Get(context.block_item_list()));
+            _ir.Put(context, _ir.Get(context.block_item_list()));
         }
 
         public override void ExitBlock_item_list(ProgramParser.Block_item_listContext context)
         {
             StringBuilder stringBuilder = new();
             foreach (var blockItem in context.block_item())
-                stringBuilder.AppendLine(Ir.Get(blockItem));
+                stringBuilder.AppendLine(_ir.Get(blockItem));
             
-            Ir.Put(context, stringBuilder.ToString());
+            _ir.Put(context, stringBuilder.ToString());
         }
 
         public override void ExitBlock_item(ProgramParser.Block_itemContext context)
         {
             StringBuilder stringBuilder = new();
             foreach (var child in context.children)
-                stringBuilder.AppendLine(Ir.Get(child));
+                stringBuilder.AppendLine(_ir.Get(child));
 
-            Ir.Put(context, stringBuilder.ToString());
+            _ir.Put(context, stringBuilder.ToString());
         }
 
         #endregion
@@ -865,7 +881,7 @@ namespace FrontEnd
 
         public override void ExitStmt(ProgramParser.StmtContext context)
         {
-            Ir.Put(context, Ir.Get(context.GetChild(0)));
+            _ir.Put(context, _ir.Get(context.GetChild(0)));
         }
 
         #endregion
