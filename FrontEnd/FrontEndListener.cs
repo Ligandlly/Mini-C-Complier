@@ -77,6 +77,8 @@ namespace FrontEnd
             _values.Put(context, _values.Get(child));
         }
 
+        public int LineNumber { get; set; }
+
 
         #region Program
 
@@ -88,6 +90,9 @@ namespace FrontEnd
 
         public override void ExitProgram(ProgramParser.ProgramContext context)
         {
+            if (!_tables[Global].ContainsKey("main"))
+                throw new FrontEndException("Main Function Undefined");
+            
             StringBuilder stringBuilder = new();
             foreach (var tmpVariable in _tmpVariables)
                 stringBuilder.AppendLine(_irBuilder.GenerateIr("global", tmpVariable.Type, tmpVariable.Name));
@@ -133,7 +138,7 @@ namespace FrontEnd
         /// <exception cref="DuplicateNameException">Duplicate Variable Name</exception>
         /// <remarks>Local variables in function is declared by <c>decl_val</c>, while global variables are declared by <c>global</c>.</remarks>
         /// <param name="context"></param>
-        public override void ExitVar_declHasId(ProgramParser.Var_declHasIdContext context)
+        public override void EnterVar_declHasId(ProgramParser.Var_declHasIdContext context)
         {
             var name = context.id().GetText();
             var type = context.type_spec().GetText();
@@ -226,15 +231,20 @@ namespace FrontEnd
 
             var funcIdent = _tables[Global][funcName] as FuncIdentity;
 
-            Debug.Assert(funcIdent != null, nameof(funcIdent) + " != null");
-            foreach (var (paramType, paramName) in funcIdent.Params)
-                rltBuilder.AppendLine(_irBuilder.GenerateIr("param_decl", paramType, paramName));
+            if (funcName != "main")
+            {
+                Debug.Assert(funcIdent != null, nameof(funcIdent) + " != null");
+                foreach (var (paramType, paramName) in funcIdent.Params)
+                    rltBuilder.AppendLine(_irBuilder.GenerateIr("param_decl", paramType, paramName));
 
-            rltBuilder.AppendLine(_irBuilder.GenerateIr("func", rltType, funcName, $"{funcIdent.Params.Length}"));
+                rltBuilder.AppendLine(_irBuilder.GenerateIr("func", rltType, funcName, $"{funcIdent.Params.Length}"));
+            }
 
             rltBuilder.AppendLine(_ir.Get(context.compound_stmt()));
 
-            rltBuilder.AppendLine(_irBuilder.GenerateIr("end_func"));
+            if (funcName != "main")
+                rltBuilder.AppendLine(_irBuilder.GenerateIr("end_func"));
+            
             var rlt = rltBuilder.ToString();
             _ir.Put(context, rlt);
             _currentScopeNameStack.Pop();
@@ -245,7 +255,7 @@ namespace FrontEnd
         /// </summary>
         /// <remarks>Local variables in function is declared by <c>decl_arr</c>, while global variables are declared by <c>global_arr</c>.</remarks>
         /// <param name="context"></param>
-        public override void ExitVar_declHasArr(ProgramParser.Var_declHasArrContext context)
+        public override void EnterVar_declHasArr(ProgramParser.Var_declHasArrContext context)
         {
             var type = context.type_spec().GetText();
             var name = context.id().GetText();
@@ -307,7 +317,7 @@ namespace FrontEnd
                 }
             }
 
-            _ir.Put(context, text);
+            // _ir.Put(context, text);
             _values.Put(context, new Literal(text));
         }
 
@@ -325,12 +335,12 @@ namespace FrontEnd
                 if (_tables[Global].ContainsKey(name))
                     table = _tables[Global];
                 else
-                    return;
+                    throw new FrontEndException($"Undefined Identifier: {context.GetText()}");
             }
 
             var id = table[name];
 
-            _ir.Put(context, name);
+            _ir.Put(context, "");
             _values.Put(context, id);
         }
 
@@ -358,7 +368,7 @@ namespace FrontEnd
         {
             var funcName = context.id().GetText();
 
-            var table = _tables[_currentScopeNameStack.Peek()];
+            var table = _tables[Global];
 
             // check whether the function is defined correctly
             if (!table.ContainsKey(funcName) || table[funcName] is not FuncIdentity func)
@@ -378,8 +388,10 @@ namespace FrontEnd
                 var identity = _values.Get(expr);
 
                 // Check Type
-                if (identity.Type != "literal" && func.Params[paramsCount++].paramType != identity.Type)
+                if (identity.Type != "literal" && func.Params[paramsCount].paramType != identity.Type)
                     throw new FrontEndException("Arguments Type Not Match");
+
+                paramsCount++;
 
                 stringBuilder.AppendLine(_irBuilder.GenerateIr("param", identity.Name));
             }
@@ -771,9 +783,8 @@ namespace FrontEnd
             StringBuilder stringBuilder = new();
 
             var exprIr = _ir.Get(context.expr());
-            if (exprIr.Contains(";"))
-                stringBuilder.AppendLine(exprIr);
-
+            
+            stringBuilder.AppendLine(exprIr);
             stringBuilder.AppendLine(head);
             stringBuilder.AppendLine(_ir.Get(context.ifStmt));
             stringBuilder.AppendLine(middle);
