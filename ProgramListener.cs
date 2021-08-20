@@ -363,15 +363,29 @@ public interface IProgramListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitParam_listHasBody([NotNull] ProgramParser.Param_listHasBodyContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ProgramParser.param"/>.
+	/// Enter a parse tree produced by the <c>paramHasInt</c>
+	/// labeled alternative in <see cref="ProgramParser.param"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterParam([NotNull] ProgramParser.ParamContext context);
+	void EnterParamHasInt([NotNull] ProgramParser.ParamHasIntContext context);
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ProgramParser.param"/>.
+	/// Exit a parse tree produced by the <c>paramHasInt</c>
+	/// labeled alternative in <see cref="ProgramParser.param"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitParam([NotNull] ProgramParser.ParamContext context);
+	void ExitParamHasInt([NotNull] ProgramParser.ParamHasIntContext context);
+	/// <summary>
+	/// Enter a parse tree produced by the <c>paramHasArr</c>
+	/// labeled alternative in <see cref="ProgramParser.param"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterParamHasArr([NotNull] ProgramParser.ParamHasArrContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>paramHasArr</c>
+	/// labeled alternative in <see cref="ProgramParser.param"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitParamHasArr([NotNull] ProgramParser.ParamHasArrContext context);
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="ProgramParser.stmt"/>.
 	/// </summary>

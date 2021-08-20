@@ -1738,6 +1738,18 @@ public partial class ProgramParser : Parser {
 	}
 
 	public partial class ParamContext : ParserRuleContext {
+		public ParamContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_param; } }
+	 
+		public ParamContext() { }
+		public virtual void CopyFrom(ParamContext context) {
+			base.CopyFrom(context);
+		}
+	}
+	public partial class ParamHasArrContext : ParamContext {
 		[System.Diagnostics.DebuggerNonUserCode] public Type_specContext type_spec() {
 			return GetRuleContext<Type_specContext>(0);
 		}
@@ -1747,20 +1759,35 @@ public partial class ProgramParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public NumContext num() {
 			return GetRuleContext<NumContext>(0);
 		}
-		public ParamContext(ParserRuleContext parent, int invokingState)
-			: base(parent, invokingState)
-		{
-		}
-		public override int RuleIndex { get { return RULE_param; } }
+		public ParamHasArrContext(ParamContext context) { CopyFrom(context); }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
 			IProgramListener typedListener = listener as IProgramListener;
-			if (typedListener != null) typedListener.EnterParam(this);
+			if (typedListener != null) typedListener.EnterParamHasArr(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
 			IProgramListener typedListener = listener as IProgramListener;
-			if (typedListener != null) typedListener.ExitParam(this);
+			if (typedListener != null) typedListener.ExitParamHasArr(this);
+		}
+	}
+	public partial class ParamHasIntContext : ParamContext {
+		[System.Diagnostics.DebuggerNonUserCode] public Type_specContext type_spec() {
+			return GetRuleContext<Type_specContext>(0);
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public IdContext id() {
+			return GetRuleContext<IdContext>(0);
+		}
+		public ParamHasIntContext(ParamContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void EnterRule(IParseTreeListener listener) {
+			IProgramListener typedListener = listener as IProgramListener;
+			if (typedListener != null) typedListener.EnterParamHasInt(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void ExitRule(IParseTreeListener listener) {
+			IProgramListener typedListener = listener as IProgramListener;
+			if (typedListener != null) typedListener.ExitParamHasInt(this);
 		}
 	}
 
@@ -1774,6 +1801,7 @@ public partial class ProgramParser : Parser {
 			ErrorHandler.Sync(this);
 			switch ( Interpreter.AdaptivePredict(TokenStream,19,Context) ) {
 			case 1:
+				_localctx = new ParamHasIntContext(_localctx);
 				EnterOuterAlt(_localctx, 1);
 				{
 				State = 236;
@@ -1783,6 +1811,7 @@ public partial class ProgramParser : Parser {
 				}
 				break;
 			case 2:
+				_localctx = new ParamHasArrContext(_localctx);
 				EnterOuterAlt(_localctx, 2);
 				{
 				State = 239;

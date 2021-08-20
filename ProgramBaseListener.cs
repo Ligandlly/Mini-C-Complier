@@ -426,17 +426,33 @@ public partial class ProgramBaseListener : IProgramListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitParam_listHasBody([NotNull] ProgramParser.Param_listHasBodyContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ProgramParser.param"/>.
+	/// Enter a parse tree produced by the <c>paramHasInt</c>
+	/// labeled alternative in <see cref="ProgramParser.param"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterParam([NotNull] ProgramParser.ParamContext context) { }
+	public virtual void EnterParamHasInt([NotNull] ProgramParser.ParamHasIntContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ProgramParser.param"/>.
+	/// Exit a parse tree produced by the <c>paramHasInt</c>
+	/// labeled alternative in <see cref="ProgramParser.param"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitParam([NotNull] ProgramParser.ParamContext context) { }
+	public virtual void ExitParamHasInt([NotNull] ProgramParser.ParamHasIntContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>paramHasArr</c>
+	/// labeled alternative in <see cref="ProgramParser.param"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterParamHasArr([NotNull] ProgramParser.ParamHasArrContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>paramHasArr</c>
+	/// labeled alternative in <see cref="ProgramParser.param"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitParamHasArr([NotNull] ProgramParser.ParamHasArrContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="ProgramParser.stmt"/>.
 	/// <para>The default implementation does nothing.</para>

@@ -66,7 +66,9 @@ block_item_list: block_item+;
 block_item: (var_decl) | (stmt); // 块中只能有变量声明和statement
 param_list: '(' (VOID)? ')'         # param_listHasEmpty
     | '(' param (',' param)* ')'    # param_listHasBody;
-param: type_spec id | type_spec id '[' num? ']';
+    
+param: type_spec id                 #paramHasInt
+    | type_spec id '[' num? ']'     #paramHasArr;    
 
 stmt:
 	selection_stmt

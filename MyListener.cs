@@ -65,18 +65,36 @@ namespace MiniC
             return _tmpVariables.Last();
         }
 
-        public override void EnterProgram(ProgramParser.ProgramContext context)
-        {
-            _tables.Add(Global, new SymbolTable());
-            _currentScopeNameStack.Push(Global);
-        }
-
         private void CopyIrAndValue(IParseTree context, IParseTree child)
         {
             Ir.Put(context, Ir.Get(child));
             _values.Put(context, _values.Get(child));
         }
 
+        
+        #region Program
+
+        public override void EnterProgram(ProgramParser.ProgramContext context)
+        {
+            _tables.Add(Global, new SymbolTable());
+            _currentScopeNameStack.Push(Global);
+        }
+
+        public override void ExitProgram(ProgramParser.ProgramContext context)
+        {
+            StringBuilder stringBuilder = new();
+            foreach (var tmpVariable in _tmpVariables)
+                stringBuilder.AppendLine(_irBuilder.GenerateIr("global", tmpVariable.Type, tmpVariable.Name));
+
+            foreach (var declContext in context.decl())
+                stringBuilder.AppendLine(Ir.Get(declContext));
+            
+            Ir.Put(context, stringBuilder.ToString());
+            Console.WriteLine(stringBuilder.ToString());
+        }
+
+        #endregion
+        
         #region Primary_expr
 
         public override void ExitPrimary_exprHasExpr(ProgramParser.Primary_exprHasExprContext context)
@@ -147,13 +165,27 @@ namespace MiniC
             var tmpList = new List<(string, string)>();
             foreach (var child in context.param_list().children)
             {
-                if (child is not ProgramParser.ParamContext tmpParam) continue;
-                var type = tmpParam.type_spec().GetText();
-                var name = tmpParam.id().GetText();
-                
-                table.Add(name, new Identity(name, type));
-                tmpList.Add((type, name));
-                
+                switch (child)
+                {
+                    case ProgramParser.ParamHasIntContext paramHasInt:
+                    {
+                        var type = paramHasInt.type_spec().GetText();
+                        var name = paramHasInt.id().GetText();
+                    
+                        table.Add(name, new Identity(name, type));
+                        tmpList.Add((type, name));
+                        break;
+                    }
+                    case ProgramParser.ParamHasArrContext paramHasArr:
+                    {
+                        var type = paramHasArr.type_spec().GetText();
+                        var name = paramHasArr.id().GetText();
+                    
+                        table.Add(name, new ArrIdentity(name, type+"Arr", int.Parse(paramHasArr.num().GetText())));
+                        tmpList.Add((type, name));
+                        break;
+                    }
+                }
             }
 
             _tables[Global].Add(funcName, new FuncIdentity(funcName, rltType, tmpList.ToArray()));
@@ -168,9 +200,8 @@ namespace MiniC
         /// param; int; a; ;
         /// param; char; b; ;
         /// func; int; func1; ;
-        ///     local; int; rlt; ;
-        ///     +; a; b; rlt;
-        ///     return; rlt; ; ;
+        ///     +; a; b; 0_t;
+        ///     return; 0_t; ; ;
         /// end_func; ; ; ;
         /// </code>
         /// </example>
@@ -183,23 +214,6 @@ namespace MiniC
             var rltType = context.type_spec() != null ? context.type_spec().GetText() : context.VOID().GetText();
 
             var paramList = context.param_list();
-
-            foreach (var child in paramList.children)
-            {
-                if (child is not ProgramParser.ParamContext tmpParam) continue;
-                // 1st: Add param to Symbol Table
-                var name = tmpParam.id().GetText();
-                var type = tmpParam.type_spec().GetText();
-                var table = _tables[_currentScopeNameStack.Peek()];
-                // Check if the name has already in Symbol table
-                if (table.Keys.Contains(name))
-                {
-                    throw new MyListenerException("Duplicate Parameter Name");
-                }
-
-                // 2nd: Add to IR code
-                rltBuilder.AppendLine(_irBuilder.GenerateIr("param", type, name));
-            }
 
             rltBuilder.AppendLine(_irBuilder.GenerateIr("func", rltType, funcName));
 
@@ -221,7 +235,7 @@ namespace MiniC
             var type = context.type_spec().GetText();
             var name = context.id().GetText();
             var length = int.Parse(context.num().GetText());
-            var arr = new ArrIdentity(name, type, length);
+            var arr = new ArrIdentity(name, type+"Arr", length);
 
             _tables[Global].Add(name, arr);
             var irCode = _irBuilder.GenerateIr(_currentScopeNameStack.Peek() == Global ? "global_arr" : "decl_arr", type, name, length.ToString());
@@ -229,6 +243,12 @@ namespace MiniC
             Ir.Put(context, irCode);
 
         }
+
+        public override void ExitDecl(ProgramParser.DeclContext context)
+        {
+            Ir.Put(context, Ir.Get(context.GetChild(0)));
+        }
+
         #endregion
 
         #region Literal
@@ -676,6 +696,7 @@ namespace MiniC
             var tail = _irBuilder.GenerateIr(labelNumber: endIf);
 
             StringBuilder stringBuilder = new();
+            stringBuilder.AppendLine(Ir.Get(context.expr()));
             stringBuilder.AppendLine(head);
             stringBuilder.AppendLine(Ir.Get(context.stmt()));
             stringBuilder.AppendLine(tail);
@@ -732,6 +753,7 @@ namespace MiniC
             var tail = _irBuilder.GenerateIr(_irBuilder.GenerateIr(labelNumber: endElse));
 
             StringBuilder stringBuilder = new();
+            stringBuilder.AppendLine(Ir.Get(context.expr()));
             stringBuilder.AppendLine(head);
             stringBuilder.AppendLine(Ir.Get(context.ifStmt));
             stringBuilder.AppendLine(middle);
@@ -747,6 +769,103 @@ namespace MiniC
         public override void ExitExpr_stmt(ProgramParser.Expr_stmtContext context)
         {
             Ir.Put(context, Ir.Get(context.expr()));
+        }
+
+        #endregion
+
+        #region Iteration_stmt
+
+        private readonly Stack<(int start, int end)> _labelStack = new();
+
+        public override void EnterIteration_stmt(ProgramParser.Iteration_stmtContext context)
+        {
+            var startLabel = LabelNumber;
+            var endLabel = LabelNumber;
+            _labelStack.Push((startLabel, endLabel));
+        }
+
+        public override void ExitIteration_stmt(ProgramParser.Iteration_stmtContext context)
+        {
+            var (startLabel, endLabel) = _labelStack.Pop();
+            
+            var exprVal = _values.Get(context.expr());
+            var head = _irBuilder.GenerateIr(labelNumber: startLabel) + "\n"
+                                                                      + _irBuilder.GenerateIr("Je", exprVal.Name, "0",
+                                                                          $"label_{endLabel}");
+            var tail = _irBuilder.GenerateIr("J", $"label_{startLabel}") + "\n" +
+                       _irBuilder.GenerateIr(labelNumber: endLabel);
+
+            StringBuilder stringBuilder = new();
+
+            stringBuilder.AppendLine(Ir.Get(context.expr()));
+            stringBuilder.AppendLine(head);
+            stringBuilder.AppendLine(Ir.Get(context.stmt()));
+            stringBuilder.AppendLine(tail);
+            
+            Ir.Put(context, stringBuilder.ToString());
+        }
+
+        #endregion
+
+        #region Single_stmt
+
+        public override void ExitContinue_stmt(ProgramParser.Continue_stmtContext context)
+        {
+            if (_labelStack.TryPeek(out (int, int) labels) == false)
+                throw new MyListenerException("Use Continue Outside While Statement");
+            Ir.Put(context, _irBuilder.GenerateIr("J", $"label_{labels.Item1}"));
+        }
+
+        public override void ExitBreak_stmt(ProgramParser.Break_stmtContext context)
+        {
+            if (_labelStack.TryPeek(out (int, int) labels) == false)
+                throw new MyListenerException("Use Break Outside While Statement");
+            Ir.Put(context, _irBuilder.GenerateIr("J", $"label_{labels.Item2}"));
+        }
+
+        public override void ExitReturn_stmt(ProgramParser.Return_stmtContext context)
+        {
+            StringBuilder stringBuilder = new();
+            stringBuilder.AppendLine(Ir.Get(context.expr()));
+            var exprVal = _values.Get(context.expr());
+            stringBuilder.AppendLine(_irBuilder.GenerateIr("return", exprVal.Name));
+            Ir.Put(context, stringBuilder.ToString());
+        }
+
+        #endregion
+
+        #region Compound_stmt
+
+        public override void ExitCompound_stmtHasBody(ProgramParser.Compound_stmtHasBodyContext context)
+        {
+            Ir.Put(context, Ir.Get(context.block_item_list()));
+        }
+
+        public override void ExitBlock_item_list(ProgramParser.Block_item_listContext context)
+        {
+            StringBuilder stringBuilder = new();
+            foreach (var blockItem in context.block_item())
+                stringBuilder.AppendLine(Ir.Get(blockItem));
+            
+            Ir.Put(context, stringBuilder.ToString());
+        }
+
+        public override void ExitBlock_item(ProgramParser.Block_itemContext context)
+        {
+            StringBuilder stringBuilder = new();
+            foreach (var child in context.children)
+                stringBuilder.AppendLine(Ir.Get(child));
+
+            Ir.Put(context, stringBuilder.ToString());
+        }
+
+        #endregion
+
+        #region Stmt
+
+        public override void ExitStmt(ProgramParser.StmtContext context)
+        {
+            Ir.Put(context, Ir.Get(context.GetChild(0)));
         }
 
         #endregion
