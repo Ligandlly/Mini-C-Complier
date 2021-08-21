@@ -37,9 +37,9 @@ namespace FrontEnd
 
             UnitSize = type switch
             {
-                "int" => 4,
-                "short" => 2,
-                "char" => 1,
+                "intArr" => 4,
+                "shortArr" => 2,
+                "charArr" => 1,
                 _ => throw new Exception("Invalid Type Specific")
             };
         }

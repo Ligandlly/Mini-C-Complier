@@ -214,7 +214,7 @@ namespace FrontEnd
                         var name = paramHasArr.id().GetText();
 
                         table.Add(name, new ArrIdentity(name, type + "Arr", int.Parse(paramHasArr.num().GetText())));
-                        tmpList.Add((type, name));
+                        tmpList.Add((type + "Arr", name));
                         break;
                     }
                 }
@@ -683,11 +683,15 @@ namespace FrontEnd
             }
             else
             {
+                StringBuilder stringBuilder = new();
                 var leftVal = _values.Get(context.left);
                 var rightVal = _values.Get(context.right);
                 var tmpRlt = NewTmpVar(leftVal.Type);
 
-                _ir.Put(context, _irBuilder.GenerateIr(context.op.Text, leftVal.Name, rightVal.Name, tmpRlt.Name));
+                stringBuilder.AppendLine(_ir.Get(context.left));
+                stringBuilder.AppendLine(_ir.Get(context.right));
+                stringBuilder.AppendLine(_irBuilder.GenerateIr(context.op.Text, leftVal.Name, rightVal.Name, tmpRlt.Name));
+                _ir.Put(context, stringBuilder.ToString());
                 _values.Put(context, tmpRlt);
             }
         }

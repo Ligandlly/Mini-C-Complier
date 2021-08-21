@@ -6,6 +6,7 @@
 *.class
 .antlr
 .vscode
+*/input.c
 # User-specific files
 *.rsuser
 *.suo
