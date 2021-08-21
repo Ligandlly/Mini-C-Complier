@@ -1,4 +1,21 @@
-﻿using Antlr4.Runtime.Misc;
+﻿/*
+ * Although she feeds me bread of bitterness, 
+ * And sinks into my throat her tiger's tooth, 
+ * Stealing my breath of life, 
+ * I will confess I love this cultured hell that tests my youth! 
+ * Her vigor flows like tides into my blood, 
+ * Giving me strength erect against her hate. 
+ * Her bigness sweeps my being like a flood. 
+ * Yet as a rebel fronts a king in state, 
+ * I stand within her walls with not a shred 
+ * Of terror, malice, not a word of jeer. 
+ * Darkly I gaze into the days ahead, 
+ * And see her might and granite wonders there,
+ * Beneath the touch of Time’s unerring hand, 
+ * Like priceless treasures sinking in the sand.
+ */
+
+using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 using System;
 using System.Collections.Generic;
@@ -92,7 +109,7 @@ namespace FrontEnd
         {
             if (!_tables[Global].ContainsKey("main"))
                 throw new FrontEndException("Main Function Undefined");
-            
+
             StringBuilder stringBuilder = new();
             foreach (var tmpVariable in _tmpVariables)
                 stringBuilder.AppendLine(_irBuilder.GenerateIr("global", tmpVariable.Type, tmpVariable.Name));
@@ -244,7 +261,7 @@ namespace FrontEnd
 
             if (funcName != "main")
                 rltBuilder.AppendLine(_irBuilder.GenerateIr("end_func"));
-            
+
             var rlt = rltBuilder.ToString();
             _ir.Put(context, rlt);
             _currentScopeNameStack.Pop();
@@ -783,7 +800,7 @@ namespace FrontEnd
             StringBuilder stringBuilder = new();
 
             var exprIr = _ir.Get(context.expr());
-            
+
             stringBuilder.AppendLine(exprIr);
             stringBuilder.AppendLine(head);
             stringBuilder.AppendLine(_ir.Get(context.ifStmt));
