@@ -120,9 +120,8 @@ namespace FrontEnd
             _ir.Put(context, stringBuilder.ToString());
 
             Result = stringBuilder.ToString();
-
-            // FIXME: There are blank lines that can only remove manually
-            Result = Regex.Replace(Result, @"^\s+$[\r\n]*", string.Empty, RegexOptions.Multiline);
+            
+            Result = Regex.Replace(Result, @"^\s*$[\r\n]*", string.Empty, RegexOptions.Multiline);
         }
 
         #endregion
@@ -356,8 +355,7 @@ namespace FrontEnd
             }
 
             var id = table[name];
-
-            _ir.Put(context, "");
+            
             _values.Put(context, id);
         }
 
@@ -651,6 +649,7 @@ namespace FrontEnd
             if (unaryVal.Mutable == false)
                 throw new FrontEndException("Change Value of an Immutable Variable");
 
+            stringBuilder.AppendLine(_ir.Get(context.unary_expr()));
             stringBuilder.AppendLine(_ir.Get(context.assignmentExpr()));
             stringBuilder.AppendLine(_irBuilder.GenerateIr("=", assVal.Name, dist: unaryVal.Name));
 
@@ -857,7 +856,7 @@ namespace FrontEnd
         #endregion
 
         #region Single_stmt
-
+        
         public override void ExitContinue_stmt(ProgramParser.Continue_stmtContext context)
         {
             if (_labelStack.TryPeek(out (int, int) labels) == false)
