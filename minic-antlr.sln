@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.810.7
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrontEnd", "FrontEnd\FrontEnd.csproj", "{395590F3-D2A0-4551-A205-8F8BA9759799}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FrontEnd", "FrontEnd\FrontEnd.csproj", "{395590F3-D2A0-4551-A205-8F8BA9759799}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniCC", "MiniCC\MiniCC.csproj", "{3FECB49B-8FF9-4A89-A41D-E646CE0DAA6F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiniCC", "MiniCC\MiniCC.csproj", "{3FECB49B-8FF9-4A89-A41D-E646CE0DAA6F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrontEndTest", "FrontEndTest\FrontEndTest.csproj", "{B7634C66-77D5-484A-8F73-14D043FC5DD5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FrontendTest", "FrontEndTest\FrontendTest.csproj", "{B7634C66-77D5-484A-8F73-14D043FC5DD5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backend", "Backend\Backend.csproj", "{5142BD8E-0C43-4138-B6BC-C29B1C7E256D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Backend", "Backend\Backend.csproj", "{5142BD8E-0C43-4138-B6BC-C29B1C7E256D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{174439E1-7A9D-4C29-983C-10CC20893764}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{174439E1-7A9D-4C29-983C-10CC20893764}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
