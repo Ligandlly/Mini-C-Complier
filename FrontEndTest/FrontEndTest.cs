@@ -1,8 +1,7 @@
-using System;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
-using NUnit.Framework;
 using FrontEnd;
+using NUnit.Framework;
 namespace FrontEndTest
 {
     public class Tests
