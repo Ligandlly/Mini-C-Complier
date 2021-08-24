@@ -36,7 +36,8 @@ int main() {
             var walker = new ParseTreeWalker();
             var frontEndListener = new FrontEndListener();
             walker.Walk(frontEndListener, tree);
-
+            Console.WriteLine(frontEndListener.Result);
+            return;
             var backend = new Backend.Backend(frontEndListener.Result);
             foreach (var q in backend.IrList)
             {

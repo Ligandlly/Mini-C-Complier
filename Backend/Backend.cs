@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using FrontEnd;
+
 
 namespace Backend
 {
+    using SymbolTable = Dictionary<string, Identity>;
+
     public record Quaternary
     {
         public List<string> Labels { get; init; }
@@ -21,9 +25,12 @@ namespace Backend
     public class Backend
     {
         public List<Quaternary> IrList { get; } = new();
+        public Dictionary<string, SymbolTable> Tables { get; init; }
 
-        public Backend(string ir)
+        public Backend(string ir, Dictionary<string, SymbolTable> tables)
         {
+            Tables = tables;
+
             var semicolon = 0;
             StringBuilder stringBuilder = new();
             var tmpQuaternary = new Quaternary()

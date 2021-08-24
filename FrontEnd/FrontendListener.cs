@@ -56,7 +56,7 @@ namespace FrontEnd
         /// <summary>
         /// Symbol Tables
         /// </summary>
-        private readonly Dictionary<string, SymbolTable> _tables = new();
+        public readonly Dictionary<string, SymbolTable> Tables = new();
 
         private readonly Stack<string> _currentScopeNameStack = new();
 
@@ -101,13 +101,13 @@ namespace FrontEnd
 
         public override void EnterProgram(ProgramParser.ProgramContext context)
         {
-            _tables.Add(Global, new SymbolTable());
+            Tables.Add(Global, new SymbolTable());
             _currentScopeNameStack.Push(Global);
         }
 
         public override void ExitProgram(ProgramParser.ProgramContext context)
         {
-            if (!_tables[Global].ContainsKey("main"))
+            if (!Tables[Global].ContainsKey("main"))
                 throw new FrontEndException("Main Function Undefined");
 
             StringBuilder stringBuilder = new();
@@ -161,7 +161,7 @@ namespace FrontEnd
             var name = context.id().GetText();
             var type = context.type_spec().GetText();
 
-            var table = _tables[_currentScopeNameStack.Peek()];
+            var table = Tables[_currentScopeNameStack.Peek()];
 
             // Check if the name has already in Symbol table
             if (table.ContainsKey(name))
@@ -188,12 +188,12 @@ namespace FrontEnd
             var funcName = context.id().GetText();
             var rltType = context.type_spec() != null ? context.type_spec().GetText() : context.VOID().GetText();
 
-            if (_tables[Global].Keys.Contains(funcName))
+            if (Tables[Global].Keys.Contains(funcName))
                 throw new FrontEndException("Duplicate Function Name");
 
             _currentScopeNameStack.Push(funcName);
             var table = new SymbolTable();
-            _tables.Add(funcName, table);
+            Tables.Add(funcName, table);
 
             // Add parameter list
             var tmpList = new List<(string, string)>();
@@ -222,7 +222,7 @@ namespace FrontEnd
                 }
             }
 
-            _tables[Global].Add(funcName, new FuncIdentity(funcName, rltType, tmpList.ToArray()));
+            Tables[Global].Add(funcName, new FuncIdentity(funcName, rltType, tmpList.ToArray()));
         }
 
         /// <summary>
@@ -247,7 +247,7 @@ namespace FrontEnd
             var funcName = context.id().GetText();
             var rltType = context.type_spec() != null ? context.type_spec().GetText() : context.VOID().GetText();
 
-            var funcIdent = _tables[Global][funcName] as FuncIdentity;
+            var funcIdent = Tables[Global][funcName] as FuncIdentity;
 
             if (funcName != "main")
             {
@@ -280,7 +280,7 @@ namespace FrontEnd
             var length = int.Parse(context.num().GetText());
             var arr = new ArrIdentity(name, type + "Arr", length);
 
-            _tables[Global].Add(name, arr);
+            Tables[Global].Add(name, arr);
             var irCode = _irBuilder.GenerateIr(_currentScopeNameStack.Peek() == Global ? "global_arr" : "decl_arr",
                 type, name, length.ToString());
 
@@ -347,11 +347,11 @@ namespace FrontEnd
         public override void ExitId(ProgramParser.IdContext context)
         {
             var name = context.GetText();
-            var table = _tables[_currentScopeNameStack.Peek()];
+            var table = Tables[_currentScopeNameStack.Peek()];
             if (!table.ContainsKey(name))
             {
-                if (_tables[Global].ContainsKey(name))
-                    table = _tables[Global];
+                if (Tables[Global].ContainsKey(name))
+                    table = Tables[Global];
                 else
                     throw new FrontEndException($"Undefined Identifier: {context.GetText()}");
             }
@@ -385,7 +385,7 @@ namespace FrontEnd
         {
             var funcName = context.id().GetText();
 
-            var table = _tables[Global];
+            var table = Tables[Global];
 
             // check whether the function is defined correctly
             if (!table.ContainsKey(funcName) || table[funcName] is not FuncIdentity func)
@@ -446,7 +446,7 @@ namespace FrontEnd
             var funcName = context.id().GetText();
 
             // If do not have function defined or the identity with the name is not defined as a function,
-            var table = _tables[_currentScopeNameStack.Peek()];
+            var table = Tables[_currentScopeNameStack.Peek()];
             if (!table.ContainsKey(funcName) || table[funcName] is not FuncIdentity func)
             {
                 throw new KeyNotFoundException("Function Undefined");
