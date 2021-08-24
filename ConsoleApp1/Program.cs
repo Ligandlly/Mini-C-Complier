@@ -1,19 +1,14 @@
-using System;
+﻿using System;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
-using NUnit.Framework;
 using FrontEnd;
-namespace FrontEndTest
-{
-    public class Tests
-    {
-        [SetUp]
-        public void Setup()
-        {
-        }
+using Backend;
 
-        [Test]
-        public void TestArray()
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main(string[] args)
         {
             string test = @"
 int addThird(int arr[5]) {
@@ -22,29 +17,13 @@ int addThird(int arr[5]) {
 
 int main() {
     int arr[5];
-    arr[1] = 2;
-    addThird(arr);
+    while (1) {
+        arr[1] = 2;
+        addThird(arr);
+    }
 }
 ";
-            string rlt = @"    global; intArr; @t0;  ;
-    global; intArr; @t1;  ;
-    global; intArr; @t2;  ;
-    global; int; @t3;  ;
-    param_decl; intArr; arr;  ;
-    func; int; addThird; 1;
-    cp; arr;  ; @t0;
-    inc; 8;  ; @t0;
-    +; @t0; 1; @t1;
-    return; @t1;  ;  ;
-    end_func;  ;  ;  ;
-    decl_arr; int; arr; 5;
-    cp; arr;  ; @t2;
-    inc; 4;  ; @t2;
-    =; 2;  ; @t2;
-    param; arr;  ;  ;
-    call; addThird; 1; @t3;
-    end;  ;  ;  ;
-";
+
             ICharStream stream = CharStreams.fromString(test);
             ITokenSource lexer = new ProgramLexer(stream);
             ITokenStream tokens = new CommonTokenStream(lexer);
@@ -58,7 +37,11 @@ int main() {
             var frontEndListener = new FrontEndListener();
             walker.Walk(frontEndListener, tree);
 
-            Assert.AreEqual(rlt, frontEndListener.Result);
+            var backend = new Backend.Backend(frontEndListener.Result);
+            foreach (var q in backend.IrList)
+            {
+                Console.WriteLine(q);
+            }
         }
     }
 }

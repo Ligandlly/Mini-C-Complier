@@ -122,6 +122,8 @@ namespace FrontEnd
             Result = stringBuilder.ToString();
             
             Result = Regex.Replace(Result, @"^\s*$[\r\n]*", string.Empty, RegexOptions.Multiline);
+
+            Result += _irBuilder.GenerateIr("end") + "\r\n";
         }
 
         #endregion
