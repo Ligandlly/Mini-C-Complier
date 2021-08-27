@@ -25,7 +25,7 @@ namespace Backend
     public class Backend
     {
         public List<Quaternary> IrList { get; } = new();
-        public Dictionary<string, SymbolTable> Tables { get; init; }
+        public Dictionary<string, SymbolTable> Tables { get; }
 
         public Backend(string ir, Dictionary<string, SymbolTable> tables)
         {
@@ -80,6 +80,58 @@ namespace Backend
                         break;
                 }
             }
+        }
+
+
+        public string DataSegment()
+        {
+            StringBuilder stringBuilder = new();
+            stringBuilder.AppendLine(".data");
+
+            List<int> tmpInts = new();
+            List<int> tmpShorts = new();
+            List<int> tmpChars = new();
+            
+            foreach (var quaternary in IrList)
+            {
+                if (quaternary.Op != "global")
+                    break;
+                
+                // tmp var
+                if (quaternary.Src2[0] == '@')
+                {
+                    switch (quaternary.Src1)
+                    {
+                        case "int":
+                            tmpInts.Add(int.Parse(quaternary.Src2[3..]));
+                            break;
+                        case "short":
+                            tmpShorts.Add(int.Parse(quaternary.Src2[3..]));
+                            break;
+                        case "char":
+                            tmpChars.Add(int.Parse(quaternary.Src2[3..]));
+                            break;
+                    }
+                }
+            }
+
+            return stringBuilder.ToString();
+        }
+            
+        public string Translate()
+        {
+            foreach (var quaternary in IrList)
+            {
+                switch (quaternary.Op)
+                {
+                    case "+":
+                        
+                        break;
+                    
+                }
+            }
+
+            return "";
         }
     }
 }

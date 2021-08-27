@@ -38,7 +38,7 @@ int main() {
             walker.Walk(frontEndListener, tree);
             Console.WriteLine(frontEndListener.Result);
             return;
-            var backend = new Backend.Backend(frontEndListener.Result);
+            var backend = new Backend.Backend(frontEndListener.Result, frontEndListener.Tables);
             foreach (var q in backend.IrList)
             {
                 Console.WriteLine(q);

@@ -25,9 +25,9 @@ int main() {
     addThird(arr);
 }
 ";
-            string rlt = @"    global; intArr; @t0;  ;
-    global; intArr; @t1;  ;
-    global; intArr; @t2;  ;
+            string rlt = @"    global; int; @t0;  ;
+    global; int; @t1;  ;
+    global; int; @t2;  ;
     global; int; @t3;  ;
     param_decl; intArr; arr;  ;
     func; int; addThird; 1;
@@ -57,7 +57,7 @@ int main() {
             var frontEndListener = new FrontEndListener();
             walker.Walk(frontEndListener, tree);
 
-            Assert.AreEqual(rlt, frontEndListener.Result);
+            Assert.AreEqual(rlt.Trim(), frontEndListener.Result.Trim());
         }
     }
 }

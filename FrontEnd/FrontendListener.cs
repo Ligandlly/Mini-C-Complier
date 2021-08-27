@@ -71,13 +71,7 @@ namespace FrontEnd
         /// <summary>
         /// Template Variables List
         /// </summary>
-        private readonly Dictionary<string, List<Identity>> _tmpVariables = new()
-        {
-            {Identity.Int, new List<Identity>()},
-            {Identity.Short, new List<Identity>()},
-            {Identity.Char, new List<Identity>()}
-        };
-
+        private readonly List<Identity> _tmpVariables = new();
         /// <summary>
         /// Create a new temporary variable
         /// </summary>
@@ -88,9 +82,9 @@ namespace FrontEnd
         {
             var rlt = _tmpVariables.Count;
             var name = $"@t{rlt}";
-            _tmpVariables[type].Add(new Identity(name, type, mutable));
+            _tmpVariables.Add(new Identity(name, type, mutable));
 
-            return _tmpVariables[type].Last();
+            return _tmpVariables.Last();
         }
 
         private void CopyIrAndValue(IParseTree context, IParseTree child)
@@ -114,15 +108,8 @@ namespace FrontEnd
                 throw new FrontEndException("Main Function Undefined");
 
             StringBuilder stringBuilder = new();
-            foreach (var tmpVariable in _tmpVariables[Identity.Int])
+            foreach (var tmpVariable in _tmpVariables)
                 stringBuilder.AppendLine(_irBuilder.GenerateIr("global", tmpVariable.Type, tmpVariable.Name));
-
-            foreach (var identity in _tmpVariables[Identity.Short])
-                stringBuilder.AppendLine(_irBuilder.GenerateIr("global", identity.Type, identity.Name));
-
-            foreach (var identity in _tmpVariables[Identity.Char])
-                stringBuilder.AppendLine(_irBuilder.GenerateIr("global", identity.Type, identity.Name));
-
 
             foreach (var declContext in context.decl())
                 stringBuilder.AppendLine(_ir.Get(declContext));
