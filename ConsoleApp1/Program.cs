@@ -11,16 +11,10 @@ namespace ConsoleApp1
         static void Main(string[] args)
         {
             string test = @"
-int addThird(int arr[5]) {
-    return arr[2] + 1;
-}
-
 int main() {
-    int arr[5];
-    while (1) {
-        arr[1] = 2;
-        addThird(arr);
-    }
+    int a;
+    a = 1;
+    a = a + 2;
 }
 ";
 

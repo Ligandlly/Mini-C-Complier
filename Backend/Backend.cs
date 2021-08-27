@@ -21,11 +21,18 @@ namespace Backend
             return $"{string.Join(" ,", Labels)} \n {Op}, {Src1}, {Src2}, {Dist}";
         }
     }
-    
+
     public class Backend
     {
         public List<Quaternary> IrList { get; } = new();
         public Dictionary<string, SymbolTable> Tables { get; }
+
+        private readonly Dictionary<string, string> _typeMap = new()
+        {
+            {"int", "word"},
+            {"short", "half"},
+            {"char", "byte"}
+        };
 
         public Backend(string ir, Dictionary<string, SymbolTable> tables)
         {
@@ -73,6 +80,7 @@ namespace Backend
                             default:
                                 throw new Exception();
                         }
+
                         stringBuilder.Clear();
                         break;
                     default:
@@ -86,38 +94,15 @@ namespace Backend
         public string DataSegment()
         {
             StringBuilder stringBuilder = new();
-            stringBuilder.AppendLine(".data");
+            stringBuilder.AppendLine(".DATA");
 
-            List<int> tmpInts = new();
-            List<int> tmpShorts = new();
-            List<int> tmpChars = new();
-            
             foreach (var quaternary in IrList)
             {
-                if (quaternary.Op != "global")
-                    break;
-                
-                // tmp var
-                if (quaternary.Src2[0] == '@')
-                {
-                    switch (quaternary.Src1)
-                    {
-                        case "int":
-                            tmpInts.Add(int.Parse(quaternary.Src2[3..]));
-                            break;
-                        case "short":
-                            tmpShorts.Add(int.Parse(quaternary.Src2[3..]));
-                            break;
-                        case "char":
-                            tmpChars.Add(int.Parse(quaternary.Src2[3..]));
-                            break;
-                    }
-                }
             }
 
-            return stringBuilder.ToString();
+            return "";
         }
-            
+
         public string Translate()
         {
             foreach (var quaternary in IrList)
@@ -125,9 +110,8 @@ namespace Backend
                 switch (quaternary.Op)
                 {
                     case "+":
-                        
+
                         break;
-                    
                 }
             }
 

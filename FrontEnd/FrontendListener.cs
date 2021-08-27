@@ -62,7 +62,7 @@ namespace FrontEnd
 
         private readonly IIrBuilder _irBuilder = new QuaternaryBuilder();
 
-        private const string Global = "0_global";
+        public const string Global = "0_global";
 
         private int _labelNumber;
 
@@ -81,7 +81,7 @@ namespace FrontEnd
         private Identity NewTmpVar(string type, bool mutable = true)
         {
             var rlt = _tmpVariables.Count;
-            var name = $"@t{rlt}";
+            var name = $"t{rlt}";
             _tmpVariables.Add(new Identity(name, type, mutable));
 
             return _tmpVariables.Last();
@@ -670,6 +670,7 @@ namespace FrontEnd
         /// </code>
         /// </example>
         /// <param name="context"></param>
+        /// <exception cref="FrontEndException">Divided By Zero</exception>
         public override void ExitBinaryExpr([NotNull] ProgramParser.BinaryExprContext context)
         {
             if (context.num() != null)
@@ -687,6 +688,12 @@ namespace FrontEnd
                 var rightVal = _values.Get(context.right);
                 var tmpRlt = NewTmpVar(leftVal.Type);
 
+                if (context.op.Text is "/" or "%")
+                {
+                    if (_ir.Get(context.right) == "0")
+                        throw new FrontEndException("Divided By Zero");
+                }
+                
                 stringBuilder.AppendLine(_ir.Get(context.left));
                 stringBuilder.AppendLine(_ir.Get(context.right));
                 stringBuilder.AppendLine(_irBuilder.GenerateIr(context.op.Text, leftVal.Name, rightVal.Name, tmpRlt.Name));

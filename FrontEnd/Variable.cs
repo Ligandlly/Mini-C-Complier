@@ -53,7 +53,7 @@ namespace FrontEnd
         public (string paramType, string paramName)[] Params
         {
             get => _params;
-            set
+            init
             {
                 if (value.Length == 1 && value[0].paramType == "void")
                 {
