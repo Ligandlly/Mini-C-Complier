@@ -71,7 +71,12 @@ namespace FrontEnd
         /// <summary>
         /// Template Variables List
         /// </summary>
-        private readonly List<Identity> _tmpVariables = new();
+        private readonly Dictionary<string, List<Identity>> _tmpVariables = new()
+        {
+            {Identity.Int, new List<Identity>()},
+            {Identity.Short, new List<Identity>()},
+            {Identity.Char, new List<Identity>()}
+        };
 
         /// <summary>
         /// Create a new temporary variable
@@ -83,9 +88,9 @@ namespace FrontEnd
         {
             var rlt = _tmpVariables.Count;
             var name = $"@t{rlt}";
-            _tmpVariables.Add(new Identity(name, type, mutable));
+            _tmpVariables[type].Add(new Identity(name, type, mutable));
 
-            return _tmpVariables.Last();
+            return _tmpVariables[type].Last();
         }
 
         private void CopyIrAndValue(IParseTree context, IParseTree child)
@@ -93,8 +98,6 @@ namespace FrontEnd
             _ir.Put(context, _ir.Get(child));
             _values.Put(context, _values.Get(child));
         }
-
-        public int LineNumber { get; set; }
 
 
         #region Program
@@ -111,8 +114,15 @@ namespace FrontEnd
                 throw new FrontEndException("Main Function Undefined");
 
             StringBuilder stringBuilder = new();
-            foreach (var tmpVariable in _tmpVariables)
+            foreach (var tmpVariable in _tmpVariables[Identity.Int])
                 stringBuilder.AppendLine(_irBuilder.GenerateIr("global", tmpVariable.Type, tmpVariable.Name));
+
+            foreach (var identity in _tmpVariables[Identity.Short])
+                stringBuilder.AppendLine(_irBuilder.GenerateIr("global", identity.Type, identity.Name));
+
+            foreach (var identity in _tmpVariables[Identity.Char])
+                stringBuilder.AppendLine(_irBuilder.GenerateIr("global", identity.Type, identity.Name));
+
 
             foreach (var declContext in context.decl())
                 stringBuilder.AppendLine(_ir.Get(declContext));
@@ -517,7 +527,7 @@ namespace FrontEnd
             if (identity is not ArrIdentity arrIdentity)
                 throw new FrontEndException("Get Item From Non-array Variable");
 
-            var tmpRltId = NewTmpVar(arrIdentity.Type);
+            var tmpRltId = NewTmpVar(arrIdentity.Type[..^3]);
             stringBuilder.AppendLine(_irBuilder.GenerateIr("cp", arrIdentity.Name, dist: tmpRltId.Name));
 
             // If expr is literal
@@ -529,7 +539,7 @@ namespace FrontEnd
             else
             {
                 var exprVal = _values.Get(context.expr());
-                var tmpOffsetId = NewTmpVar(exprVal.Type);
+                var tmpOffsetId = NewTmpVar(exprVal.Type[..^3]);
                 stringBuilder.AppendLine(_irBuilder.GenerateIr("<<", exprVal.Name, "2", tmpOffsetId.Name));
                 stringBuilder.AppendLine(_irBuilder.GenerateIr("inc", tmpOffsetId.Name, dist: tmpRltId.Name));
             }
