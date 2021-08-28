@@ -62,7 +62,7 @@ int main() {
     global; int; t1;  ;
     global; int; t2;  ;
     global; int; t3;  ;
-    param_decl; intArr; arr;  ;
+    param_decl; int; arr; 5;
     func; int; addThird; 1;
     cp; arr;  ; t0;
     inc; 8;  ; t0;
@@ -75,6 +75,67 @@ int main() {
     =; 2;  ; t2;
     param; arr;  ;  ;
     call; addThird; 1; t3;
+    end;  ;  ;  ;
+";
+            ICharStream stream = CharStreams.fromString(test);
+            ITokenSource lexer = new ProgramLexer(stream);
+            ITokenStream tokens = new CommonTokenStream(lexer);
+            ProgramParser parser = new ProgramParser(tokens)
+            {
+                BuildParseTree = true,
+                ErrorHandler = new FrontEndErrorStrategy()
+            };
+            IParseTree tree = parser.program();
+            var walker = new ParseTreeWalker();
+            var frontEndListener = new FrontEndListener();
+            walker.Walk(frontEndListener, tree);
+
+            Assert.AreEqual(rlt.Trim(), frontEndListener.Result.Trim());
+        }
+
+        [Test]
+        public void TestArrDecl()
+        {
+            var test = @"
+short arr[3];
+int main() {
+    short localArr[4];
+}";
+            var rlt = @"    global_arr; short; arr; 3;
+    decl_arr; short; localArr; 4;
+    end;  ;  ;  ;
+";
+            ICharStream stream = CharStreams.fromString(test);
+            ITokenSource lexer = new ProgramLexer(stream);
+            ITokenStream tokens = new CommonTokenStream(lexer);
+            ProgramParser parser = new ProgramParser(tokens)
+            {
+                BuildParseTree = true,
+                ErrorHandler = new FrontEndErrorStrategy()
+            };
+            IParseTree tree = parser.program();
+            var walker = new ParseTreeWalker();
+            var frontEndListener = new FrontEndListener();
+            walker.Walk(frontEndListener, tree);
+
+            Assert.AreEqual(rlt.Trim(), frontEndListener.Result.Trim());
+        }
+
+        [Test]
+        public void TestFuncDef()
+        {
+            var test = @"
+short foo(int a, char arr[3]) {
+    return 1;
+}
+int main() {
+    
+}";
+            var rlt = @"    param_decl; int; a;  ;
+    param_decl; char; arr; 3;
+    func; short; foo; 2;
+    return; 1;  ;  ;
+    end_func;  ;  ;  ;
     end;  ;  ;  ;
 ";
             ICharStream stream = CharStreams.fromString(test);

@@ -250,8 +250,17 @@ namespace FrontEnd
             {
                 Debug.Assert(funcIdent != null, nameof(funcIdent) + " != null");
                 foreach (var (paramType, paramName) in funcIdent.Params)
-                    rltBuilder.AppendLine(_irBuilder.GenerateIr("param_decl", paramType, paramName));
-
+                {
+                    if (paramType.Substring(paramType.Length - 3,3) == "Arr")
+                    {
+                        var arrId = Tables[_currentScopeNameStack.Peek()][paramName] as ArrIdentity;
+                        Debug.Assert(arrId != null, nameof(arrId) + " != null");
+                        rltBuilder.AppendLine(_irBuilder.GenerateIr("param_decl", paramType[..^3], arrId.Name,
+                            $"{arrId.Length}"));
+                    }
+                    else
+                        rltBuilder.AppendLine(_irBuilder.GenerateIr("param_decl", paramType, paramName));
+                }
                 rltBuilder.AppendLine(_irBuilder.GenerateIr("func", rltType, funcName, $"{funcIdent.Params.Length}"));
             }
 

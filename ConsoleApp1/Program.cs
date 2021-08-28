@@ -11,10 +11,11 @@ namespace ConsoleApp1
         static void Main(string[] args)
         {
             string test = @"
+short foo(int a, char arr[3]) {
+    return 1;
+}
 int main() {
-    int a;
-    a = 1;
-    a = a + 2;
+    
 }
 ";
 
