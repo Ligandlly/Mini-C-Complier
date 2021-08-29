@@ -11,6 +11,24 @@ namespace FrontEndTest
         {
         }
 
+        private static void Compare(string test, string rlt)
+        {
+            ICharStream stream = CharStreams.fromString(test);
+            ITokenSource lexer = new ProgramLexer(stream);
+            ITokenStream tokens = new CommonTokenStream(lexer);
+            ProgramParser parser = new ProgramParser(tokens)
+            {
+                BuildParseTree = true,
+                ErrorHandler = new FrontEndErrorStrategy()
+            };
+            IParseTree tree = parser.program();
+            var walker = new ParseTreeWalker();
+            var frontEndListener = new FrontEndListener();
+            walker.Walk(frontEndListener, tree);
+
+            Assert.AreEqual(rlt.Trim(), frontEndListener.Result.Trim());
+        }
+
         [Test]
         public void TestAdd()
         {
@@ -28,20 +46,7 @@ int main() {
     =; t0;  ; a;
     end;  ;  ;  ;
 ";
-            ICharStream stream = CharStreams.fromString(test);
-            ITokenSource lexer = new ProgramLexer(stream);
-            ITokenStream tokens = new CommonTokenStream(lexer);
-            ProgramParser parser = new ProgramParser(tokens)
-            {
-                BuildParseTree = true,
-                ErrorHandler = new FrontEndErrorStrategy()
-            };
-            IParseTree tree = parser.program();
-            var walker = new ParseTreeWalker();
-            var frontEndListener = new FrontEndListener();
-            walker.Walk(frontEndListener, tree);
-
-            Assert.AreEqual(rlt.Trim(), frontEndListener.Result.Trim());
+            Compare(test, rlt);
         }
         
         [Test]
@@ -77,21 +82,10 @@ int main() {
     call; addThird; 1; t3;
     end;  ;  ;  ;
 ";
-            ICharStream stream = CharStreams.fromString(test);
-            ITokenSource lexer = new ProgramLexer(stream);
-            ITokenStream tokens = new CommonTokenStream(lexer);
-            ProgramParser parser = new ProgramParser(tokens)
-            {
-                BuildParseTree = true,
-                ErrorHandler = new FrontEndErrorStrategy()
-            };
-            IParseTree tree = parser.program();
-            var walker = new ParseTreeWalker();
-            var frontEndListener = new FrontEndListener();
-            walker.Walk(frontEndListener, tree);
-
-            Assert.AreEqual(rlt.Trim(), frontEndListener.Result.Trim());
+            Compare(test, rlt);
         }
+
+       
 
         [Test]
         public void TestArrDecl()
@@ -105,20 +99,8 @@ int main() {
     decl_arr; short; localArr; 4;
     end;  ;  ;  ;
 ";
-            ICharStream stream = CharStreams.fromString(test);
-            ITokenSource lexer = new ProgramLexer(stream);
-            ITokenStream tokens = new CommonTokenStream(lexer);
-            ProgramParser parser = new ProgramParser(tokens)
-            {
-                BuildParseTree = true,
-                ErrorHandler = new FrontEndErrorStrategy()
-            };
-            IParseTree tree = parser.program();
-            var walker = new ParseTreeWalker();
-            var frontEndListener = new FrontEndListener();
-            walker.Walk(frontEndListener, tree);
+            Compare(test, rlt);
 
-            Assert.AreEqual(rlt.Trim(), frontEndListener.Result.Trim());
         }
 
         [Test]
@@ -138,20 +120,8 @@ int main() {
     end_func;  ;  ;  ;
     end;  ;  ;  ;
 ";
-            ICharStream stream = CharStreams.fromString(test);
-            ITokenSource lexer = new ProgramLexer(stream);
-            ITokenStream tokens = new CommonTokenStream(lexer);
-            ProgramParser parser = new ProgramParser(tokens)
-            {
-                BuildParseTree = true,
-                ErrorHandler = new FrontEndErrorStrategy()
-            };
-            IParseTree tree = parser.program();
-            var walker = new ParseTreeWalker();
-            var frontEndListener = new FrontEndListener();
-            walker.Walk(frontEndListener, tree);
+            Compare(test, rlt);
 
-            Assert.AreEqual(rlt.Trim(), frontEndListener.Result.Trim());
         }
     }
 }

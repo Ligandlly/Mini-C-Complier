@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
@@ -8,6 +8,7 @@
     <ItemGroup>
       <ProjectReference Include="..\Backend\Backend.csproj" />
       <ProjectReference Include="..\FrontEnd\FrontEnd.csproj" />
+      <ProjectReference Include="..\MiddleWares\MiddleWares.csproj" />
     </ItemGroup>
 
 </Project>
