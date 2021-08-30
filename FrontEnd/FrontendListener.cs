@@ -71,7 +71,7 @@ namespace FrontEnd
         /// <summary>
         /// Template Variables List
         /// </summary>
-        private readonly List<Identity> _tmpVariables = new();
+        private readonly List<TmpIdentity> _tmpVariables = new();
         /// <summary>
         /// Create a new temporary variable
         /// </summary>
@@ -82,7 +82,7 @@ namespace FrontEnd
         {
             var rlt = _tmpVariables.Count;
             var name = $"t{rlt}";
-            _tmpVariables.Add(new Identity(name, type, mutable));
+            _tmpVariables.Add(new TmpIdentity(name, type, _currentScopeNameStack.Peek()));
 
             return _tmpVariables.Last();
         }
@@ -107,9 +107,10 @@ namespace FrontEnd
             if (!Tables[Global].ContainsKey("main"))
                 throw new FrontEndException("Main Function Undefined");
 
+            // Temporary Variables
             StringBuilder stringBuilder = new();
             foreach (var tmpVariable in _tmpVariables)
-                stringBuilder.AppendLine(_irBuilder.GenerateIr("global", tmpVariable.Type, tmpVariable.Name));
+                stringBuilder.AppendLine(_irBuilder.GenerateIr("decl_var", tmpVariable.Type, $"{tmpVariable.Name}@{tmpVariable.Scope}"));
 
             foreach (var declContext in context.decl())
                 stringBuilder.AppendLine(_ir.Get(declContext));
@@ -168,8 +169,8 @@ namespace FrontEnd
 
             table.Add(name, new Identity(name, type));
 
-            var irCode = _irBuilder.GenerateIr(_currentScopeNameStack.Peek() == Global ? "global" : "decl_var", type,
-                name);
+            var irCode = _irBuilder.GenerateIr( "decl_var", type,
+                $"{name}@{_currentScopeNameStack.Peek()}");
             _ir.Put(context, irCode);
             _values.Put(context.id(), new Identity(name, type));
         }
@@ -287,8 +288,8 @@ namespace FrontEnd
             var arr = new ArrIdentity(name, type + "Arr", length);
 
             Tables[Global].Add(name, arr);
-            var irCode = _irBuilder.GenerateIr(_currentScopeNameStack.Peek() == Global ? "global_arr" : "decl_arr",
-                type, name, length.ToString());
+            var irCode = _irBuilder.GenerateIr("decl_arr",
+                type, $"{name}@{_currentScopeNameStack.Peek()}", length.ToString());
 
             _ir.Put(context, irCode);
         }
@@ -741,12 +742,12 @@ namespace FrontEnd
         /// =>
         /// 
         /// <code>
-        ///     Je a 0 label_0 -------------|
+        ///     Je a 0 label0 -------------|
         ///     + b 1 b                     |
-        ///     Je c 0 label_1 ---------|   |
+        ///     Je c 0 label1 ---------|   |
         ///     + b 2 b                 |   |
-        /// label_1:   -----------------|   |
-        /// label_0:    --------------------|
+        /// label1:   -----------------|   |
+        /// label0:    --------------------|
         ///     + b 3 b
         /// </code>
         /// </example>
@@ -755,7 +756,7 @@ namespace FrontEnd
         {
             var exprVal = _values.Get(context.expr());
             var endIf = LabelNumber;
-            var head = _irBuilder.GenerateIr("Je", exprVal.Name, "0", $"label_{endIf}");
+            var head = _irBuilder.GenerateIr("Je", exprVal.Name, "0", $"label{endIf}");
             var tail = _irBuilder.GenerateIr(labelNumber: endIf);
 
             StringBuilder stringBuilder = new();
@@ -788,18 +789,18 @@ namespace FrontEnd
         /// =>
         /// 
         /// <code>
-        ///         Je  a   0   label_0  -------------|
+        ///         Je  a   0   label0  -------------|
         ///         +   b   1   b                     |
-        ///         Je  b   0   label_2               |
+        ///         Je  b   0   label2               |
         ///         +   b   2   b                     |
-        ///         J label_3                         |
-        /// label_2:                                  |
+        ///         J label3                         |
+        /// label2:                                  |
         ///         +   b   3   b                     |
-        /// label_3:                                  |
-        ///         J label_1     --------------------|
-        /// label_0:    ------------------------------|
+        /// label3:                                  |
+        ///         J label1     --------------------|
+        /// label0:    ------------------------------|
         ///         +   b   4   b                     |
-        /// label_1:  --------------------------------|
+        /// label1:  --------------------------------|
         ///         +   b   5   b
         /// </code>
         /// </example>
@@ -810,8 +811,8 @@ namespace FrontEnd
             var endIf = LabelNumber;
             var endElse = LabelNumber;
 
-            var head = _irBuilder.GenerateIr("Je", exprVal.Name, "0", $"label_{endIf}");
-            var middle = _irBuilder.GenerateIr("J", $"label_{endElse}") + "\n"
+            var head = _irBuilder.GenerateIr("Je", exprVal.Name, "0", $"label{endIf}");
+            var middle = _irBuilder.GenerateIr("J", $"label{endElse}") + "\n"
                                                                         + _irBuilder.GenerateIr(labelNumber: endIf);
             var tail = _irBuilder.GenerateIr(labelNumber: endElse);
 
@@ -858,8 +859,8 @@ namespace FrontEnd
             var exprVal = _values.Get(context.expr());
             var head = _irBuilder.GenerateIr(labelNumber: startLabel) + "\n"
                                                                       + _irBuilder.GenerateIr("Je", exprVal.Name, "0",
-                                                                          $"label_{endLabel}");
-            var tail = _irBuilder.GenerateIr("J", $"label_{startLabel}") + "\n" +
+                                                                          $"label{endLabel}");
+            var tail = _irBuilder.GenerateIr("J", $"label{startLabel}") + "\n" +
                        _irBuilder.GenerateIr(labelNumber: endLabel);
 
             StringBuilder stringBuilder = new();
@@ -880,14 +881,14 @@ namespace FrontEnd
         {
             if (_labelStack.TryPeek(out (int, int) labels) == false)
                 throw new FrontEndException("Use Continue Outside While Statement");
-            _ir.Put(context, _irBuilder.GenerateIr("J", $"label_{labels.Item1}"));
+            _ir.Put(context, _irBuilder.GenerateIr("J", $"label{labels.Item1}"));
         }
 
         public override void ExitBreak_stmt(ProgramParser.Break_stmtContext context)
         {
             if (_labelStack.TryPeek(out (int, int) labels) == false)
                 throw new FrontEndException("Use Break Outside While Statement");
-            _ir.Put(context, _irBuilder.GenerateIr("J", $"label_{labels.Item2}"));
+            _ir.Put(context, _irBuilder.GenerateIr("J", $"label{labels.Item2}"));
         }
 
         public override void ExitReturn_stmt(ProgramParser.Return_stmtContext context)

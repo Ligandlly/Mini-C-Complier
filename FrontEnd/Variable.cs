@@ -79,4 +79,13 @@ namespace FrontEnd
         {
         }
     }
+
+    public class TmpIdentity : Identity
+    {
+        public string Scope { get; init; }
+        public TmpIdentity(string name, string type, string scope ) : base(name, type, true)
+        {
+            Scope = scope;
+        }
+    }
 }

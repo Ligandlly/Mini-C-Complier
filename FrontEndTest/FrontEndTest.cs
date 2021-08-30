@@ -39,8 +39,8 @@ int main() {
     a = a + 2;
 }
 ";
-            string rlt = @"    global; int; t0;  ;
-    decl_var; int; a;  ;
+            string rlt = @"    decl_var; int; t0@main;  ;
+    decl_var; int; a@main;  ;
     =; 1;  ; a;
     +; a; 2; t0;
     =; t0;  ; a;
@@ -48,7 +48,7 @@ int main() {
 ";
             Compare(test, rlt);
         }
-        
+
         [Test]
         public void TestArray()
         {
@@ -63,10 +63,10 @@ int main() {
     addThird(arr);
 }
 ";
-            string rlt = @"    global; int; t0;  ;
-    global; int; t1;  ;
-    global; int; t2;  ;
-    global; int; t3;  ;
+            string rlt = @"    decl_var; int; t0@addThird;  ;
+    decl_var; int; t1@addThird;  ;
+    decl_var; int; t2@main;  ;
+    decl_var; int; t3@main;  ;
     param_decl; int; arr; 5;
     func; int; addThird; 1;
     cp; arr;  ; t0;
@@ -74,7 +74,7 @@ int main() {
     +; t0; 1; t1;
     return; t1;  ;  ;
     end_func;  ;  ;  ;
-    decl_arr; int; arr; 5;
+    decl_arr; int; arr@main; 5;
     cp; arr;  ; t2;
     inc; 4;  ; t2;
     =; 2;  ; t2;
@@ -85,7 +85,7 @@ int main() {
             Compare(test, rlt);
         }
 
-       
+
 
         [Test]
         public void TestArrDecl()
@@ -95,8 +95,8 @@ short arr[3];
 int main() {
     short localArr[4];
 }";
-            var rlt = @"    global_arr; short; arr; 3;
-    decl_arr; short; localArr; 4;
+            var rlt = @"    decl_arr; short; arr@0_global; 3;
+    decl_arr; short; localArr@main; 4;
     end;  ;  ;  ;
 ";
             Compare(test, rlt);

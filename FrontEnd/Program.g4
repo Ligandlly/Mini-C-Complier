@@ -123,7 +123,7 @@ Num: HexadecimalConstant | DecimalConstant;
 fragment IdentifierNondigit:
 	Nondigit; //|   // other implementation-defined characters...
 
-fragment Nondigit: [a-zA-Z_];
+fragment Nondigit: [a-zA-Z];
 
 fragment Digit: [0-9];
 
