@@ -62,6 +62,8 @@ namespace FrontEnd
 
         private readonly IIrBuilder _irBuilder = new QuaternaryBuilder();
 
+        private readonly List<string> _decls = new();
+
         public const string Global = "0_global";
 
         private int _labelNumber;
@@ -112,6 +114,11 @@ namespace FrontEnd
             foreach (var tmpVariable in _tmpVariables)
                 stringBuilder.AppendLine(_irBuilder.GenerateIr("decl_var", tmpVariable.Type, $"{tmpVariable.Name}@{tmpVariable.Scope}"));
 
+            foreach (var decl in _decls)
+            {
+                stringBuilder.AppendLine(decl);
+            }
+            
             foreach (var declContext in context.decl())
                 stringBuilder.AppendLine(_ir.Get(declContext));
 
@@ -171,7 +178,7 @@ namespace FrontEnd
 
             var irCode = _irBuilder.GenerateIr( "decl_var", type,
                 $"{name}@{_currentScopeNameStack.Peek()}");
-            _ir.Put(context, irCode);
+            _decls.Add(irCode);
             _values.Put(context.id(), new Identity(name, type));
         }
 
@@ -291,7 +298,7 @@ namespace FrontEnd
             var irCode = _irBuilder.GenerateIr("decl_arr",
                 type, $"{name}@{_currentScopeNameStack.Peek()}", length.ToString());
 
-            _ir.Put(context, irCode);
+            _decls.Add(irCode);
         }
 
         public override void ExitDecl(ProgramParser.DeclContext context)
@@ -524,25 +531,10 @@ namespace FrontEnd
             if (identity is not ArrIdentity arrIdentity)
                 throw new FrontEndException("Get Item From Non-array Variable");
 
-            var tmpRltId = NewTmpVar(arrIdentity.Type[..^3]);
-            stringBuilder.AppendLine(_irBuilder.GenerateIr("cp", arrIdentity.Name, dist: tmpRltId.Name));
-
-            // If expr is literal
-            if (_values.Get(context.expr()) is Literal literal)
-            {
-                var offset = int.Parse(literal.Name) << 2;
-                stringBuilder.AppendLine(_irBuilder.GenerateIr("inc", $"{offset}", dist: tmpRltId.Name));
-            }
-            else
-            {
-                var exprVal = _values.Get(context.expr());
-                var tmpOffsetId = NewTmpVar(exprVal.Type[..^3]);
-                stringBuilder.AppendLine(_irBuilder.GenerateIr("<<", exprVal.Name, "2", tmpOffsetId.Name));
-                stringBuilder.AppendLine(_irBuilder.GenerateIr("inc", tmpOffsetId.Name, dist: tmpRltId.Name));
-            }
-
-            _ir.Put(context, stringBuilder.ToString());
-            _values.Put(context, tmpRltId);
+            var offsetValue = _values.Get(context.expr());
+            var baseValue = _values.Get(context.primary_expr());
+            // _ir.Put(context, );
+            _values.Put(context, new Identity($"{baseValue.Name}[{offsetValue.Name}]", baseValue.Type[..^3], true));
         }
 
         #endregion

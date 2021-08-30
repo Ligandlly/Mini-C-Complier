@@ -11,9 +11,15 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            string test = @"short arr[3];
+            string test = @"int x;
+int foo() {
+    char c; int d;
+    c = 0; c = c + 1;
+}
 int main() {
-    short localArr[4];
+    short a;
+    int b;
+    char cs[5];
 }
 ";
 

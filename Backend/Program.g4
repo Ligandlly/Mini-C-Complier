@@ -1,6 +1,10 @@
 ﻿grammar Program;
 
-//program: stmt+;
+program: stmt+;
+
+
+Label : 'label' Num ':';
+stmt : Label* quaternary;
 
 decl 
     : variableDecl
@@ -15,10 +19,8 @@ Type
     ;
     
 variableDecl 
-    : 'global' ';'  Type ';' Id ';' ';'             #globalVarDecl
-    | 'decl_val' ';' Type  ';' Id ';' ';'           #localVarDecl
-    | 'global_arr' ';' Type  ';' Id ';' Num ';'     #globalArrDecl
-    | 'decl_arr' ';' Type  ';' Id ';' Num ';'       #localVarDecl
+    : 'decl_var' ';' Type  ';' name=Id '@' scope=Id ';' ';'           #localVarDecl
+    | 'decl_arr' ';' Type  ';' name=Id '@' scope=Id ';' Num ';'       #localVarDecl
     ;
 
 paramDecl
@@ -41,6 +43,9 @@ quaternary:
     | multiple
     | divide
     | return
+    | jumpEqual
+    | decl
+    | end
     ;
     
 literalAssignment: 
@@ -51,36 +56,45 @@ variableAssignment:
     
 AdditaveOp : '+' | '-' | '&' | '|' | '^' | '<<' | '>>'; 
 addOrMinus 
-    : AdditaveOp ';' Num ';' Num ';' Id ';' #digitAddOrMinus
-    | AdditaveOp ';' Id ';' Num ';' Id ';'  #hybridAddOrMinus
-    | AdditaveOp ';' Num ';' Id ';' Id ';'  #hybridAddOrMinus
-    | AdditaveOp ';' Id ';' Id ';' Id ';'   #variableAddOrMinus
+    : AdditaveOp ';' left=Num ';' right=Num ';' rlt=Id ';'  #digitAddOrMinus
+    | AdditaveOp ';' left=Id  ';' right=Num ';' rlt=Id ';'  #idFirstAddOrMinus
+    | AdditaveOp ';' left=Num ';' right=Id  ';' rlt=Id ';'  #numFirstAddOrMinus
+    | AdditaveOp ';' left=Id  ';' right=Id  ';' rlt=Id ';'  #idAddOrMinus
     ;
     
 multiple
-    : '*' ';' Num ';' Num ';' Id ';'    #digitMultiple
-    | '*' ';' Id ';' Num ';' Id ';'     #hybridMultiple
-    | '*' ';' Num ';' Id ';' Id ';'     #hybridMultiple
-    | '*' ';' Id ';' Id ';' Id ';'      #variableMultiple
+    : '*' ';' left=Num ';' right=Num ';' rlt=Id ';'      #digitMultiple
+    | '*' ';' left=Id  ';' right=Num ';' rlt=Id ';'      #idFirstMultiple
+    | '*' ';' left=Num ';' right=Id  ';' rlt=Id ';'      #numFirstMultiple
+    | '*' ';' left=Id  ';' right=Id  ';' rlt=Id ';'      #idMultiple
     ;
 
 DivideOp : '/' | '%';
 divide
-    : DivideOp ';' Num ';' Num ';' Id ';'    #digitDivide
-    | DivideOp ';' Id ';' Num ';' Id ';'     #hybridDivide
-    | DivideOp ';' Num ';' Id ';' Id ';'     #hybridDivide
-    | DivideOp ';' Id ';' Id ';' Id ';'      #variableDivide
+    : DivideOp ';' left=Num ';' right=Num ';' rlt=Id ';'      #digitDivide
+    | DivideOp ';' left=Id  ';' right=Num ';' rlt=Id ';'      #idFirstDivide
+    | DivideOp ';' left=Num ';' right=Id  ';' rlt=Id ';'      #numFirstDivide
+    | DivideOp ';' left=Id  ';' right=Id  ';' rlt=Id ';'      #idDivide
     ;
     
 return
     : 'return' ';' Id ';' ';' ';'       #variableReturn
     | 'return' ';' Num ';' ';' ';'      #literalReturn 
     ;
+    
+jumpEqual 
+    : 'Je' ';' left=Num ';' right=Num ';' rlt=Num ';'   #digitJumpEqual
+    | 'Je' ';' left=Id  ';' right=Num ';' rlt=Num ';'   #idFirstJumpEqual
+    | 'Je' ';' left=Num ';' right=Id  ';' rlt=Num ';'   #numFirstJumpEqual
+    | 'Je' ';' left=Id  ';' right=Id  ';' rlt=Num ';'   #idJumpEqual 
+    ;
+    
+end : 'end' ';' ';' ';' ';';
 
 Num: Digit+;
 fragment Digit: [0-9];
 
-Id : Letter+;
+Id : [a-zA-Z]Letter*;
 fragment Letter: [a-zA-Z0-9];
 
 Whitespace: [ \t]+ -> skip;

@@ -30,6 +30,38 @@ namespace FrontEndTest
         }
 
         [Test]
+        public void TestDecl()
+        {
+            string test = @"
+int x;
+int foo() {
+    char c; int d;
+    c = 0; c = c + 1;
+}
+int main() {
+    short a;
+    int b;
+    char cs[5];
+}
+";
+            string rlt = @"    decl_var; char; t0@foo;  ;
+    decl_var; int; x@0_global;  ;
+    decl_var; char; c@foo;  ;
+    decl_var; int; d@foo;  ;
+    decl_var; short; a@main;  ;
+    decl_var; int; b@main;  ;
+    decl_arr; char; cs@main; 5;
+    func; int; foo; 0;
+    =; 0;  ; c;
+    +; c; 1; t0;
+    =; t0;  ; c;
+    end_func;  ;  ;  ;
+    end;  ;  ;  ;
+";
+            Compare(test, rlt);
+        }
+        
+        [Test]
         public void TestAdd()
         {
             string test = @"
@@ -64,22 +96,16 @@ int main() {
 }
 ";
             string rlt = @"    decl_var; int; t0@addThird;  ;
-    decl_var; int; t1@addThird;  ;
-    decl_var; int; t2@main;  ;
-    decl_var; int; t3@main;  ;
+    decl_var; int; t1@main;  ;
+    decl_arr; int; arr@main; 5;
     param_decl; int; arr; 5;
     func; int; addThird; 1;
-    cp; arr;  ; t0;
-    inc; 8;  ; t0;
-    +; t0; 1; t1;
-    return; t1;  ;  ;
+    +; arr[2]; 1; t0;
+    return; t0;  ;  ;
     end_func;  ;  ;  ;
-    decl_arr; int; arr@main; 5;
-    cp; arr;  ; t2;
-    inc; 4;  ; t2;
-    =; 2;  ; t2;
+    =; 2;  ; arr[1];
     param; arr;  ;  ;
-    call; addThird; 1; t3;
+    call; addThird; 1; t1;
     end;  ;  ;  ;
 ";
             Compare(test, rlt);
