@@ -19,6 +19,7 @@
 // Ambiguous reference in cref attribute
 #pragma warning disable 419
 
+namespace Frontend {
 using System;
 using System.IO;
 using System.Text;
@@ -385,3 +386,4 @@ public partial class ProgramLexer : Lexer {
 
 
 }
+} // namespace Frontend

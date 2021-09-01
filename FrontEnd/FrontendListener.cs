@@ -25,7 +25,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace FrontEnd
+namespace Frontend
 {
     using SymbolTable = Dictionary<string, Identity>;
 
@@ -58,13 +58,13 @@ namespace FrontEnd
         /// </summary>
         public readonly Dictionary<string, SymbolTable> Tables = new();
 
-        private readonly Stack<string> _currentScopeNameStack = new();
+        private string _currentScopeName = Global;
 
         private readonly IIrBuilder _irBuilder = new QuaternaryBuilder();
 
         private readonly List<string> _decls = new();
 
-        public const string Global = "0_global";
+        public const string Global = "global0";
 
         private int _labelNumber;
 
@@ -73,7 +73,7 @@ namespace FrontEnd
         /// <summary>
         /// Template Variables List
         /// </summary>
-        private readonly List<TmpIdentity> _tmpVariables = new();
+        private readonly List<VariableIdentity> _tmpVariables = new();
         /// <summary>
         /// Create a new temporary variable
         /// </summary>
@@ -84,7 +84,7 @@ namespace FrontEnd
         {
             var rlt = _tmpVariables.Count;
             var name = $"t{rlt}";
-            _tmpVariables.Add(new TmpIdentity(name, type, _currentScopeNameStack.Peek()));
+            _tmpVariables.Add(new VariableIdentity(name, type, _currentScopeName));
 
             return _tmpVariables.Last();
         }
@@ -101,7 +101,7 @@ namespace FrontEnd
         public override void EnterProgram(ProgramParser.ProgramContext context)
         {
             Tables.Add(Global, new SymbolTable());
-            _currentScopeNameStack.Push(Global);
+            _currentScopeName = Global;
         }
 
         public override void ExitProgram(ProgramParser.ProgramContext context)
@@ -112,20 +112,20 @@ namespace FrontEnd
             // Temporary Variables
             StringBuilder stringBuilder = new();
             foreach (var tmpVariable in _tmpVariables)
-                stringBuilder.AppendLine(_irBuilder.GenerateIr("decl_var", tmpVariable.Type, $"{tmpVariable.Name}@{tmpVariable.Scope}"));
+                stringBuilder.AppendLine(_irBuilder.GenerateIr("decl_var", tmpVariable.Type, tmpVariable.Name));
 
             foreach (var decl in _decls)
             {
                 stringBuilder.AppendLine(decl);
             }
-            
+
             foreach (var declContext in context.decl())
                 stringBuilder.AppendLine(_ir.Get(declContext));
 
             _ir.Put(context, stringBuilder.ToString());
 
             Result = stringBuilder.ToString();
-            
+
             Result = Regex.Replace(Result, @"^\s*$[\r\n]*", string.Empty, RegexOptions.Multiline);
 
             Result += _irBuilder.GenerateIr("end") + "\r\n";
@@ -166,7 +166,7 @@ namespace FrontEnd
             var name = context.id().GetText();
             var type = context.type_spec().GetText();
 
-            var table = Tables[_currentScopeNameStack.Peek()];
+            var table = Tables[_currentScopeName];
 
             // Check if the name has already in Symbol table
             if (table.ContainsKey(name))
@@ -174,12 +174,13 @@ namespace FrontEnd
                 throw new FrontEndException("Duplicate Variable Name");
             }
 
-            table.Add(name, new Identity(name, type));
+            var tmp = new VariableIdentity(name, type, _currentScopeName);
+            table.Add(name, tmp);
 
-            var irCode = _irBuilder.GenerateIr( "decl_var", type,
-                $"{name}@{_currentScopeNameStack.Peek()}");
+            var irCode = _irBuilder.GenerateIr("decl_var", type,
+                tmp.Name);
             _decls.Add(irCode);
-            _values.Put(context.id(), new Identity(name, type));
+            _values.Put(context.id(), tmp);
         }
 
         /// <summary>
@@ -196,7 +197,7 @@ namespace FrontEnd
             if (Tables[Global].Keys.Contains(funcName))
                 throw new FrontEndException("Duplicate Function Name");
 
-            _currentScopeNameStack.Push(funcName);
+            _currentScopeName = funcName;
             var table = new SymbolTable();
             Tables.Add(funcName, table);
 
@@ -207,23 +208,23 @@ namespace FrontEnd
                 switch (child)
                 {
                     case ProgramParser.ParamHasIntContext paramHasInt:
-                    {
-                        var type = paramHasInt.type_spec().GetText();
-                        var name = paramHasInt.id().GetText();
+                        {
+                            var type = paramHasInt.type_spec().GetText();
+                            var name = paramHasInt.id().GetText();
 
-                        table.Add(name, new Identity(name, type));
-                        tmpList.Add((type, name));
-                        break;
-                    }
+                            table.Add(name, new VariableIdentity(name, type, _currentScopeName));
+                            tmpList.Add((type, name));
+                            break;
+                        }
                     case ProgramParser.ParamHasArrContext paramHasArr:
-                    {
-                        var type = paramHasArr.type_spec().GetText();
-                        var name = paramHasArr.id().GetText();
+                        {
+                            var type = paramHasArr.type_spec().GetText();
+                            var name = paramHasArr.id().GetText();
 
-                        table.Add(name, new ArrIdentity(name, type + "Arr", int.Parse(paramHasArr.num().GetText())));
-                        tmpList.Add((type + "Arr", name));
-                        break;
-                    }
+                            table.Add(name, new VariableIdentity(name, type, _currentScopeName, int.Parse(paramHasArr.num().GetText())));
+                            tmpList.Add((type, name));
+                            break;
+                        }
                 }
             }
 
@@ -254,32 +255,27 @@ namespace FrontEnd
 
             var funcIdent = Tables[Global][funcName] as FuncIdentity;
 
-            if (funcName != "main")
+            //if (funcName != "main")
             {
                 Debug.Assert(funcIdent != null, nameof(funcIdent) + " != null");
                 foreach (var (paramType, paramName) in funcIdent.Params)
                 {
-                    if (paramType.Substring(paramType.Length - 3,3) == "Arr")
-                    {
-                        var arrId = Tables[_currentScopeNameStack.Peek()][paramName] as ArrIdentity;
-                        Debug.Assert(arrId != null, nameof(arrId) + " != null");
-                        rltBuilder.AppendLine(_irBuilder.GenerateIr("param_decl", paramType[..^3], arrId.Name,
-                            $"{arrId.Length}"));
-                    }
-                    else
-                        rltBuilder.AppendLine(_irBuilder.GenerateIr("param_decl", paramType, paramName));
+                    var arrId = Tables[_currentScopeName][paramName] as VariableIdentity;
+                    Debug.Assert(arrId != null, nameof(arrId) + " != null");
+                    rltBuilder.AppendLine(_irBuilder.GenerateIr("param_decl", paramType, arrId.Name,
+                        $"{arrId.Length}"));
+
                 }
                 rltBuilder.AppendLine(_irBuilder.GenerateIr("func", rltType, funcName, $"{funcIdent.Params.Length}"));
             }
 
             rltBuilder.AppendLine(_ir.Get(context.compound_stmt()));
 
-            if (funcName != "main")
-                rltBuilder.AppendLine(_irBuilder.GenerateIr("end_func"));
+            rltBuilder.AppendLine(_irBuilder.GenerateIr("end_func"));
 
             var rlt = rltBuilder.ToString();
             _ir.Put(context, rlt);
-            _currentScopeNameStack.Pop();
+            _currentScopeName = Global;
         }
 
         /// <summary>
@@ -292,11 +288,11 @@ namespace FrontEnd
             var type = context.type_spec().GetText();
             var name = context.id().GetText();
             var length = int.Parse(context.num().GetText());
-            var arr = new ArrIdentity(name, type + "Arr", length);
+            var arr = new VariableIdentity(name, type, _currentScopeName, length);
 
             Tables[Global].Add(name, arr);
             var irCode = _irBuilder.GenerateIr("decl_arr",
-                type, $"{name}@{_currentScopeNameStack.Peek()}", length.ToString());
+                type, arr.Name, length.ToString());
 
             _decls.Add(irCode);
         }
@@ -361,7 +357,7 @@ namespace FrontEnd
         public override void ExitId(ProgramParser.IdContext context)
         {
             var name = context.GetText();
-            var table = Tables[_currentScopeNameStack.Peek()];
+            var table = Tables[_currentScopeName];
             if (!table.ContainsKey(name))
             {
                 if (Tables[Global].ContainsKey(name))
@@ -371,7 +367,7 @@ namespace FrontEnd
             }
 
             var id = table[name];
-            
+
             _values.Put(context, id);
         }
 
@@ -460,7 +456,7 @@ namespace FrontEnd
             var funcName = context.id().GetText();
 
             // If do not have function defined or the identity with the name is not defined as a function,
-            var table = Tables[_currentScopeNameStack.Peek()];
+            var table = Tables[_currentScopeName];
             if (!table.ContainsKey(funcName) || table[funcName] is not FuncIdentity func)
             {
                 throw new KeyNotFoundException("Function Undefined");
@@ -523,18 +519,16 @@ namespace FrontEnd
         /// <param name="context"></param>
         public override void ExitPostfix_exprHasgetitem(ProgramParser.Postfix_exprHasgetitemContext context)
         {
-            var stringBuilder = new StringBuilder();
-
-
             // Check identity first
-            var identity = _values.Get(context.primary_expr());
-            if (identity is not ArrIdentity arrIdentity)
+            var identity = _values.Get(context.primary_expr()) as VariableIdentity;
+            Debug.Assert(identity != null, nameof(identity) + " != null");
+            if (!identity.IsArr())
                 throw new FrontEndException("Get Item From Non-array Variable");
 
             var offsetValue = _values.Get(context.expr());
             var baseValue = _values.Get(context.primary_expr());
             // _ir.Put(context, );
-            _values.Put(context, new Identity($"{baseValue.Name}[{offsetValue.Name}]", baseValue.Type[..^3], true));
+            _values.Put(context, new VariableIdentity($"{baseValue.Name}[{offsetValue.Name}]", baseValue.Type, _currentScopeName));
         }
 
         #endregion
@@ -561,7 +555,8 @@ namespace FrontEnd
         /// <exception cref="FrontEndException">Increase a Immutable Value</exception>
         public override void ExitUnary_exprHasInc(ProgramParser.Unary_exprHasIncContext context)
         {
-            var unaryExprVal = _values.Get(context.unary_expr());
+            var unaryExprVal = _values.Get(context.unary_expr()) as VariableIdentity;
+            Debug.Assert(unaryExprVal != null, nameof(unaryExprVal) + " != null");
             if (unaryExprVal.Mutable == false)
                 throw new FrontEndException("Increase a Immutable Value");
             _ir.Put(context, _irBuilder.GenerateIr("+", unaryExprVal.Name, "1", unaryExprVal.Name));
@@ -576,7 +571,8 @@ namespace FrontEnd
         /// <exception cref="FrontEndException">Decrease a Immutable Value</exception>
         public override void ExitUnary_exprHasDec(ProgramParser.Unary_exprHasDecContext context)
         {
-            var unaryExprVal = _values.Get(context.unary_expr());
+            var unaryExprVal = _values.Get(context.unary_expr()) as VariableIdentity;
+            Debug.Assert(unaryExprVal != null, nameof(unaryExprVal) + " != null");
             if (unaryExprVal.Mutable == false)
                 throw new FrontEndException("Decrease a Immutable Value");
             _ir.Put(context, _irBuilder.GenerateIr("-", unaryExprVal.Name, "1", unaryExprVal.Name));
@@ -645,8 +641,9 @@ namespace FrontEnd
         public override void ExitAssignmentExprHasAssign([NotNull] ProgramParser.AssignmentExprHasAssignContext context)
         {
             StringBuilder stringBuilder = new();
-            var unaryVal = _values.Get(context.unary_expr());
+            var unaryVal = _values.Get(context.unary_expr()) as VariableIdentity;
             var assVal = _values.Get(context.assignmentExpr());
+            Debug.Assert(unaryVal != null, nameof(unaryVal) + " != null");
             if (unaryVal.Mutable == false)
                 throw new FrontEndException("Change Value of an Immutable Variable");
 
@@ -695,7 +692,7 @@ namespace FrontEnd
                     if (_ir.Get(context.right) == "0")
                         throw new FrontEndException("Divided By Zero");
                 }
-                
+
                 stringBuilder.AppendLine(_ir.Get(context.left));
                 stringBuilder.AppendLine(_ir.Get(context.right));
                 stringBuilder.AppendLine(_irBuilder.GenerateIr(context.op.Text, leftVal.Name, rightVal.Name, tmpRlt.Name));
@@ -868,7 +865,7 @@ namespace FrontEnd
         #endregion
 
         #region Single_stmt
-        
+
         public override void ExitContinue_stmt(ProgramParser.Continue_stmtContext context)
         {
             if (_labelStack.TryPeek(out (int, int) labels) == false)

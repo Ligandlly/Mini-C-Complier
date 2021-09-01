@@ -1,15 +1,32 @@
 using System;
+using System.Collections.Generic;
 
-namespace FrontEnd
+namespace Frontend
 {
-    public class Identity
+    public abstract record Identity
     {
         public static readonly string Int = "int";
         public static readonly string Short = "short";
         public static readonly string Char = "char";
-
-        public string Name { get; }
+        
+        public virtual string Name { get; }
         public string Type { get; }
+
+        public string Scope { get; }
+
+        protected Identity(string name, string type, string scope)
+        {
+            Name = name;
+            Type = type;
+            Scope = scope;
+        }
+
+    }
+
+    public record VariableIdentity : Identity
+    {
+
+        public int Length { get; }
 
         /// <summary>
         /// t1 = t0 + 1 is immutable,
@@ -17,75 +34,73 @@ namespace FrontEnd
         /// </summary>
         public bool Mutable { get; }
 
-        public Identity(string name, string type, bool mutable=true)
+        public override string Name => $"{base.Name}@{Scope}";
+
+        public VariableIdentity(string name, string type, string scope, int length = 1, bool mutable = true)
+            : base(name, type, scope)
         {
-            Name = name;
-            Type = type;
+            if (length == 0)
+                throw new Exception("Length of a Variable Can Not Be 0.");
+
+            Length = length;
             Mutable = mutable;
         }
-    }
 
-    public class ArrIdentity : Identity
-    {
-        public int Length { get; }
-        public int UnitSize { get; }
-
-        public ArrIdentity(string name, string type, int length)
-            : base(name, type)
+        public bool IsArr()
         {
-            Length = length;
-
-            UnitSize = type switch
-            {
-                "intArr" => 4,
-                "shortArr" => 2,
-                "charArr" => 1,
-                _ => throw new Exception("Invalid Type Specific")
-            };
+            return Length != 1;
         }
     }
 
-    public class FuncIdentity : Identity
+    public record FuncIdentity : Identity
     {
         public static readonly string Void = "void";
 
-        private (string, string)[] _params;
-        public (string paramType, string paramName)[] Params
-        {
-            get => _params;
-            init
-            {
-                if (value.Length == 1 && value[0].paramType == "void")
-                {
-                    _params = Array.Empty<(string, string)>();
-                }
-                else
-                {
-                    _params = value;
-                }
-            }
-        }
+        public (string paramType, string paramName)[] Params { get; }
 
-        public FuncIdentity(string name, string type, (string, string)[] @params) : base(name, type)
+        public FuncIdentity(string name, string type, (string, string)[] @params) : base(name, type, FrontEndListener.Global)
         {
+            if (@params.Length == 1 && @params[0].Item1 == "void")
+            {
+                Params = Array.Empty<(string, string)>();
+            }
+            else
+            {
+                Params = @params;
+            }
             Params = @params;
         }
     }
 
-    public class Literal : Identity
+    public record Literal : Identity
     {
         public static readonly string Lit = "literal";
-        public Literal(string name) : base(name, "literal", false)
+        public Literal(string name) : base(name, "literal", FrontEndListener.Global)
         {
         }
     }
 
-    public class TmpIdentity : Identity
+    public record OffsetPair
     {
-        public string Scope { get; init; }
-        public TmpIdentity(string name, string type, string scope ) : base(name, type, true)
+        public string Name { get; init; }
+        public int Offset { get; init; }
+
+        public OffsetPair(string name, int offset)
         {
-            Scope = scope;
+            Name = name;
+            Offset = offset;
+        }
+    }
+
+    public record BackendFuncIdentity : Identity
+    {
+        public List<Identity> Parameters { get; init; }
+        public List<OffsetPair> OffsetPairs { get; init; }
+        public BackendFuncIdentity(string name, string type, List<Identity> @params, List<OffsetPair> offsetPairs)
+            : base(name, type, FrontEndListener.Global)
+        {
+            Parameters = @params;
+            OffsetPairs = offsetPairs;
         }
     }
 }

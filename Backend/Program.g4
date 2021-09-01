@@ -1,6 +1,6 @@
 ﻿grammar Program;
 
-program: stmt+;
+program: decl* | stmt+;
 
 
 Label : 'label' Num ':';
@@ -20,7 +20,7 @@ Type
     
 variableDecl 
     : 'decl_var' ';' Type  ';' name=Id '@' scope=Id ';' ';'           #localVarDecl
-    | 'decl_arr' ';' Type  ';' name=Id '@' scope=Id ';' Num ';'       #localVarDecl
+    | 'decl_arr' ';' Type  ';' name=Id '@' scope=Id ';' Num ';'       #localArrDecl
     ;
 
 paramDecl
@@ -44,7 +44,6 @@ quaternary:
     | divide
     | return
     | jumpEqual
-    | decl
     | end
     ;
     

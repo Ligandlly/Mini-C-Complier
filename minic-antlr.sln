@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.810.7
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FrontEnd", "FrontEnd\FrontEnd.csproj", "{395590F3-D2A0-4551-A205-8F8BA9759799}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Frontend", "FrontEnd\Frontend.csproj", "{395590F3-D2A0-4551-A205-8F8BA9759799}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiniCC", "MiniCC\MiniCC.csproj", "{3FECB49B-8FF9-4A89-A41D-E646CE0DAA6F}"
 EndProject
@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp1", "ConsoleApp1\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiddleWares", "MiddleWares\MiddleWares.csproj", "{D301C438-617D-4387-9B26-46F551AE0BE2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiddleWareTest", "MiddleWareTest\MiddleWareTest.csproj", "{C7FDF582-4A9B-4EFA-B74E-4D5326994A1E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiddleWareTest", "MiddleWareTest\MiddleWareTest.csproj", "{C7FDF582-4A9B-4EFA-B74E-4D5326994A1E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

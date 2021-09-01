@@ -7,7 +7,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Backend\Backend.csproj" />
-      <ProjectReference Include="..\FrontEnd\FrontEnd.csproj" />
+      <ProjectReference Include="..\FrontEnd\Frontend.csproj" />
       <ProjectReference Include="..\MiddleWares\MiddleWares.csproj" />
     </ItemGroup>
 

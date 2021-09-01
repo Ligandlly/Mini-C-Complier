@@ -1,7 +1,7 @@
 ﻿using System;
 using Antlr4.Runtime;
 
-namespace FrontEnd
+namespace Frontend
 {
     public class FrontEndErrorStrategy : DefaultErrorStrategy
     {
