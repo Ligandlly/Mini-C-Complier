@@ -19,21 +19,25 @@ Type
     ;
     
 variableDecl 
-    : 'decl_var' ';' Type  ';' name=Id '@' scope=Id ';' ';'           #localVarDecl
-    | 'decl_arr' ';' Type  ';' name=Id '@' scope=Id ';' Num ';'       #localArrDecl
+    : 'decl_var' ';' Type  ';' variable ';' ';'           #localVarDecl
+    | 'decl_arr' ';' Type  ';' variable';' Num ';'       #localArrDecl
     ;
 
 paramDecl
-    : 'param_decl' ';' Type ';' Id ';' Num ';'   #arrayParam
-    | 'param_decl' ';' Type ';' Id ';' ';'      #variableParam
+    : 'param_decl' ';' Type ';' variable ';' Num ';'   #arrayParam
+    | 'param_decl' ';' Type ';' variable ';' ';'      #variableParam
     ;    
     
 funcTail 
     : 'end_func' ';' ';' ';' ';'
     ;
-    
+
+funcHead
+    : paramDecl* 'func' ';' Type ';' Id ';' Num ';'
+    ;    
+
 funcDef
-    : paramDecl* 'func' ';' Type ';' Id ';' Num ';'  quaternary* funcTail
+    : funcHead  quaternary* funcTail
     ;
 
 quaternary: 
@@ -45,50 +49,64 @@ quaternary:
     | return
     | jumpEqual
     | end
+    | call
     ;
     
 literalAssignment: 
-    '=' ';' Num ';' ';' Id ';';
+    '=' ';' Num ';' ';' variable ';';
 
 variableAssignment: 
-    '=' ';' Id ';' ';' Id ';';
+    '=' ';' variable ';' ';' variable ';';
     
 AdditaveOp : '+' | '-' | '&' | '|' | '^' | '<<' | '>>'; 
 addOrMinus 
-    : AdditaveOp ';' left=Num ';' right=Num ';' rlt=Id ';'  #digitAddOrMinus
-    | AdditaveOp ';' left=Id  ';' right=Num ';' rlt=Id ';'  #idFirstAddOrMinus
-    | AdditaveOp ';' left=Num ';' right=Id  ';' rlt=Id ';'  #numFirstAddOrMinus
-    | AdditaveOp ';' left=Id  ';' right=Id  ';' rlt=Id ';'  #idAddOrMinus
+    : AdditaveOp ';' left=Num ';' right=Num ';' rlt=variable ';'  #digitAddOrMinus
+    | AdditaveOp ';' left=variable  ';' right=Num ';' rlt=variable ';'  #idFirstAddOrMinus
+    | AdditaveOp ';' left=Num ';' right=variable  ';' rlt=variable ';'  #numFirstAddOrMinus
+    | AdditaveOp ';' left=variable  ';' right=variable  ';' rlt=variable ';'  #idAddOrMinus
     ;
     
 multiple
-    : '*' ';' left=Num ';' right=Num ';' rlt=Id ';'      #digitMultiple
-    | '*' ';' left=Id  ';' right=Num ';' rlt=Id ';'      #idFirstMultiple
-    | '*' ';' left=Num ';' right=Id  ';' rlt=Id ';'      #numFirstMultiple
-    | '*' ';' left=Id  ';' right=Id  ';' rlt=Id ';'      #idMultiple
+    : '*' ';' left=Num ';' right=Num ';' rlt=variable ';'      #digitMultiple
+    | '*' ';' left=variable  ';' right=Num ';' rlt=variable ';'      #idFirstMultiple
+    | '*' ';' left=Num ';' right=variable  ';' rlt=variable ';'      #numFirstMultiple
+    | '*' ';' left=variable  ';' right=variable  ';' rlt=variable ';'      #idMultiple
     ;
 
 DivideOp : '/' | '%';
 divide
-    : DivideOp ';' left=Num ';' right=Num ';' rlt=Id ';'      #digitDivide
-    | DivideOp ';' left=Id  ';' right=Num ';' rlt=Id ';'      #idFirstDivide
-    | DivideOp ';' left=Num ';' right=Id  ';' rlt=Id ';'      #numFirstDivide
-    | DivideOp ';' left=Id  ';' right=Id  ';' rlt=Id ';'      #idDivide
+    : DivideOp ';' left=Num ';' right=Num ';' rlt=variable ';'      #digitDivide
+    | DivideOp ';' left=variable  ';' right=Num ';' rlt=variable ';'      #idFirstDivide
+    | DivideOp ';' left=Num ';' right=variable  ';' rlt=variable ';'      #numFirstDivide
+    | DivideOp ';' left=variable  ';' right=variable  ';' rlt=variable ';'      #idDivide
     ;
     
 return
-    : 'return' ';' Id ';' ';' ';'       #variableReturn
+    : 'return' ';' variable ';' ';' ';'       #variableReturn
     | 'return' ';' Num ';' ';' ';'      #literalReturn 
     ;
     
 jumpEqual 
     : 'Je' ';' left=Num ';' right=Num ';' rlt=Num ';'   #digitJumpEqual
-    | 'Je' ';' left=Id  ';' right=Num ';' rlt=Num ';'   #idFirstJumpEqual
-    | 'Je' ';' left=Num ';' right=Id  ';' rlt=Num ';'   #numFirstJumpEqual
-    | 'Je' ';' left=Id  ';' right=Id  ';' rlt=Num ';'   #idJumpEqual 
+    | 'Je' ';' left=variable  ';' right=Num ';' rlt=Num ';'   #idFirstJumpEqual
+    | 'Je' ';' left=Num ';' right=variable  ';' rlt=Num ';'   #numFirstJumpEqual
+    | 'Je' ';' left=variable  ';' right=variable  ';' rlt=Num ';'   #idJumpEqual 
+    ;
+    
+param
+    : 'param' ';' variable ';' ';' ';'
+    ;
+    
+call
+    : param* 'call' ';' Id ';' Num ';' rlt=variable ';'
     ;
     
 end : 'end' ';' ';' ';' ';';
+
+variable 
+    : name=Id '@' scope=Id '[' offset=Num ']' '@' Id 
+    | name=Id '@' scope=Id
+    ;
 
 Num: Digit+;
 fragment Digit: [0-9];

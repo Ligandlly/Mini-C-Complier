@@ -120,6 +120,16 @@ public interface IProgramListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitFuncTail([NotNull] ProgramParser.FuncTailContext context);
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="ProgramParser.funcHead"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterFuncHead([NotNull] ProgramParser.FuncHeadContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ProgramParser.funcHead"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitFuncHead([NotNull] ProgramParser.FuncHeadContext context);
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="ProgramParser.funcDef"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -376,6 +386,26 @@ public interface IProgramListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitIdJumpEqual([NotNull] ProgramParser.IdJumpEqualContext context);
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="ProgramParser.param"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterParam([NotNull] ProgramParser.ParamContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ProgramParser.param"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitParam([NotNull] ProgramParser.ParamContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="ProgramParser.call"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterCall([NotNull] ProgramParser.CallContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ProgramParser.call"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitCall([NotNull] ProgramParser.CallContext context);
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="ProgramParser.end"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -385,5 +415,15 @@ public interface IProgramListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitEnd([NotNull] ProgramParser.EndContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="ProgramParser.variable"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterVariable([NotNull] ProgramParser.VariableContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ProgramParser.variable"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitVariable([NotNull] ProgramParser.VariableContext context);
 }
 } // namespace Backend

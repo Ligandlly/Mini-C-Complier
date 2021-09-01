@@ -141,6 +141,18 @@ public partial class ProgramBaseListener : IProgramListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitFuncTail([NotNull] ProgramParser.FuncTailContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="ProgramParser.funcHead"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterFuncHead([NotNull] ProgramParser.FuncHeadContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ProgramParser.funcHead"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitFuncHead([NotNull] ProgramParser.FuncHeadContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="ProgramParser.funcDef"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -441,6 +453,30 @@ public partial class ProgramBaseListener : IProgramListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitIdJumpEqual([NotNull] ProgramParser.IdJumpEqualContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="ProgramParser.param"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterParam([NotNull] ProgramParser.ParamContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ProgramParser.param"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitParam([NotNull] ProgramParser.ParamContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="ProgramParser.call"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterCall([NotNull] ProgramParser.CallContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ProgramParser.call"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitCall([NotNull] ProgramParser.CallContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="ProgramParser.end"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -452,6 +488,18 @@ public partial class ProgramBaseListener : IProgramListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitEnd([NotNull] ProgramParser.EndContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="ProgramParser.variable"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterVariable([NotNull] ProgramParser.VariableContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ProgramParser.variable"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitVariable([NotNull] ProgramParser.VariableContext context) { }
 
 	/// <inheritdoc/>
 	/// <remarks>The default implementation does nothing.</remarks>
