@@ -3,6 +3,7 @@ using System.Net.Http.Headers;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 using Backend;
+// using Backend;
 using Frontend;
 
 
@@ -13,11 +14,15 @@ namespace ConsoleApp1
         static void Main(string[] args)
         {
             string test = @"
-short foo(int a, char arr[3]) {
-    return 1;
+int a[5];
+int foo(int arr[13], int i) {
+    if (a[0] == 0) {
+        return 1;
+    }
 }
 int main() {
-    
+    int arr[3];
+    arr[3] = 1 + 2;
 }
 ";
 
@@ -35,8 +40,8 @@ int main() {
             walker.Walk(frontEndListener, tree);
             Console.WriteLine(frontEndListener.Result);
 
-            return;
-             var rlt = MiddleWares.MergeLabel.Merge (frontEndListener.Result);
+
+            var rlt = MiddleWares.MergeLabel.Merge(frontEndListener.Result);
 
             Console.WriteLine(rlt);
             ICharStream bstream = CharStreams.fromString(rlt);

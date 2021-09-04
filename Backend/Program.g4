@@ -1,14 +1,19 @@
 ﻿grammar Program;
 
-program: decl* | stmt+;
+program: funcDecl+ decls funcDefs;
 
+funcDefs : funcDef+;
 
-Label : 'label' Num ':';
-stmt : Label* quaternary;
+decls : decl*;
+
+InlineLabel : 'label' Num;
+label: InlineLabel ':';
+stmt : (label)? quaternary | label;
 
 decl 
     : variableDecl
-    | funcDef
+    | paramDecl
+    | globalVariableDecl
     ; 
     
 Type 
@@ -18,14 +23,21 @@ Type
     | 'void'
     ;
     
+funcDecl : 'func_decl' ';' Type ';' Id ';' Num ';';
+    
+globalVariableDecl
+    : 'global' ';' Type  ';' variable ';' ';'         
+    | 'global' ';' Type  ';' variable';' Num ';'      
+    ;
+    
 variableDecl 
-    : 'decl_var' ';' Type  ';' variable ';' ';'           #localVarDecl
-    | 'decl_arr' ';' Type  ';' variable';' Num ';'       #localArrDecl
+    : 'decl_var' ';' Type  ';' variable ';' ';'         
+    | 'decl_arr' ';' Type  ';' variable';' Num ';'      
     ;
 
 paramDecl
-    : 'param_decl' ';' Type ';' variable ';' Num ';'   #arrayParam
-    | 'param_decl' ';' Type ';' variable ';' ';'      #variableParam
+    : 'param_decl' ';' Type ';' variable ';' Num ';' 
+    | 'param_decl' ';' Type ';' variable ';' ';'     
     ;    
     
 funcTail 
@@ -33,19 +45,20 @@ funcTail
     ;
 
 funcHead
-    : paramDecl* 'func' ';' Type ';' Id ';' Num ';'
+    : 'func' ';' Type ';' Id ';' Num ';'
     ;    
 
 funcDef
-    : funcHead  quaternary* funcTail
+    : funcHead  stmt* funcTail
     ;
 
 quaternary: 
     literalAssignment
     | variableAssignment
-    | addOrMinus
-    | multiple
-    | divide
+//    | addOrMinus
+//    | multiple
+//    | divide
+    | binary
     | return
     | jumpEqual
     | end
@@ -58,39 +71,43 @@ literalAssignment:
 variableAssignment: 
     '=' ';' variable ';' ';' variable ';';
     
-AdditaveOp : '+' | '-' | '&' | '|' | '^' | '<<' | '>>'; 
-addOrMinus 
-    : AdditaveOp ';' left=Num ';' right=Num ';' rlt=variable ';'  #digitAddOrMinus
-    | AdditaveOp ';' left=variable  ';' right=Num ';' rlt=variable ';'  #idFirstAddOrMinus
-    | AdditaveOp ';' left=Num ';' right=variable  ';' rlt=variable ';'  #numFirstAddOrMinus
-    | AdditaveOp ';' left=variable  ';' right=variable  ';' rlt=variable ';'  #idAddOrMinus
-    ;
-    
-multiple
-    : '*' ';' left=Num ';' right=Num ';' rlt=variable ';'      #digitMultiple
-    | '*' ';' left=variable  ';' right=Num ';' rlt=variable ';'      #idFirstMultiple
-    | '*' ';' left=Num ';' right=variable  ';' rlt=variable ';'      #numFirstMultiple
-    | '*' ';' left=variable  ';' right=variable  ';' rlt=variable ';'      #idMultiple
-    ;
 
-DivideOp : '/' | '%';
-divide
-    : DivideOp ';' left=Num ';' right=Num ';' rlt=variable ';'      #digitDivide
-    | DivideOp ';' left=variable  ';' right=Num ';' rlt=variable ';'      #idFirstDivide
-    | DivideOp ';' left=Num ';' right=variable  ';' rlt=variable ';'      #numFirstDivide
-    | DivideOp ';' left=variable  ';' right=variable  ';' rlt=variable ';'      #idDivide
+operand : Num | variable;
+BinaryOp : '+' | '-' | '&' | '|' | '^' | '<<' | '>>' | '<' | '>' | '>=' | '<=' | '==' | '!=' | '*' | '/' | '%' ; 
+binary 
+    : BinaryOp ';' left=operand ';' right=operand ';' rlt=operand ';' 
     ;
-    
+//    
+//AdditaveOp : '+' | '-' | '&' | '|' | '^' | '<<' | '>>' | '<' | '>' | '>=' | '<=' | '==' | '!='; 
+//addOrMinus 
+//    : AdditaveOp ';' left=Num ';' right=Num ';' rlt=variable ';'  #digitAddOrMinus
+//    | AdditaveOp ';' left=variable  ';' right=Num ';' rlt=variable ';'  #idFirstAddOrMinus
+//    | AdditaveOp ';' left=Num ';' right=variable  ';' rlt=variable ';'  #numFirstAddOrMinus
+//    | AdditaveOp ';' left=variable  ';' right=variable  ';' rlt=variable ';'  #idAddOrMinus
+//    ;
+//    
+//multiple
+//    : '*' ';' left=Num ';' right=Num ';' rlt=variable ';'      #digitMultiple
+//    | '*' ';' left=variable  ';' right=Num ';' rlt=variable ';'      #idFirstMultiple
+//    | '*' ';' left=Num ';' right=variable  ';' rlt=variable ';'      #numFirstMultiple
+//    | '*' ';' left=variable  ';' right=variable  ';' rlt=variable ';'      #idMultiple
+//    ;
+//
+//DivideOp : '/' | '%';
+//divide
+//    : DivideOp ';' left=Num ';' right=Num ';' rlt=variable ';'      #digitDivide
+//    | DivideOp ';' left=variable  ';' right=Num ';' rlt=variable ';'      #idFirstDivide
+//    | DivideOp ';' left=Num ';' right=variable  ';' rlt=variable ';'      #numFirstDivide
+//    | DivideOp ';' left=variable  ';' right=variable  ';' rlt=variable ';'      #idDivide
+//    ;
+//    
 return
     : 'return' ';' variable ';' ';' ';'       #variableReturn
     | 'return' ';' Num ';' ';' ';'      #literalReturn 
     ;
     
 jumpEqual 
-    : 'Je' ';' left=Num ';' right=Num ';' rlt=Num ';'   #digitJumpEqual
-    | 'Je' ';' left=variable  ';' right=Num ';' rlt=Num ';'   #idFirstJumpEqual
-    | 'Je' ';' left=Num ';' right=variable  ';' rlt=Num ';'   #numFirstJumpEqual
-    | 'Je' ';' left=variable  ';' right=variable  ';' rlt=Num ';'   #idJumpEqual 
+    : 'Je' ';' left=operand  ';' right=operand  ';' rlt=InlineLabel ';' 
     ;
     
 param
@@ -108,7 +125,7 @@ variable
     | name=Id '@' scope=Id
     ;
 
-Num: Digit+;
+Num: '-'? Digit+;
 fragment Digit: [0-9];
 
 Id : [a-zA-Z]Letter*;

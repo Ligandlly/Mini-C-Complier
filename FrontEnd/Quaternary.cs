@@ -19,7 +19,7 @@ namespace Frontend
                 throw new InvalidOperationException("Quaternary");
 
             return labelNumber != null
-                ? $"label_{labelNumber}:"
+                ? $"label{labelNumber}:"
                 : $"    {operation ?? " "}; {firstSrc ?? " "}; {secondSrc ?? " "}; {dist ?? " "};";
         }
     }

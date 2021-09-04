@@ -49,6 +49,42 @@ public partial class ProgramBaseListener : IProgramListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitProgram([NotNull] ProgramParser.ProgramContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="ProgramParser.funcDefs"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterFuncDefs([NotNull] ProgramParser.FuncDefsContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ProgramParser.funcDefs"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitFuncDefs([NotNull] ProgramParser.FuncDefsContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="ProgramParser.decls"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterDecls([NotNull] ProgramParser.DeclsContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ProgramParser.decls"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitDecls([NotNull] ProgramParser.DeclsContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="ProgramParser.label"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterLabel([NotNull] ProgramParser.LabelContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ProgramParser.label"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitLabel([NotNull] ProgramParser.LabelContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="ProgramParser.stmt"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -73,61 +109,53 @@ public partial class ProgramBaseListener : IProgramListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitDecl([NotNull] ProgramParser.DeclContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by the <c>localVarDecl</c>
-	/// labeled alternative in <see cref="ProgramParser.variableDecl"/>.
+	/// Enter a parse tree produced by <see cref="ProgramParser.funcDecl"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterLocalVarDecl([NotNull] ProgramParser.LocalVarDeclContext context) { }
+	public virtual void EnterFuncDecl([NotNull] ProgramParser.FuncDeclContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by the <c>localVarDecl</c>
-	/// labeled alternative in <see cref="ProgramParser.variableDecl"/>.
+	/// Exit a parse tree produced by <see cref="ProgramParser.funcDecl"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitLocalVarDecl([NotNull] ProgramParser.LocalVarDeclContext context) { }
+	public virtual void ExitFuncDecl([NotNull] ProgramParser.FuncDeclContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by the <c>localArrDecl</c>
-	/// labeled alternative in <see cref="ProgramParser.variableDecl"/>.
+	/// Enter a parse tree produced by <see cref="ProgramParser.globalVariableDecl"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterLocalArrDecl([NotNull] ProgramParser.LocalArrDeclContext context) { }
+	public virtual void EnterGlobalVariableDecl([NotNull] ProgramParser.GlobalVariableDeclContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by the <c>localArrDecl</c>
-	/// labeled alternative in <see cref="ProgramParser.variableDecl"/>.
+	/// Exit a parse tree produced by <see cref="ProgramParser.globalVariableDecl"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitLocalArrDecl([NotNull] ProgramParser.LocalArrDeclContext context) { }
+	public virtual void ExitGlobalVariableDecl([NotNull] ProgramParser.GlobalVariableDeclContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by the <c>arrayParam</c>
-	/// labeled alternative in <see cref="ProgramParser.paramDecl"/>.
+	/// Enter a parse tree produced by <see cref="ProgramParser.variableDecl"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterArrayParam([NotNull] ProgramParser.ArrayParamContext context) { }
+	public virtual void EnterVariableDecl([NotNull] ProgramParser.VariableDeclContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by the <c>arrayParam</c>
-	/// labeled alternative in <see cref="ProgramParser.paramDecl"/>.
+	/// Exit a parse tree produced by <see cref="ProgramParser.variableDecl"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitArrayParam([NotNull] ProgramParser.ArrayParamContext context) { }
+	public virtual void ExitVariableDecl([NotNull] ProgramParser.VariableDeclContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by the <c>variableParam</c>
-	/// labeled alternative in <see cref="ProgramParser.paramDecl"/>.
+	/// Enter a parse tree produced by <see cref="ProgramParser.paramDecl"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterVariableParam([NotNull] ProgramParser.VariableParamContext context) { }
+	public virtual void EnterParamDecl([NotNull] ProgramParser.ParamDeclContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by the <c>variableParam</c>
-	/// labeled alternative in <see cref="ProgramParser.paramDecl"/>.
+	/// Exit a parse tree produced by <see cref="ProgramParser.paramDecl"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitVariableParam([NotNull] ProgramParser.VariableParamContext context) { }
+	public virtual void ExitParamDecl([NotNull] ProgramParser.ParamDeclContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="ProgramParser.funcTail"/>.
 	/// <para>The default implementation does nothing.</para>
@@ -201,173 +229,29 @@ public partial class ProgramBaseListener : IProgramListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitVariableAssignment([NotNull] ProgramParser.VariableAssignmentContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by the <c>digitAddOrMinus</c>
-	/// labeled alternative in <see cref="ProgramParser.addOrMinus"/>.
+	/// Enter a parse tree produced by <see cref="ProgramParser.operand"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterDigitAddOrMinus([NotNull] ProgramParser.DigitAddOrMinusContext context) { }
+	public virtual void EnterOperand([NotNull] ProgramParser.OperandContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by the <c>digitAddOrMinus</c>
-	/// labeled alternative in <see cref="ProgramParser.addOrMinus"/>.
+	/// Exit a parse tree produced by <see cref="ProgramParser.operand"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitDigitAddOrMinus([NotNull] ProgramParser.DigitAddOrMinusContext context) { }
+	public virtual void ExitOperand([NotNull] ProgramParser.OperandContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by the <c>idFirstAddOrMinus</c>
-	/// labeled alternative in <see cref="ProgramParser.addOrMinus"/>.
+	/// Enter a parse tree produced by <see cref="ProgramParser.binary"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterIdFirstAddOrMinus([NotNull] ProgramParser.IdFirstAddOrMinusContext context) { }
+	public virtual void EnterBinary([NotNull] ProgramParser.BinaryContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by the <c>idFirstAddOrMinus</c>
-	/// labeled alternative in <see cref="ProgramParser.addOrMinus"/>.
+	/// Exit a parse tree produced by <see cref="ProgramParser.binary"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitIdFirstAddOrMinus([NotNull] ProgramParser.IdFirstAddOrMinusContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by the <c>numFirstAddOrMinus</c>
-	/// labeled alternative in <see cref="ProgramParser.addOrMinus"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterNumFirstAddOrMinus([NotNull] ProgramParser.NumFirstAddOrMinusContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by the <c>numFirstAddOrMinus</c>
-	/// labeled alternative in <see cref="ProgramParser.addOrMinus"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitNumFirstAddOrMinus([NotNull] ProgramParser.NumFirstAddOrMinusContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by the <c>idAddOrMinus</c>
-	/// labeled alternative in <see cref="ProgramParser.addOrMinus"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterIdAddOrMinus([NotNull] ProgramParser.IdAddOrMinusContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by the <c>idAddOrMinus</c>
-	/// labeled alternative in <see cref="ProgramParser.addOrMinus"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitIdAddOrMinus([NotNull] ProgramParser.IdAddOrMinusContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by the <c>digitMultiple</c>
-	/// labeled alternative in <see cref="ProgramParser.multiple"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterDigitMultiple([NotNull] ProgramParser.DigitMultipleContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by the <c>digitMultiple</c>
-	/// labeled alternative in <see cref="ProgramParser.multiple"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitDigitMultiple([NotNull] ProgramParser.DigitMultipleContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by the <c>idFirstMultiple</c>
-	/// labeled alternative in <see cref="ProgramParser.multiple"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterIdFirstMultiple([NotNull] ProgramParser.IdFirstMultipleContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by the <c>idFirstMultiple</c>
-	/// labeled alternative in <see cref="ProgramParser.multiple"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitIdFirstMultiple([NotNull] ProgramParser.IdFirstMultipleContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by the <c>numFirstMultiple</c>
-	/// labeled alternative in <see cref="ProgramParser.multiple"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterNumFirstMultiple([NotNull] ProgramParser.NumFirstMultipleContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by the <c>numFirstMultiple</c>
-	/// labeled alternative in <see cref="ProgramParser.multiple"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitNumFirstMultiple([NotNull] ProgramParser.NumFirstMultipleContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by the <c>idMultiple</c>
-	/// labeled alternative in <see cref="ProgramParser.multiple"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterIdMultiple([NotNull] ProgramParser.IdMultipleContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by the <c>idMultiple</c>
-	/// labeled alternative in <see cref="ProgramParser.multiple"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitIdMultiple([NotNull] ProgramParser.IdMultipleContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by the <c>digitDivide</c>
-	/// labeled alternative in <see cref="ProgramParser.divide"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterDigitDivide([NotNull] ProgramParser.DigitDivideContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by the <c>digitDivide</c>
-	/// labeled alternative in <see cref="ProgramParser.divide"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitDigitDivide([NotNull] ProgramParser.DigitDivideContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by the <c>idFirstDivide</c>
-	/// labeled alternative in <see cref="ProgramParser.divide"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterIdFirstDivide([NotNull] ProgramParser.IdFirstDivideContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by the <c>idFirstDivide</c>
-	/// labeled alternative in <see cref="ProgramParser.divide"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitIdFirstDivide([NotNull] ProgramParser.IdFirstDivideContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by the <c>numFirstDivide</c>
-	/// labeled alternative in <see cref="ProgramParser.divide"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterNumFirstDivide([NotNull] ProgramParser.NumFirstDivideContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by the <c>numFirstDivide</c>
-	/// labeled alternative in <see cref="ProgramParser.divide"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitNumFirstDivide([NotNull] ProgramParser.NumFirstDivideContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by the <c>idDivide</c>
-	/// labeled alternative in <see cref="ProgramParser.divide"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterIdDivide([NotNull] ProgramParser.IdDivideContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by the <c>idDivide</c>
-	/// labeled alternative in <see cref="ProgramParser.divide"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitIdDivide([NotNull] ProgramParser.IdDivideContext context) { }
+	public virtual void ExitBinary([NotNull] ProgramParser.BinaryContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by the <c>variableReturn</c>
 	/// labeled alternative in <see cref="ProgramParser.return"/>.
@@ -397,61 +281,17 @@ public partial class ProgramBaseListener : IProgramListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitLiteralReturn([NotNull] ProgramParser.LiteralReturnContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by the <c>digitJumpEqual</c>
-	/// labeled alternative in <see cref="ProgramParser.jumpEqual"/>.
+	/// Enter a parse tree produced by <see cref="ProgramParser.jumpEqual"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterDigitJumpEqual([NotNull] ProgramParser.DigitJumpEqualContext context) { }
+	public virtual void EnterJumpEqual([NotNull] ProgramParser.JumpEqualContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by the <c>digitJumpEqual</c>
-	/// labeled alternative in <see cref="ProgramParser.jumpEqual"/>.
+	/// Exit a parse tree produced by <see cref="ProgramParser.jumpEqual"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitDigitJumpEqual([NotNull] ProgramParser.DigitJumpEqualContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by the <c>idFirstJumpEqual</c>
-	/// labeled alternative in <see cref="ProgramParser.jumpEqual"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterIdFirstJumpEqual([NotNull] ProgramParser.IdFirstJumpEqualContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by the <c>idFirstJumpEqual</c>
-	/// labeled alternative in <see cref="ProgramParser.jumpEqual"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitIdFirstJumpEqual([NotNull] ProgramParser.IdFirstJumpEqualContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by the <c>numFirstJumpEqual</c>
-	/// labeled alternative in <see cref="ProgramParser.jumpEqual"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterNumFirstJumpEqual([NotNull] ProgramParser.NumFirstJumpEqualContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by the <c>numFirstJumpEqual</c>
-	/// labeled alternative in <see cref="ProgramParser.jumpEqual"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitNumFirstJumpEqual([NotNull] ProgramParser.NumFirstJumpEqualContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by the <c>idJumpEqual</c>
-	/// labeled alternative in <see cref="ProgramParser.jumpEqual"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterIdJumpEqual([NotNull] ProgramParser.IdJumpEqualContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by the <c>idJumpEqual</c>
-	/// labeled alternative in <see cref="ProgramParser.jumpEqual"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitIdJumpEqual([NotNull] ProgramParser.IdJumpEqualContext context) { }
+	public virtual void ExitJumpEqual([NotNull] ProgramParser.JumpEqualContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="ProgramParser.param"/>.
 	/// <para>The default implementation does nothing.</para>

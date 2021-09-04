@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 namespace Frontend
 {
-    public abstract record Identity
+    public abstract class Identity
     {
         public static readonly string Int = "int";
         public static readonly string Short = "short";
         public static readonly string Char = "char";
-        
+
         public virtual string Name { get; }
         public string Type { get; }
 
@@ -20,12 +20,10 @@ namespace Frontend
             Type = type;
             Scope = scope;
         }
-
     }
 
-    public record VariableIdentity : Identity
+    public class VariableIdentity : Identity
     {
-
         public int Length { get; }
 
         /// <summary>
@@ -35,6 +33,9 @@ namespace Frontend
         public bool Mutable { get; }
 
         public override string Name => $"{base.Name}@{Scope}";
+
+        public string GetNaiveName() => base.Name;
+
 
         public VariableIdentity(string name, string type, string scope, int length = 1, bool mutable = true)
             : base(name, type, scope)
@@ -52,13 +53,14 @@ namespace Frontend
         }
     }
 
-    public record FuncIdentity : Identity
+    public class FuncIdentity : Identity
     {
         public static readonly string Void = "void";
 
         public (string paramType, string paramName)[] Params { get; }
 
-        public FuncIdentity(string name, string type, (string, string)[] @params) : base(name, type, FrontEndListener.Global)
+        public FuncIdentity(string name, string type, (string, string)[] @params) : base(name, type,
+            FrontEndListener.Global)
         {
             if (@params.Length == 1 && @params[0].Item1 == "void")
             {
@@ -68,19 +70,21 @@ namespace Frontend
             {
                 Params = @params;
             }
+
             Params = @params;
         }
     }
 
-    public record Literal : Identity
+    public class Literal : Identity
     {
         public static readonly string Lit = "literal";
-        public Literal(string name) : base(name, "literal", FrontEndListener.Global)
+
+        public Literal(string name) : base(name, "int", FrontEndListener.Global)
         {
         }
     }
 
-    public record OffsetPair
+    public class OffsetPair
     {
         public string Name { get; init; }
         public int Offset { get; init; }
@@ -92,15 +96,21 @@ namespace Frontend
         }
     }
 
-    public record BackendFuncIdentity : Identity
+    public class BackendFuncIdentity : Identity
     {
-        public List<Identity> Parameters { get; init; }
-        public List<OffsetPair> OffsetPairs { get; init; }
-        public BackendFuncIdentity(string name, string type, List<Identity> @params, List<OffsetPair> offsetPairs)
+        public Dictionary<string, OffsetPair> OffsetPairs { get; } = new();
+
+        public BackendFuncIdentity(string name, string type) : base(name, type, FrontEndListener.Global)
+        {
+        }
+
+        public BackendFuncIdentity(string name, string type, List<OffsetPair> offsetPairs)
             : base(name, type, FrontEndListener.Global)
         {
-            Parameters = @params;
-            OffsetPairs = offsetPairs;
+            foreach (var offsetPair in offsetPairs)
+            {
+                OffsetPairs.Add(offsetPair.Name, offsetPair);
+            }
         }
     }
 }

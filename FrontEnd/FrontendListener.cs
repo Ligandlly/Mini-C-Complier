@@ -64,16 +64,20 @@ namespace Frontend
 
         private readonly List<string> _decls = new();
 
+        private List<string> _funcDecls = new();
+
         public const string Global = "global0";
 
         private int _labelNumber;
 
         private int LabelNumber => _labelNumber++;
 
+
         /// <summary>
         /// Template Variables List
         /// </summary>
         private readonly List<VariableIdentity> _tmpVariables = new();
+
         /// <summary>
         /// Create a new temporary variable
         /// </summary>
@@ -109,15 +113,18 @@ namespace Frontend
             if (!Tables[Global].ContainsKey("main"))
                 throw new FrontEndException("Main Function Undefined");
 
-            // Temporary Variables
             StringBuilder stringBuilder = new();
+
+            foreach (var funcDecl in _funcDecls)
+                stringBuilder.AppendLine(funcDecl);
+
+            // Temporary Variables
             foreach (var tmpVariable in _tmpVariables)
                 stringBuilder.AppendLine(_irBuilder.GenerateIr("decl_var", tmpVariable.Type, tmpVariable.Name));
 
             foreach (var decl in _decls)
-            {
                 stringBuilder.AppendLine(decl);
-            }
+
 
             foreach (var declContext in context.decl())
                 stringBuilder.AppendLine(_ir.Get(declContext));
@@ -208,23 +215,25 @@ namespace Frontend
                 switch (child)
                 {
                     case ProgramParser.ParamHasIntContext paramHasInt:
-                        {
-                            var type = paramHasInt.type_spec().GetText();
-                            var name = paramHasInt.id().GetText();
+                    {
+                        var type = paramHasInt.type_spec().GetText();
+                        var name = paramHasInt.id().GetText();
 
-                            table.Add(name, new VariableIdentity(name, type, _currentScopeName));
-                            tmpList.Add((type, name));
-                            break;
-                        }
+                        table.Add(name, new VariableIdentity(name, type, _currentScopeName));
+                        tmpList.Add((type, name));
+                        break;
+                    }
                     case ProgramParser.ParamHasArrContext paramHasArr:
-                        {
-                            var type = paramHasArr.type_spec().GetText();
-                            var name = paramHasArr.id().GetText();
+                    {
+                        var type = paramHasArr.type_spec().GetText();
+                        var name = paramHasArr.id().GetText();
 
-                            table.Add(name, new VariableIdentity(name, type, _currentScopeName, int.Parse(paramHasArr.num().GetText())));
-                            tmpList.Add((type, name));
-                            break;
-                        }
+                        table.Add(name,
+                            new VariableIdentity(name, type, _currentScopeName,
+                                int.Parse(paramHasArr.num().GetText())));
+                        tmpList.Add((type, name));
+                        break;
+                    }
                 }
             }
 
@@ -262,10 +271,11 @@ namespace Frontend
                 {
                     var arrId = Tables[_currentScopeName][paramName] as VariableIdentity;
                     Debug.Assert(arrId != null, nameof(arrId) + " != null");
-                    rltBuilder.AppendLine(_irBuilder.GenerateIr("param_decl", paramType, arrId.Name,
+                    _decls.Add(_irBuilder.GenerateIr("param_decl", paramType, arrId.Name,
                         $"{arrId.Length}"));
-
                 }
+
+                _funcDecls.Add(_irBuilder.GenerateIr("func_decl", rltType, funcName, $"{funcIdent.Params.Length}"));
                 rltBuilder.AppendLine(_irBuilder.GenerateIr("func", rltType, funcName, $"{funcIdent.Params.Length}"));
             }
 
@@ -528,7 +538,8 @@ namespace Frontend
             var offsetValue = _values.Get(context.expr());
             var baseValue = _values.Get(context.primary_expr());
             // _ir.Put(context, );
-            _values.Put(context, new VariableIdentity($"{baseValue.Name}[{offsetValue.Name}]", baseValue.Type, _currentScopeName));
+            _values.Put(context,
+                new VariableIdentity($"{baseValue.Name}[{offsetValue.Name}]", baseValue.Type, _currentScopeName));
         }
 
         #endregion
@@ -695,7 +706,8 @@ namespace Frontend
 
                 stringBuilder.AppendLine(_ir.Get(context.left));
                 stringBuilder.AppendLine(_ir.Get(context.right));
-                stringBuilder.AppendLine(_irBuilder.GenerateIr(context.op.Text, leftVal.Name, rightVal.Name, tmpRlt.Name));
+                stringBuilder.AppendLine(_irBuilder.GenerateIr(context.op.Text, leftVal.Name, rightVal.Name,
+                    tmpRlt.Name));
                 _ir.Put(context, stringBuilder.ToString());
                 _values.Put(context, tmpRlt);
             }
@@ -802,7 +814,7 @@ namespace Frontend
 
             var head = _irBuilder.GenerateIr("Je", exprVal.Name, "0", $"label{endIf}");
             var middle = _irBuilder.GenerateIr("J", $"label{endElse}") + "\n"
-                                                                        + _irBuilder.GenerateIr(labelNumber: endIf);
+                                                                       + _irBuilder.GenerateIr(labelNumber: endIf);
             var tail = _irBuilder.GenerateIr(labelNumber: endElse);
 
             StringBuilder stringBuilder = new();
