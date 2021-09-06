@@ -15,8 +15,6 @@
  * Like priceless treasures sinking in the sand.
  */
 
-using Antlr4.Runtime.Misc;
-using Antlr4.Runtime.Tree;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -24,6 +22,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Antlr4.Runtime.Misc;
+using Antlr4.Runtime.Tree;
 
 namespace Frontend
 {
@@ -215,25 +215,25 @@ namespace Frontend
                 switch (child)
                 {
                     case ProgramParser.ParamHasIntContext paramHasInt:
-                    {
-                        var type = paramHasInt.type_spec().GetText();
-                        var name = paramHasInt.id().GetText();
+                        {
+                            var type = paramHasInt.type_spec().GetText();
+                            var name = paramHasInt.id().GetText();
 
-                        table.Add(name, new VariableIdentity(name, type, _currentScopeName));
-                        tmpList.Add((type, name));
-                        break;
-                    }
+                            table.Add(name, new VariableIdentity(name, type, _currentScopeName));
+                            tmpList.Add((type, name));
+                            break;
+                        }
                     case ProgramParser.ParamHasArrContext paramHasArr:
-                    {
-                        var type = paramHasArr.type_spec().GetText();
-                        var name = paramHasArr.id().GetText();
+                        {
+                            var type = paramHasArr.type_spec().GetText();
+                            var name = paramHasArr.id().GetText();
 
-                        table.Add(name,
-                            new VariableIdentity(name, type, _currentScopeName,
-                                int.Parse(paramHasArr.num().GetText())));
-                        tmpList.Add((type, name));
-                        break;
-                    }
+                            table.Add(name,
+                                new VariableIdentity(name, type, _currentScopeName,
+                                    int.Parse(paramHasArr.num().GetText())));
+                            tmpList.Add((type, name));
+                            break;
+                        }
                 }
             }
 
@@ -633,7 +633,7 @@ namespace Frontend
             var unaryId = _values.Get(context.unary_expr());
             var tmpRlt = NewTmpVar(unaryId.Type, false);
 
-            _ir.Put(context, _irBuilder.GenerateIr("!", unaryId.Name, dist: tmpRlt.Name));
+            _ir.Put(context, _irBuilder.GenerateIr("~", unaryId.Name, dist: tmpRlt.Name));
             _values.Put(context, tmpRlt);
         }
 

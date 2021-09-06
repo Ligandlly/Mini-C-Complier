@@ -8,10 +8,10 @@ namespace Backend
 {
     using SymbolTable = Dictionary<string, Identity>;
 
-    internal record Memory
+    internal readonly struct Memory
     {
-        public string Base { get; init; }
-        public int Offset { get; set; }
+        public string Base { get; }
+        public int Offset { get; }
 
         public Memory(string @base = "$sp", int offset = 0)
         {
@@ -34,14 +34,12 @@ namespace Backend
 
     public class BackendListener : ProgramBaseListener
     {
-        private const string RelationReg = "$s0";
-
-        private HashSet<string> _relopSet = new()
+        private readonly HashSet<string> _relopSet = new()
         {
             "<", ">", "==", "!=", "<=", ">="
         };
 
-        private HashSet<string> _multSet = new()
+        private readonly HashSet<string> _multSet = new()
         {
             "*", "/", "%"
         };
@@ -98,44 +96,44 @@ namespace Backend
             return rlt;
         }
 
-        void Relop(string op, string lReg, string rReg)
+        void Relop(string op, string lReg, string rReg, string rltReg)
         {
             switch (op)
             {
                 case "==":
                 {
-                    _codeSegment.Add($"XOR {RelationReg}, {lReg}, {rReg}");
+                    _codeSegment.Add($"XOR {rltReg}, {lReg}, {rReg}");
                     break;
                 }
                 case "!=":
                 {
-                    _codeSegment.Add($"SUB {RelationReg}, {lReg}, {rReg}");
+                    _codeSegment.Add($"SUB {rltReg}, {lReg}, {rReg}");
                     break;
                 }
                 case "<":
                 {
-                    _codeSegment.Add($"SLT {RelationReg}, {lReg}, {rReg}");
+                    _codeSegment.Add($"SLT {rltReg}, {lReg}, {rReg}");
                     break;
                 }
                 case ">":
                 {
-                    _codeSegment.Add($"SLT {RelationReg}, {rReg}, {lReg}");
+                    _codeSegment.Add($"SLT {rltReg}, {rReg}, {lReg}");
                     break;
                 }
                 case "<=":
                 {
                     var tmp = TmpReg;
                     _codeSegment.Add($"ORI $t{tmp}, $0, 1");
-                    _codeSegment.Add($"SLT {RelationReg}, {rReg}, {lReg}");
-                    _codeSegment.Add($"SUB {RelationReg}, {RelationReg}, $t{tmp}");
+                    _codeSegment.Add($"SLT {rltReg}, {rReg}, {lReg}");
+                    _codeSegment.Add($"SUB {rltReg}, {rltReg}, $t{tmp}");
                     break;
                 }
                 case ">=":
                 {
                     var tmp = TmpReg;
                     _codeSegment.Add($"ORI $t{tmp}, $0, 1");
-                    _codeSegment.Add($"SLT {RelationReg}, {lReg}, {rReg}");
-                    _codeSegment.Add($"SUB {RelationReg}, {RelationReg}, $t{tmp}");
+                    _codeSegment.Add($"SLT {rltReg}, {lReg}, {rReg}");
+                    _codeSegment.Add($"SUB {rltReg}, {rltReg}, $t{tmp}");
                     break;
                 }
             }
@@ -150,7 +148,7 @@ namespace Backend
 
             if (_relopSet.Contains(op))
             {
-                Relop(op, l, r);
+                Relop(op, l, r, rlt);
                 TmpReg -= usedTmpReg;
                 return;
             }

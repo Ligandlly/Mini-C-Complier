@@ -63,7 +63,7 @@ int main() {
 ";
             Compare(test, rlt);
         }
-        
+
         [Test]
         public void TestAdd()
         {
