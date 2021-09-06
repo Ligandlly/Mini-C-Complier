@@ -1,8 +1,9 @@
-﻿using Frontend;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
+using Frontend;
 
 namespace Backend
 {
@@ -36,12 +37,25 @@ namespace Backend
     {
         private readonly HashSet<string> _relopSet = new()
         {
-            "<", ">", "==", "!=", "<=", ">="
+            "<",
+            ">",
+            "==",
+            "!=",
+            "<=",
+            ">="
         };
 
         private readonly HashSet<string> _multSet = new()
         {
-            "*", "/", "%"
+            "*",
+            "/",
+            "%"
+        };
+
+        private readonly HashSet<string> _binaryLogicalSet = new()
+        {
+            "||",
+            "&&"
         };
 
         private bool _isDeclFin = false;
@@ -101,42 +115,64 @@ namespace Backend
             switch (op)
             {
                 case "==":
-                {
-                    _codeSegment.Add($"XOR {rltReg}, {lReg}, {rReg}");
-                    break;
-                }
+                    {
+                        _codeSegment.Add($"XOR {rltReg}, {lReg}, {rReg}");
+                        break;
+                    }
                 case "!=":
-                {
-                    _codeSegment.Add($"SUB {rltReg}, {lReg}, {rReg}");
-                    break;
-                }
+                    {
+                        _codeSegment.Add($"SUB {rltReg}, {lReg}, {rReg}");
+                        break;
+                    }
                 case "<":
-                {
-                    _codeSegment.Add($"SLT {rltReg}, {lReg}, {rReg}");
-                    break;
-                }
+                    {
+                        _codeSegment.Add($"SLT {rltReg}, {lReg}, {rReg}");
+                        break;
+                    }
                 case ">":
-                {
-                    _codeSegment.Add($"SLT {rltReg}, {rReg}, {lReg}");
-                    break;
-                }
+                    {
+                        _codeSegment.Add($"SLT {rltReg}, {rReg}, {lReg}");
+                        break;
+                    }
                 case "<=":
-                {
-                    var tmp = TmpReg;
-                    _codeSegment.Add($"ORI $t{tmp}, $0, 1");
-                    _codeSegment.Add($"SLT {rltReg}, {rReg}, {lReg}");
-                    _codeSegment.Add($"SUB {rltReg}, {rltReg}, $t{tmp}");
-                    break;
-                }
+                    {
+                        var tmp = TmpReg;
+                        _codeSegment.Add($"ORI $t{tmp}, $0, 1");
+                        _codeSegment.Add($"SLT {rltReg}, {rReg}, {lReg}");
+                        _codeSegment.Add($"SUB {rltReg}, {rltReg}, $t{tmp}");
+                        break;
+                    }
                 case ">=":
-                {
-                    var tmp = TmpReg;
-                    _codeSegment.Add($"ORI $t{tmp}, $0, 1");
-                    _codeSegment.Add($"SLT {rltReg}, {lReg}, {rReg}");
-                    _codeSegment.Add($"SUB {rltReg}, {rltReg}, $t{tmp}");
-                    break;
-                }
+                    {
+                        var tmp = TmpReg;
+                        _codeSegment.Add($"ORI $t{tmp}, $0, 1");
+                        _codeSegment.Add($"SLT {rltReg}, {lReg}, {rReg}");
+                        _codeSegment.Add($"SUB {rltReg}, {rltReg}, $t{tmp}");
+                        break;
+                    }
             }
+        }
+
+        void BinaryLogicalOp(string op, string lReg, string rReg, string rltReg)
+        {
+            var tmp1 = TmpReg++;
+            var tmp2 = TmpReg++;
+            var tmp3 = TmpReg++;
+            var tmp4 = TmpReg++;
+
+            _codeSegment.Add($"SLT $t{tmp1}, $0, {lReg}");
+            _codeSegment.Add($"SLT $t{tmp2}, {lReg}, $0");
+            _codeSegment.Add($"OR $t{tmp3}, {tmp1}, {tmp2}");
+
+            _codeSegment.Add($"SLT $t{tmp1}, $0, {rReg}");
+            _codeSegment.Add($"SLT $t{tmp2}, {rReg}, $0");
+            _codeSegment.Add($"OR $t{tmp4}, {tmp1}, {tmp2}");
+
+            var command = op == "||" ? "OR" : "AND";
+            _codeSegment.Add($"{command} {rltReg}, $t{tmp3}, $t{tmp4}");
+
+            TmpReg -= 4;
+
         }
 
         void BinOp(string op, string l, string r, string rlt)
@@ -149,6 +185,13 @@ namespace Backend
             if (_relopSet.Contains(op))
             {
                 Relop(op, l, r, rlt);
+                TmpReg -= usedTmpReg;
+                return;
+            }
+
+            if (_binaryLogicalSet.Contains(op))
+            {
+                BinaryLogicalOp(op, l, r, rlt);
                 TmpReg -= usedTmpReg;
                 return;
             }
@@ -285,12 +328,12 @@ namespace Backend
             var left = context.left.GetText();
             var right = context.right.GetText();
             var rlt = context.rlt.GetText();
-            
+
             BinOp(op, left, right, rlt);
         }
 
         #endregion
-        
+
         #region Variable
 
         public override void ExitVariable(ProgramParser.VariableContext context)

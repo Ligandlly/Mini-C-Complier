@@ -172,6 +172,26 @@ public interface IProgramListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitQuaternary([NotNull] ProgramParser.QuaternaryContext context);
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="ProgramParser.operand"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterOperand([NotNull] ProgramParser.OperandContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ProgramParser.operand"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitOperand([NotNull] ProgramParser.OperandContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="ProgramParser.unary"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterUnary([NotNull] ProgramParser.UnaryContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ProgramParser.unary"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitUnary([NotNull] ProgramParser.UnaryContext context);
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="ProgramParser.literalAssignment"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -191,16 +211,6 @@ public interface IProgramListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitVariableAssignment([NotNull] ProgramParser.VariableAssignmentContext context);
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="ProgramParser.operand"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterOperand([NotNull] ProgramParser.OperandContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="ProgramParser.operand"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitOperand([NotNull] ProgramParser.OperandContext context);
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="ProgramParser.binary"/>.
 	/// </summary>

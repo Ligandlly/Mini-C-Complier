@@ -205,6 +205,30 @@ public partial class ProgramBaseListener : IProgramListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitQuaternary([NotNull] ProgramParser.QuaternaryContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="ProgramParser.operand"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterOperand([NotNull] ProgramParser.OperandContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ProgramParser.operand"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitOperand([NotNull] ProgramParser.OperandContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="ProgramParser.unary"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterUnary([NotNull] ProgramParser.UnaryContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ProgramParser.unary"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitUnary([NotNull] ProgramParser.UnaryContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="ProgramParser.literalAssignment"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -228,18 +252,6 @@ public partial class ProgramBaseListener : IProgramListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitVariableAssignment([NotNull] ProgramParser.VariableAssignmentContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="ProgramParser.operand"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterOperand([NotNull] ProgramParser.OperandContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="ProgramParser.operand"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitOperand([NotNull] ProgramParser.OperandContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="ProgramParser.binary"/>.
 	/// <para>The default implementation does nothing.</para>
