@@ -145,18 +145,6 @@ public partial class ProgramBaseListener : IProgramListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitVariableDecl([NotNull] ProgramParser.VariableDeclContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ProgramParser.paramDecl"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterParamDecl([NotNull] ProgramParser.ParamDeclContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="ProgramParser.paramDecl"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitParamDecl([NotNull] ProgramParser.ParamDeclContext context) { }
-	/// <summary>
 	/// Enter a parse tree produced by <see cref="ProgramParser.funcTail"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -228,30 +216,6 @@ public partial class ProgramBaseListener : IProgramListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitUnary([NotNull] ProgramParser.UnaryContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="ProgramParser.literalAssignment"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterLiteralAssignment([NotNull] ProgramParser.LiteralAssignmentContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="ProgramParser.literalAssignment"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitLiteralAssignment([NotNull] ProgramParser.LiteralAssignmentContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="ProgramParser.variableAssignment"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterVariableAssignment([NotNull] ProgramParser.VariableAssignmentContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="ProgramParser.variableAssignment"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitVariableAssignment([NotNull] ProgramParser.VariableAssignmentContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="ProgramParser.binary"/>.
 	/// <para>The default implementation does nothing.</para>

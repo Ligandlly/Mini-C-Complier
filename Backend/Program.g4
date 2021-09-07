@@ -10,7 +10,7 @@ InlineLabel: 'label' Num;
 label: InlineLabel ':';
 stmt: (label)? quaternary | label;
 
-decl: variableDecl | paramDecl | globalVariableDecl;
+decl: variableDecl | globalVariableDecl;
 
 Type: 'int' | 'short' | 'char' | 'void';
 
@@ -22,11 +22,12 @@ globalVariableDecl:
 
 variableDecl:
 	'decl_var' ';' Type ';' variable ';' ';'
-	| 'decl_arr' ';' Type ';' variable ';' Num ';';
-
-paramDecl:
-	'param_decl' ';' Type ';' variable ';' Num ';'
+	| 'decl_arr' ';' Type ';' variable ';' Num ';'
+	| 'param_decl' ';' Type ';' variable ';' Num ';'
 	| 'param_decl' ';' Type ';' variable ';' ';';
+
+// paramDecl: 'param_decl' ';' Type ';' variable ';' Num ';' | 'param_decl' ';' Type ';' variable
+// ';' ';';
 
 funcTail: 'end_func' ';' ';' ';' ';';
 
@@ -35,9 +36,7 @@ funcHead: 'func' ';' Type ';' Id ';' Num ';';
 funcDef: funcHead stmt* funcTail;
 
 quaternary:
-	literalAssignment
-	| variableAssignment
-	| unary
+	unary
 	// | addOrMinus | multiple | divide
 	| binary
 	| return
@@ -47,13 +46,10 @@ quaternary:
 
 operand: Num | variable;
 
-UnaryOp: '$' | '!' | '~';
+UnaryOp: '$' | '!' | '~' | '=';
 
 unary: UnaryOp ';' src = operand ';' ';' rlt = operand ';';
 
-literalAssignment: '=' ';' Num ';' ';' variable ';';
-
-variableAssignment: '=' ';' variable ';' ';' variable ';';
 BinaryOp:
 	'+'
 	| '-'
@@ -81,7 +77,7 @@ return:
 jumpEqual:
 	'Je' ';' left = operand ';' right = operand ';' rlt = InlineLabel ';';
 
-param: 'param' ';' variable ';' ';' ';';
+param: 'param' ';' (variable | Num) ';' ';' ';';
 
 call: param* 'call' ';' Id ';' Num ';' rlt = variable ';';
 

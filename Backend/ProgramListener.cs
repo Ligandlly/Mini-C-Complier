@@ -122,16 +122,6 @@ public interface IProgramListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitVariableDecl([NotNull] ProgramParser.VariableDeclContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ProgramParser.paramDecl"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterParamDecl([NotNull] ProgramParser.ParamDeclContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="ProgramParser.paramDecl"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitParamDecl([NotNull] ProgramParser.ParamDeclContext context);
-	/// <summary>
 	/// Enter a parse tree produced by <see cref="ProgramParser.funcTail"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -191,26 +181,6 @@ public interface IProgramListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitUnary([NotNull] ProgramParser.UnaryContext context);
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="ProgramParser.literalAssignment"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterLiteralAssignment([NotNull] ProgramParser.LiteralAssignmentContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="ProgramParser.literalAssignment"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitLiteralAssignment([NotNull] ProgramParser.LiteralAssignmentContext context);
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="ProgramParser.variableAssignment"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterVariableAssignment([NotNull] ProgramParser.VariableAssignmentContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="ProgramParser.variableAssignment"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitVariableAssignment([NotNull] ProgramParser.VariableAssignmentContext context);
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="ProgramParser.binary"/>.
 	/// </summary>

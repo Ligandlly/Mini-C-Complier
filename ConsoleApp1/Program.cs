@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Net.Http.Headers;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 using Backend;
-// using Backend;
 using Frontend;
 
 
@@ -14,15 +12,17 @@ namespace ConsoleApp1
         static void Main(string[] args)
         {
             string test = @"
-int a[5];
-int foo(int arr[13], int i) {
-    if (a[0] == 0) {
-        return 1;
-    }
+int foo2(int i[2]) {
+    return i + 1;
+}
+int foo(int i) {
+    int a;
+    return i + 1;
 }
 int main() {
-    int arr[3];
-    arr[3] = 1 + 2;
+    foo(2);
+    int a[2];
+    foo2(a);
 }
 ";
 
@@ -57,6 +57,8 @@ int main() {
             var bWalker = new ParseTreeWalker();
             var backendListener = new BackendListener();
             bWalker.Walk(backendListener, bTree);
+
+            Console.WriteLine(string.Join("\n", backendListener.CodeSegment));
         }
     }
 }

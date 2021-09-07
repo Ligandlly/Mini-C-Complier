@@ -100,6 +100,8 @@ namespace Frontend
     {
         public Dictionary<string, OffsetPair> OffsetPairs { get; } = new();
 
+        public int VariablesSize { get; set; }
+
         public BackendFuncIdentity(string name, string type) : base(name, type, FrontEndListener.Global)
         {
         }

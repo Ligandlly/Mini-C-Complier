@@ -1,23 +1,30 @@
-﻿using System;
+﻿// FIXME: Symbol Tables is redundant
+// FIXME: `_typeMap` is never used
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Linq.Expressions;
+using System.Reflection.Metadata;
+using Antlr4.Runtime.Misc;
 using Frontend;
+using SymbolTable = System.Collections.Generic.Dictionary<string, Frontend.Identity>;
 
 namespace Backend
 {
-    using SymbolTable = Dictionary<string, Identity>;
-
     internal readonly struct Memory
     {
         public string Base { get; }
         public int Offset { get; }
+        public bool IsArrHead { get; }
 
-        public Memory(string @base = "$sp", int offset = 0)
+        public int Length { get; }
+
+        public Memory(string @base = "$sp", int offset = 0, bool isArrHead = false, int length = 1)
         {
             Base = @base;
             Offset = offset;
+            IsArrHead = isArrHead;
+            Length = length;
         }
 
         public override string ToString()
@@ -58,20 +65,20 @@ namespace Backend
             "&&"
         };
 
-        private bool _isDeclFin = false;
+        private readonly bool _hasComment;
 
-        private Dictionary<BackendFuncIdentity, int> _stackOffset = new();
+        private bool _isDeclFin;
+
+        private readonly Dictionary<BackendFuncIdentity, int> _stackOffset = new();
 
         /// <summary>
         /// Name And Scope
         /// </summary>
         private readonly Dictionary<string, Memory> _variables = new();
 
-        private readonly List<string> _functions = new();
-
         private readonly List<string> _dataSegment = new();
 
-        private readonly List<string> _codeSegment = new();
+        public readonly List<string> CodeSegment = new();
 
         public const string Global = FrontEndListener.Global;
 
@@ -89,7 +96,7 @@ namespace Backend
             { "char", "byte" }
         };
 
-        private int _tmpReg = 0;
+        private int _tmpReg;
 
         private int TmpReg
         {
@@ -97,155 +104,114 @@ namespace Backend
             set
             {
                 if (value > 7)
+                {
                     throw new BackendException("Temporary Register Run Out");
+                }
+
                 _tmpReg = value;
             }
         }
 
+        public BackendListener(bool hasComment = true)
+        {
+            _hasComment = hasComment;
+        }
+
         private BackendFuncIdentity GetFuncId(string funcName)
         {
-            var rlt = _tables[Global][funcName] as BackendFuncIdentity;
+            BackendFuncIdentity rlt = _tables[Global][funcName] as BackendFuncIdentity;
 
             Debug.Assert(rlt != null, nameof(rlt) + " != null");
             return rlt;
-        }
-
-        void Relop(string op, string lReg, string rReg, string rltReg)
-        {
-            switch (op)
-            {
-                case "==":
-                    {
-                        _codeSegment.Add($"XOR {rltReg}, {lReg}, {rReg}");
-                        break;
-                    }
-                case "!=":
-                    {
-                        _codeSegment.Add($"SUB {rltReg}, {lReg}, {rReg}");
-                        break;
-                    }
-                case "<":
-                    {
-                        _codeSegment.Add($"SLT {rltReg}, {lReg}, {rReg}");
-                        break;
-                    }
-                case ">":
-                    {
-                        _codeSegment.Add($"SLT {rltReg}, {rReg}, {lReg}");
-                        break;
-                    }
-                case "<=":
-                    {
-                        var tmp = TmpReg;
-                        _codeSegment.Add($"ORI $t{tmp}, $0, 1");
-                        _codeSegment.Add($"SLT {rltReg}, {rReg}, {lReg}");
-                        _codeSegment.Add($"SUB {rltReg}, {rltReg}, $t{tmp}");
-                        break;
-                    }
-                case ">=":
-                    {
-                        var tmp = TmpReg;
-                        _codeSegment.Add($"ORI $t{tmp}, $0, 1");
-                        _codeSegment.Add($"SLT {rltReg}, {lReg}, {rReg}");
-                        _codeSegment.Add($"SUB {rltReg}, {rltReg}, $t{tmp}");
-                        break;
-                    }
-            }
-        }
-
-        void BinaryLogicalOp(string op, string lReg, string rReg, string rltReg)
-        {
-            var tmp1 = TmpReg++;
-            var tmp2 = TmpReg++;
-            var tmp3 = TmpReg++;
-            var tmp4 = TmpReg++;
-
-            _codeSegment.Add($"SLT $t{tmp1}, $0, {lReg}");
-            _codeSegment.Add($"SLT $t{tmp2}, {lReg}, $0");
-            _codeSegment.Add($"OR $t{tmp3}, {tmp1}, {tmp2}");
-
-            _codeSegment.Add($"SLT $t{tmp1}, $0, {rReg}");
-            _codeSegment.Add($"SLT $t{tmp2}, {rReg}, $0");
-            _codeSegment.Add($"OR $t{tmp4}, {tmp1}, {tmp2}");
-
-            var command = op == "||" ? "OR" : "AND";
-            _codeSegment.Add($"{command} {rltReg}, $t{tmp3}, $t{tmp4}");
-
-            TmpReg -= 4;
-
-        }
-
-        void BinOp(string op, string l, string r, string rlt)
-        {
-            var usedTmpReg = 0;
-            l = DealWithMemOrImme(l, ref usedTmpReg);
-            r = DealWithMemOrImme(r, ref usedTmpReg);
-            rlt = DealWithMemOrImme(rlt, ref usedTmpReg);
-
-            if (_relopSet.Contains(op))
-            {
-                Relop(op, l, r, rlt);
-                TmpReg -= usedTmpReg;
-                return;
-            }
-
-            if (_binaryLogicalSet.Contains(op))
-            {
-                BinaryLogicalOp(op, l, r, rlt);
-                TmpReg -= usedTmpReg;
-                return;
-            }
-
-            var command = op switch
-            {
-                "+" => "ADD",
-                "-" => "SUB",
-                "*" => "MULT",
-                "/" => "DIV",
-                "%" => "DIV",
-                "<<" => "SLLV",
-                ">>" => "SRAV",
-                "&" => "AND",
-                "|" => "OR",
-                "^" => "XOR"
-            };
-
-            if (_multSet.Contains(op))
-            {
-                _codeSegment.Add($"{command} {l}, {r}");
-                _codeSegment.Add(op == "%" ? $"MFHI {rlt}" : $"MFLO {rlt}");
-            }
-
-            _codeSegment.Add($"{command} {rlt}, {l}, {r}");
-            TmpReg -= usedTmpReg;
         }
 
         private string DealWithMemOrImme(string l, ref int usedTmpReg)
         {
             if (char.IsDigit(l[0]))
             {
-                var tmp = TmpReg++;
+                int tmp = TmpReg++;
                 usedTmpReg++;
-                _codeSegment.Add($"ORI $t{tmp}, $0, {l}");
+                CodeSegment.Add($"ORI $t{tmp}, $0, {l}");
                 l = $"$t{tmp}";
             }
             else if (l[0] != '$')
             {
-                var tmp = TmpReg++;
+                int tmp = TmpReg++;
                 usedTmpReg++;
-                _codeSegment.Add($"LW  $t{tmp}, {l}");
+                CodeSegment.Add($"LW  $t{tmp}, {_variables[l]}");
                 l = $"$t{tmp}";
             }
 
             return l;
         }
 
+
+        #region Unary
+
+        public override void ExitUnary(ProgramParser.UnaryContext context)
+        {
+            string op = context.UnaryOp().GetText();
+            string src = context.src.GetText();
+            string rlt = context.rlt.GetText();
+
+            int usedTmpReg = 0;
+            src = DealWithMemOrImme(src, ref usedTmpReg);
+            string originalRlt = rlt;
+            rlt = DealWithMemOrImme(rlt, ref usedTmpReg);
+
+            switch (op)
+            {
+                case "!":
+                    // (~(x>>1)+x)>>31
+                    {
+                        int tmp = TmpReg;
+                        CodeSegment.Add($"SRL $t{tmp}, {src}, 1");
+                        CodeSegment.Add($"ADD $t{tmp}, $t{tmp}, {src}");
+                        CodeSegment.Add($"NOR $t{tmp}, $t{tmp}, $0");
+                        CodeSegment.Add($"SRL {rlt}, $t{tmp}, 31");
+                        break;
+                    }
+                case "~":
+                    {
+                        CodeSegment.Add($"NOR {rlt}, $0, {src}");
+                        break;
+                    }
+                case "$":
+                    {
+                        CodeSegment.Add($"LW ${rlt}, 0(${src})");
+                        break;
+                    }
+                case "=":
+                    {
+                        CodeSegment.Add($"OR {rlt}, {src}, $0");
+                        break;
+                    }
+
+                default:
+                    break;
+            }
+
+            if (originalRlt[0] != '$')
+            {
+                CodeSegment.Add($"SW {rlt}, {_variables[originalRlt]}");
+            }
+
+            TmpReg -= usedTmpReg;
+
+            if (_hasComment)
+            {
+                CodeSegment.Add($"\t# {context.GetText()}");
+            }
+        }
+
+        #endregion
+
         #region Program
 
         public override void EnterProgram(ProgramParser.ProgramContext context)
         {
             _dataSegment.Add(".DATA 0x100000");
-            _codeSegment.AddRange(new[] { ".TEXT", "start:" });
+            CodeSegment.AddRange(new[] { ".TEXT", "start:" });
             _tables[Global] = new SymbolTable();
         }
 
@@ -256,15 +222,14 @@ namespace Backend
 
         #endregion
 
-
         #region Decls
 
         public override void ExitFuncDecl(ProgramParser.FuncDeclContext context)
         {
-            var name = context.Id().GetText();
-            var type = context.Type().GetText();
+            string name = context.Id().GetText();
+            string type = context.Type().GetText();
 
-            var backendFuncIdentity = new BackendFuncIdentity(name, type);
+            BackendFuncIdentity backendFuncIdentity = new BackendFuncIdentity(name, type);
             _tables[Global].Add(name, backendFuncIdentity);
             _tables.Add(name, new SymbolTable());
             _stackOffset.Add(backendFuncIdentity, 36);
@@ -272,13 +237,13 @@ namespace Backend
 
         public override void ExitVariableDecl(ProgramParser.VariableDeclContext context)
         {
-            var type = context.Type().GetText();
-            var name = context.variable().name.Text;
-            var scope = context.variable().scope.Text;
-            var num = context.Num() != null ? int.Parse(context.Num().GetText()) : 1;
+            string type = context.Type().GetText();
+            string name = context.variable().name.Text;
+            string scope = context.variable().scope.Text;
+            int num = context.Num() != null ? int.Parse(context.Num().GetText()) : 1;
 
             // Add to Symbol Table
-            var table = _tables[scope];
+            SymbolTable table = _tables[scope];
             table.Add(name, new VariableIdentity(name, type, scope, num));
 
             // If Variable is in a function
@@ -288,30 +253,31 @@ namespace Backend
                 return;
             }
 
-            var funcIdentity = _tables[Global][scope] as BackendFuncIdentity;
-            var offset = _stackOffset[funcIdentity];
+            BackendFuncIdentity funcIdentity = GetFuncId(scope);
+            int offset = _stackOffset[funcIdentity];
             _stackOffset[funcIdentity] += num << 2;
+            funcIdentity.VariablesSize += num << 2;
             funcIdentity.OffsetPairs.Add(name, new OffsetPair(name, offset));
-            _variables.Add($"{name}@{scope}", new Memory(offset: offset));
+            _variables.Add($"{name}@{scope}", new Memory(offset: offset, isArrHead: num != 1, length: num));
         }
 
-        public override void ExitParamDecl(ProgramParser.ParamDeclContext context)
-        {
-            var type = context.Type().GetText();
-            var name = context.variable().name.Text;
-            var scope = context.variable().scope.Text;
-            var num = context.Num() != null ? int.Parse(context.Num().GetText()) : 1;
+        // public override void ExitParamDecl(ProgramParser.ParamDeclContext context)
+        // {
+        //     var type = context.Type().GetText();
+        //     var name = context.variable().name.Text;
+        //     var scope = context.variable().scope.Text;
+        //     var num = context.Num() != null ? int.Parse(context.Num().GetText()) : 1;
 
-            // Add to Symbol Table
-            var table = _tables[scope];
-            table.Add(name, new VariableIdentity(name, type, scope, num));
+        //     // Add to Symbol Table
+        //     var table = _tables[scope];
+        //     table.Add(name, new VariableIdentity(name, type, scope, num));
 
-            var funcIdentity = _tables[Global][scope] as BackendFuncIdentity;
-            var offset = _stackOffset[funcIdentity];
-            _stackOffset[funcIdentity] += num << 2;
-            funcIdentity.OffsetPairs.Add(name, new OffsetPair(name, offset));
-            _variables.Add($"{name}@{scope}", new Memory(offset: offset));
-        }
+        //     var funcIdentity = _tables[Global][scope] as BackendFuncIdentity;
+        //     var offset = _stackOffset[funcIdentity];
+        //     _stackOffset[funcIdentity] += num << 2;
+        //     funcIdentity.OffsetPairs.Add(name, new OffsetPair(name, offset));
+        //     _variables.Add($"{name}@{scope}", new Memory(offset: offset));
+        // }
 
         public override void EnterFuncDef(ProgramParser.FuncDefContext context)
         {
@@ -320,16 +286,254 @@ namespace Backend
 
         #endregion
 
-        #region BinaryOp
+        #region Binary
+
+        private void Relop(string op, string lReg, string rReg, string rltReg)
+        {
+            switch (op)
+            {
+                case "==":
+                    {
+                        CodeSegment.Add($"XOR {rltReg}, {lReg}, {rReg}");
+                        break;
+                    }
+                case "!=":
+                    {
+                        CodeSegment.Add($"SUB {rltReg}, {lReg}, {rReg}");
+                        break;
+                    }
+                case "<":
+                    {
+                        CodeSegment.Add($"SLT {rltReg}, {lReg}, {rReg}");
+                        break;
+                    }
+                case ">":
+                    {
+                        CodeSegment.Add($"SLT {rltReg}, {rReg}, {lReg}");
+                        break;
+                    }
+                case "<=":
+                    {
+                        int tmp = TmpReg;
+                        CodeSegment.Add($"ORI $t{tmp}, $0, 1");
+                        CodeSegment.Add($"SLT {rltReg}, {rReg}, {lReg}");
+                        CodeSegment.Add($"SUB {rltReg}, {rltReg}, $t{tmp}");
+                        break;
+                    }
+                case ">=":
+                    {
+                        int tmp = TmpReg;
+                        CodeSegment.Add($"ORI $t{tmp}, $0, 1");
+                        CodeSegment.Add($"SLT {rltReg}, {lReg}, {rReg}");
+                        CodeSegment.Add($"SUB {rltReg}, {rltReg}, $t{tmp}");
+                        break;
+                    }
+
+                default:
+                    break;
+            }
+        }
+
+        private void BinaryLogicalOp(string op, string lReg, string rReg, string rltReg)
+        {
+            int tmp1 = TmpReg++;
+            int tmp2 = TmpReg++;
+            int tmp3 = TmpReg++;
+            int tmp4 = TmpReg++;
+
+            CodeSegment.Add($"SLT $t{tmp1}, $0, {lReg}");
+            CodeSegment.Add($"SLT $t{tmp2}, {lReg}, $0");
+            CodeSegment.Add($"OR $t{tmp3}, {tmp1}, {tmp2}");
+
+            CodeSegment.Add($"SLT $t{tmp1}, $0, {rReg}");
+            CodeSegment.Add($"SLT $t{tmp2}, {rReg}, $0");
+            CodeSegment.Add($"OR $t{tmp4}, {tmp1}, {tmp2}");
+
+            string command = op == "||" ? "OR" : "AND";
+            CodeSegment.Add($"{command} {rltReg}, $t{tmp3}, $t{tmp4}");
+
+            TmpReg -= 4;
+
+        }
+
+        private void BinaryAlgebraOp(string op, string lReg, string rReg, string rltReg)
+        {
+            string command = op switch
+            {
+                "+" => "ADD",
+                "-" => "SUB",
+                "*" => "MULT",
+                "/" => "DIV",
+                "%" => "DIV",
+                "<<" => "SLLV",
+                ">>" => "SRAV",
+                "&" => "AND",
+                "|" => "OR",
+                "^" => "XOR",
+                _ => throw new NotImplementedException()
+            };
+
+            if (_multSet.Contains(op))
+            {
+                CodeSegment.Add($"{command} {lReg}, {rReg}");
+                CodeSegment.Add(op == "%" ? $"MFHI {rltReg}" : $"MFLO {rltReg}");
+            }
+
+            CodeSegment.Add($"{command} {rltReg}, {lReg}, {rReg}");
+        }
+
+        private void BinOp(string op, string l, string r, string rlt)
+        {
+            int usedTmpReg = 0;
+            l = DealWithMemOrImme(l, ref usedTmpReg);
+            r = DealWithMemOrImme(r, ref usedTmpReg);
+            string originalRlt = rlt;
+            rlt = DealWithMemOrImme(rlt, ref usedTmpReg);
+
+            if (_relopSet.Contains(op))
+            {
+                Relop(op, l, r, rlt);
+            }
+            else if (_binaryLogicalSet.Contains(op))
+            {
+                BinaryLogicalOp(op, l, r, rlt);
+            }
+            else
+            {
+                BinaryAlgebraOp(op, l, r, rlt);
+            }
+
+            if (originalRlt[0] != '$')
+                CodeSegment.Add($"SW {rlt}, {_variables[originalRlt]}");
+
+            TmpReg -= usedTmpReg;
+        }
 
         public override void ExitBinary(ProgramParser.BinaryContext context)
         {
-            var op = context.BinaryOp().GetText();
-            var left = context.left.GetText();
-            var right = context.right.GetText();
-            var rlt = context.rlt.GetText();
+            string op = context.BinaryOp().GetText();
+            string left = context.left.GetText();
+            string right = context.right.GetText();
+            string rlt = context.rlt.GetText();
 
             BinOp(op, left, right, rlt);
+            if (_hasComment)
+                CodeSegment.Add($"\t # {context.GetText()}");
+        }
+
+        #endregion
+
+        #region CallAndReturn
+
+        /// <summary>
+        /// <ol>
+        /// <li>numbers</li>
+        /// <li>local variables</li>
+        /// <li>params</li>
+        /// <li>old sp</li>
+        /// </ol>
+        /// </summary>
+        /// <param name="context"></param>
+        public override void ExitCall([NotNull] ProgramParser.CallContext context)
+        {
+            static string[] Push(string reg)
+            {
+                return new string[] {
+                "ADDI $sp, $sp, -4", $"SW {reg}, 0($sp)"
+            };
+            }
+
+            CodeSegment.AddRange(Push("$sp"));
+            CodeSegment.AddRange(Push("$ra"));
+
+            string funcName = context.Id().GetText();
+            BackendFuncIdentity funcId = GetFuncId(funcName);
+
+            Memory rlt = _variables[context.rlt.GetText()];
+
+            CodeSegment.Add($"ADDI $sp, $sp, -{funcId.VariablesSize}");
+            int tmp = TmpReg;
+            CodeSegment.Add($"ORI $t{tmp}, $0, {funcId.VariablesSize >> 2}");
+            CodeSegment.AddRange(Push($"$t{tmp}"));
+
+            for (int i = 0; i < 8; ++i)
+                CodeSegment.AddRange(Push($"$s{i}"));
+
+            foreach (var item in context.param())
+            {
+                var text = item.GetText();
+                if (char.IsDigit(text[0]))
+                {
+                    CodeSegment.Add($"ORI $t{tmp}, $0, {text}");
+                    CodeSegment.AddRange(Push($"$t{tmp}"));
+                }
+                else
+                {
+                    var mem = _variables[text];
+                    if (mem.IsArrHead)
+                    {
+                        for (int i = 0; i < mem.Length; ++i)
+                        {
+                            CodeSegment.Add($"LW $t{tmp}, {mem.Offset + (i << 2)}({mem.Base})");
+                            CodeSegment.AddRange(Push($"$t{tmp}"));
+                        }
+                    }
+                    else
+                    {
+                        CodeSegment.Add($"LW $t{tmp}, {mem}");
+                        CodeSegment.AddRange(Push($"$t{tmp}"));
+                    }
+                }
+            }
+
+            CodeSegment.Add($"JAL {funcName}");
+            CodeSegment.Add("OR $ra, $0, $v1");
+            CodeSegment.Add($"SW $v0, {rlt}");
+            if (_hasComment)
+                CodeSegment.Add($"\t # call {funcName}");
+        }
+
+
+
+        void PublicReturnCode(string contextText)
+        {
+            static string[] Pop(string reg)
+            => new[] {
+                $"LW {reg}, 0($sp)",
+                "ADDI $sp, $sp, 4"
+            };
+
+            for (int i = 0; i < 8; ++i)
+                CodeSegment.AddRange(Pop($"$s{i}"));
+
+            string funcName = _currentScopeName;
+            BackendFuncIdentity funcId = GetFuncId(funcName);
+
+            // Ignore the number of variables
+            CodeSegment.Add("ADDI $sp, $sp, 4");
+            // local variables and params
+            CodeSegment.Add($"ADDI $sp, $sp, {funcId.VariablesSize}");
+
+            CodeSegment.AddRange(Pop("$v1"));
+            CodeSegment.AddRange(Pop("$sp"));
+            if (_hasComment)
+                CodeSegment.Add($"\t # {contextText}");
+        }
+
+        public override void ExitLiteralReturn([NotNull] ProgramParser.LiteralReturnContext context)
+        {
+            string rlt = context.Num().GetText();
+            CodeSegment.Add($"ORI $v0, $0, {rlt}");
+
+            PublicReturnCode(context.GetText());
+        }
+
+        public override void ExitVariableReturn([NotNull] ProgramParser.VariableReturnContext context)
+        {
+            var rlt = context.variable().GetText();
+            CodeSegment.Add($"LW $v0, {rlt}");
+
+            PublicReturnCode(context.GetText());
         }
 
         #endregion
@@ -341,15 +545,15 @@ namespace Backend
             if (_isDeclFin == false) return;
             if (context.Num() == null) return;
 
-            var scope = context.scope.Text;
-            var name = context.name.Text;
-            var id = _tables[scope][name] as VariableIdentity;
-            var num = int.Parse(context.Num().GetText());
+            string scope = context.scope.Text;
+            string name = context.name.Text;
+            VariableIdentity id = _tables[scope][name] as VariableIdentity;
+            int num = int.Parse(context.Num().GetText());
             Debug.Assert(id != null, nameof(id) + " != null");
-            var mem = _variables[id.Name];
+            Memory mem = _variables[id.Name];
             if (context.offset != null)
             {
-                _variables.Add($"{id.Name}[{num}]@{scope}", new Memory(mem.Base, mem.Offset + (num << 2)));
+                _variables.Add(context.GetText(), new Memory(mem.Base, mem.Offset + (num << 2)));
             }
         }
 

@@ -118,13 +118,15 @@ namespace Frontend
             foreach (var funcDecl in _funcDecls)
                 stringBuilder.AppendLine(funcDecl);
 
+            foreach (var decl in _paramDecls)
+                stringBuilder.AppendLine(decl);
+
             // Temporary Variables
             foreach (var tmpVariable in _tmpVariables)
                 stringBuilder.AppendLine(_irBuilder.GenerateIr("decl_var", tmpVariable.Type, tmpVariable.Name));
 
             foreach (var decl in _decls)
                 stringBuilder.AppendLine(decl);
-
 
             foreach (var declContext in context.decl())
                 stringBuilder.AppendLine(_ir.Get(declContext));
@@ -271,7 +273,7 @@ namespace Frontend
                 {
                     var arrId = Tables[_currentScopeName][paramName] as VariableIdentity;
                     Debug.Assert(arrId != null, nameof(arrId) + " != null");
-                    _decls.Add(_irBuilder.GenerateIr("param_decl", paramType, arrId.Name,
+                    _paramDecls.Add(_irBuilder.GenerateIr("param_decl", paramType, arrId.Name,
                         $"{arrId.Length}"));
                 }
 
@@ -845,6 +847,7 @@ namespace Frontend
         #region Iteration_stmt
 
         private readonly Stack<(int start, int end)> _labelStack = new();
+        private readonly List<string> _paramDecls = new();
 
         public override void EnterIteration_stmt(ProgramParser.Iteration_stmtContext context)
         {
