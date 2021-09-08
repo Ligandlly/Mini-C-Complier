@@ -4,35 +4,14 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Reflection.Metadata;
+using System.Linq;
+using System.Text;
 using Antlr4.Runtime.Misc;
 using Frontend;
 using SymbolTable = System.Collections.Generic.Dictionary<string, Frontend.Identity>;
 
 namespace Backend
 {
-    internal readonly struct Memory
-    {
-        public string Base { get; }
-        public int Offset { get; }
-        public bool IsArrHead { get; }
-
-        public int Length { get; }
-
-        public Memory(string @base = "$sp", int offset = 0, bool isArrHead = false, int length = 1)
-        {
-            Base = @base;
-            Offset = offset;
-            IsArrHead = isArrHead;
-            Length = length;
-        }
-
-        public override string ToString()
-        {
-            return $"{Offset}({Base})";
-        }
-    }
-
     public class BackendException : Exception
     {
         public BackendException(string message) : base(message)
@@ -42,6 +21,8 @@ namespace Backend
 
     public class BackendListener : ProgramBaseListener
     {
+        public string Result { get; private set; }
+
         private readonly HashSet<string> _relopSet = new()
         {
             "<",
@@ -246,9 +227,11 @@ namespace Backend
             SymbolTable table = _tables[scope];
             table.Add(name, new VariableIdentity(name, type, scope, num));
 
-            // If Variable is in a function
+            // If Variable is global
             if (scope == Global)
             {
+                var zeros = string.Join(", ", Enumerable.Repeat("0", num));
+                _dataSegment.Add($"{name}: .word {zeros}");
                 _variables.Add($"{name}@{scope}", new Memory(@base: name));
                 return;
             }
@@ -281,7 +264,9 @@ namespace Backend
 
         public override void EnterFuncDef(ProgramParser.FuncDefContext context)
         {
-            _currentScopeName = context.funcHead().Id().GetText();
+            var funcName = context.funcHead().Id().GetText();
+            _currentScopeName = funcName;
+            CodeSegment.Add(funcName + ':');
         }
 
         #endregion
@@ -470,19 +455,13 @@ namespace Backend
                 else
                 {
                     var mem = _variables[text];
-                    if (mem.IsArrHead)
+
+                    for (int i = 0; i < mem.Length; ++i)
                     {
-                        for (int i = 0; i < mem.Length; ++i)
-                        {
-                            CodeSegment.Add($"LW $t{tmp}, {mem.Offset + (i << 2)}({mem.Base})");
-                            CodeSegment.AddRange(Push($"$t{tmp}"));
-                        }
-                    }
-                    else
-                    {
-                        CodeSegment.Add($"LW $t{tmp}, {mem}");
+                        CodeSegment.Add($"LW $t{tmp}, {mem.Offset + (i << 2)}({mem.Base})");
                         CodeSegment.AddRange(Push($"$t{tmp}"));
                     }
+
                 }
             }
 
@@ -559,9 +538,37 @@ namespace Backend
 
         #endregion
 
+        #region Jump
+
+        public override void ExitLabel([NotNull] ProgramParser.LabelContext context)
+        {
+            CodeSegment.Add(context.GetText());
+        }
+
+        public override void ExitJumpEqual([NotNull] ProgramParser.JumpEqualContext context)
+        {
+            var lOp = context.left.GetText();
+            var rOp = context.right.GetText();
+            var label = context.InlineLabel().GetText();
+            var usedReg = 0;
+            lOp = DealWithMemOrImme(lOp, ref usedReg);
+            rOp = DealWithMemOrImme(rOp, ref usedReg);
+
+            CodeSegment.Add($"BEQ ${lOp}, ${rOp}, {label}");
+
+            TmpReg -= usedReg;
+        }
+
+        #endregion
         public override void ExitProgram(ProgramParser.ProgramContext context)
         {
-            base.ExitProgram(context);
+            var stringBuilder = new StringBuilder();
+            foreach (var line in _dataSegment)
+                stringBuilder.AppendLine(line);
+            foreach (var line in CodeSegment)
+                stringBuilder.AppendLine(line);
+
+            Result = stringBuilder.ToString();
         }
     }
 }

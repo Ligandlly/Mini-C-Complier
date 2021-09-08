@@ -26,23 +26,13 @@ variableDecl:
 	| 'param_decl' ';' Type ';' variable ';' Num ';'
 	| 'param_decl' ';' Type ';' variable ';' ';';
 
-// paramDecl: 'param_decl' ';' Type ';' variable ';' Num ';' | 'param_decl' ';' Type ';' variable
-// ';' ';';
-
 funcTail: 'end_func' ';' ';' ';' ';';
 
 funcHead: 'func' ';' Type ';' Id ';' Num ';';
 
 funcDef: funcHead stmt* funcTail;
 
-quaternary:
-	unary
-	// | addOrMinus | multiple | divide
-	| binary
-	| return
-	| jumpEqual
-	| end
-	| call;
+quaternary: unary | binary | return | jumpEqual | end | call;
 
 operand: Num | variable;
 
