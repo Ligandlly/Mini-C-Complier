@@ -13,14 +13,13 @@ namespace ConsoleApp1
         {
             string test = @"
 int foo2(int i[2]) {
-    return i + 1;
+    return i[0] + 1;
 }
-int foo(int i) {
-    int a;
-    return i + 1;
-}
+//int foo(int i) {
+  //  int a;
+    //return i + 1;
+//}
 int main() {
-    foo(2);
     int a[2];
     foo2(a);
 }
@@ -58,7 +57,7 @@ int main() {
             var backendListener = new BackendListener();
             bWalker.Walk(backendListener, bTree);
 
-            Console.WriteLine(string.Join("\n", backendListener.CodeSegment));
+            Console.WriteLine(string.Join("\n", backendListener.Result));
         }
     }
 }

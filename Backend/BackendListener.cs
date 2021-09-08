@@ -59,7 +59,7 @@ namespace Backend
 
         private readonly List<string> _dataSegment = new();
 
-        public readonly List<string> CodeSegment = new();
+        private readonly List<string> _codeSegment = new();
 
         public const string Global = FrontEndListener.Global;
 
@@ -112,14 +112,14 @@ namespace Backend
             {
                 int tmp = TmpReg++;
                 usedTmpReg++;
-                CodeSegment.Add($"ORI $t{tmp}, $0, {l}");
+                _codeSegment.Add($"ORI $t{tmp}, $0, {l}");
                 l = $"$t{tmp}";
             }
             else if (l[0] != '$')
             {
                 int tmp = TmpReg++;
                 usedTmpReg++;
-                CodeSegment.Add($"LW  $t{tmp}, {_variables[l]}");
+                _codeSegment.Add($"LW  $t{tmp}, {_variables[l]}");
                 l = $"$t{tmp}";
             }
 
@@ -146,25 +146,25 @@ namespace Backend
                     // (~(x>>1)+x)>>31
                     {
                         int tmp = TmpReg;
-                        CodeSegment.Add($"SRL $t{tmp}, {src}, 1");
-                        CodeSegment.Add($"ADD $t{tmp}, $t{tmp}, {src}");
-                        CodeSegment.Add($"NOR $t{tmp}, $t{tmp}, $0");
-                        CodeSegment.Add($"SRL {rlt}, $t{tmp}, 31");
+                        _codeSegment.Add($"SRL $t{tmp}, {src}, 1");
+                        _codeSegment.Add($"ADD $t{tmp}, $t{tmp}, {src}");
+                        _codeSegment.Add($"NOR $t{tmp}, $t{tmp}, $0");
+                        _codeSegment.Add($"SRL {rlt}, $t{tmp}, 31");
                         break;
                     }
                 case "~":
                     {
-                        CodeSegment.Add($"NOR {rlt}, $0, {src}");
+                        _codeSegment.Add($"NOR {rlt}, $0, {src}");
                         break;
                     }
                 case "$":
                     {
-                        CodeSegment.Add($"LW ${rlt}, 0(${src})");
+                        _codeSegment.Add($"LW ${rlt}, 0(${src})");
                         break;
                     }
                 case "=":
                     {
-                        CodeSegment.Add($"OR {rlt}, {src}, $0");
+                        _codeSegment.Add($"OR {rlt}, {src}, $0");
                         break;
                     }
 
@@ -174,14 +174,14 @@ namespace Backend
 
             if (originalRlt[0] != '$')
             {
-                CodeSegment.Add($"SW {rlt}, {_variables[originalRlt]}");
+                _codeSegment.Add($"SW {rlt}, {_variables[originalRlt]}");
             }
 
             TmpReg -= usedTmpReg;
 
             if (_hasComment)
             {
-                CodeSegment.Add($"\t# {context.GetText()}");
+                _codeSegment.Add($"\t# {context.GetText()}");
             }
         }
 
@@ -192,7 +192,7 @@ namespace Backend
         public override void EnterProgram(ProgramParser.ProgramContext context)
         {
             _dataSegment.Add(".DATA 0x100000");
-            CodeSegment.AddRange(new[] { ".TEXT", "start:" });
+            _codeSegment.AddRange(new[] { ".TEXT", "start:", "J main" });
             _tables[Global] = new SymbolTable();
         }
 
@@ -266,7 +266,7 @@ namespace Backend
         {
             var funcName = context.funcHead().Id().GetText();
             _currentScopeName = funcName;
-            CodeSegment.Add(funcName + ':');
+            _codeSegment.Add(funcName + ':');
         }
 
         #endregion
@@ -279,38 +279,38 @@ namespace Backend
             {
                 case "==":
                     {
-                        CodeSegment.Add($"XOR {rltReg}, {lReg}, {rReg}");
+                        _codeSegment.Add($"XOR {rltReg}, {lReg}, {rReg}");
                         break;
                     }
                 case "!=":
                     {
-                        CodeSegment.Add($"SUB {rltReg}, {lReg}, {rReg}");
+                        _codeSegment.Add($"SUB {rltReg}, {lReg}, {rReg}");
                         break;
                     }
                 case "<":
                     {
-                        CodeSegment.Add($"SLT {rltReg}, {lReg}, {rReg}");
+                        _codeSegment.Add($"SLT {rltReg}, {lReg}, {rReg}");
                         break;
                     }
                 case ">":
                     {
-                        CodeSegment.Add($"SLT {rltReg}, {rReg}, {lReg}");
+                        _codeSegment.Add($"SLT {rltReg}, {rReg}, {lReg}");
                         break;
                     }
                 case "<=":
                     {
                         int tmp = TmpReg;
-                        CodeSegment.Add($"ORI $t{tmp}, $0, 1");
-                        CodeSegment.Add($"SLT {rltReg}, {rReg}, {lReg}");
-                        CodeSegment.Add($"SUB {rltReg}, {rltReg}, $t{tmp}");
+                        _codeSegment.Add($"ORI $t{tmp}, $0, 1");
+                        _codeSegment.Add($"SLT {rltReg}, {rReg}, {lReg}");
+                        _codeSegment.Add($"SUB {rltReg}, {rltReg}, $t{tmp}");
                         break;
                     }
                 case ">=":
                     {
                         int tmp = TmpReg;
-                        CodeSegment.Add($"ORI $t{tmp}, $0, 1");
-                        CodeSegment.Add($"SLT {rltReg}, {lReg}, {rReg}");
-                        CodeSegment.Add($"SUB {rltReg}, {rltReg}, $t{tmp}");
+                        _codeSegment.Add($"ORI $t{tmp}, $0, 1");
+                        _codeSegment.Add($"SLT {rltReg}, {lReg}, {rReg}");
+                        _codeSegment.Add($"SUB {rltReg}, {rltReg}, $t{tmp}");
                         break;
                     }
 
@@ -326,16 +326,16 @@ namespace Backend
             int tmp3 = TmpReg++;
             int tmp4 = TmpReg++;
 
-            CodeSegment.Add($"SLT $t{tmp1}, $0, {lReg}");
-            CodeSegment.Add($"SLT $t{tmp2}, {lReg}, $0");
-            CodeSegment.Add($"OR $t{tmp3}, {tmp1}, {tmp2}");
+            _codeSegment.Add($"SLT $t{tmp1}, $0, {lReg}");
+            _codeSegment.Add($"SLT $t{tmp2}, {lReg}, $0");
+            _codeSegment.Add($"OR $t{tmp3}, {tmp1}, {tmp2}");
 
-            CodeSegment.Add($"SLT $t{tmp1}, $0, {rReg}");
-            CodeSegment.Add($"SLT $t{tmp2}, {rReg}, $0");
-            CodeSegment.Add($"OR $t{tmp4}, {tmp1}, {tmp2}");
+            _codeSegment.Add($"SLT $t{tmp1}, $0, {rReg}");
+            _codeSegment.Add($"SLT $t{tmp2}, {rReg}, $0");
+            _codeSegment.Add($"OR $t{tmp4}, {tmp1}, {tmp2}");
 
             string command = op == "||" ? "OR" : "AND";
-            CodeSegment.Add($"{command} {rltReg}, $t{tmp3}, $t{tmp4}");
+            _codeSegment.Add($"{command} {rltReg}, $t{tmp3}, $t{tmp4}");
 
             TmpReg -= 4;
 
@@ -360,11 +360,11 @@ namespace Backend
 
             if (_multSet.Contains(op))
             {
-                CodeSegment.Add($"{command} {lReg}, {rReg}");
-                CodeSegment.Add(op == "%" ? $"MFHI {rltReg}" : $"MFLO {rltReg}");
+                _codeSegment.Add($"{command} {lReg}, {rReg}");
+                _codeSegment.Add(op == "%" ? $"MFHI {rltReg}" : $"MFLO {rltReg}");
             }
 
-            CodeSegment.Add($"{command} {rltReg}, {lReg}, {rReg}");
+            _codeSegment.Add($"{command} {rltReg}, {lReg}, {rReg}");
         }
 
         private void BinOp(string op, string l, string r, string rlt)
@@ -389,7 +389,7 @@ namespace Backend
             }
 
             if (originalRlt[0] != '$')
-                CodeSegment.Add($"SW {rlt}, {_variables[originalRlt]}");
+                _codeSegment.Add($"SW {rlt}, {_variables[originalRlt]}");
 
             TmpReg -= usedTmpReg;
         }
@@ -403,7 +403,7 @@ namespace Backend
 
             BinOp(op, left, right, rlt);
             if (_hasComment)
-                CodeSegment.Add($"\t # {context.GetText()}");
+                _codeSegment.Add($"\t # {context.GetText()}");
         }
 
         #endregion
@@ -419,7 +419,7 @@ namespace Backend
         /// </ol>
         /// </summary>
         /// <param name="context"></param>
-        public override void ExitCall([NotNull] ProgramParser.CallContext context)
+        public override void ExitCall(ProgramParser.CallContext context)
         {
             static string[] Push(string reg)
             {
@@ -428,48 +428,53 @@ namespace Backend
             };
             }
 
-            CodeSegment.AddRange(Push("$sp"));
-            CodeSegment.AddRange(Push("$ra"));
+            var originalSp = TmpReg++;
+            var tmp = TmpReg++;
+            
+            _codeSegment.Add($"OR $t{originalSp}, $0, $sp");
 
-            string funcName = context.Id().GetText();
-            BackendFuncIdentity funcId = GetFuncId(funcName);
+            _codeSegment.AddRange(Push("$sp"));
+            _codeSegment.AddRange(Push("$ra"));
 
-            Memory rlt = _variables[context.rlt.GetText()];
+            var funcName = context.Id().GetText();
+            var funcId = GetFuncId(funcName);
 
-            CodeSegment.Add($"ADDI $sp, $sp, -{funcId.VariablesSize}");
-            int tmp = TmpReg;
-            CodeSegment.Add($"ORI $t{tmp}, $0, {funcId.VariablesSize >> 2}");
-            CodeSegment.AddRange(Push($"$t{tmp}"));
-
-            for (int i = 0; i < 8; ++i)
-                CodeSegment.AddRange(Push($"$s{i}"));
-
+            var rlt = _variables[context.rlt.GetText()];
+            
             foreach (var item in context.param())
             {
-                var text = item.GetText();
+                var text = item.GetChild(2).GetText();
                 if (char.IsDigit(text[0]))
                 {
-                    CodeSegment.Add($"ORI $t{tmp}, $0, {text}");
-                    CodeSegment.AddRange(Push($"$t{tmp}"));
+                    _codeSegment.Add($"ORI $t{tmp}, $0, {text}");
+                    _codeSegment.AddRange(Push($"$t{tmp}"));
                 }
                 else
                 {
                     var mem = _variables[text];
 
-                    for (int i = 0; i < mem.Length; ++i)
+                    for (var i = 0; i < mem.Length; ++i)
                     {
-                        CodeSegment.Add($"LW $t{tmp}, {mem.Offset + (i << 2)}({mem.Base})");
-                        CodeSegment.AddRange(Push($"$t{tmp}"));
+                        _codeSegment.Add($"LW $t{tmp}, {mem.Offset + (i << 2)}($t{originalSp})");
+                        _codeSegment.AddRange(Push($"$t{tmp}"));
                     }
 
                 }
             }
 
-            CodeSegment.Add($"JAL {funcName}");
-            CodeSegment.Add("OR $ra, $0, $v1");
-            CodeSegment.Add($"SW $v0, {rlt}");
+            _codeSegment.Add($"ORI $t{tmp}, $0, {funcId.VariablesSize >> 2}");
+            _codeSegment.AddRange(Push($"$t{tmp}"));
+
+            for (var i = 0; i < 8; ++i)
+                _codeSegment.AddRange(Push($"$s{i}"));
+
+            _codeSegment.Add($"JAL {funcName}");
+            _codeSegment.Add("OR $ra, $0, $v1");
+            _codeSegment.Add($"SW $v0, {rlt}");
             if (_hasComment)
-                CodeSegment.Add($"\t # call {funcName}");
+                _codeSegment.Add($"\t # call {funcName}");
+
+            TmpReg -= 2;
         }
 
 
@@ -483,34 +488,37 @@ namespace Backend
             };
 
             for (int i = 0; i < 8; ++i)
-                CodeSegment.AddRange(Pop($"$s{i}"));
+                _codeSegment.AddRange(Pop($"$s{i}"));
 
             string funcName = _currentScopeName;
             BackendFuncIdentity funcId = GetFuncId(funcName);
 
             // Ignore the number of variables
-            CodeSegment.Add("ADDI $sp, $sp, 4");
+            _codeSegment.Add("ADDI $sp, $sp, 4");
             // local variables and params
-            CodeSegment.Add($"ADDI $sp, $sp, {funcId.VariablesSize}");
+            _codeSegment.Add($"ADDI $sp, $sp, {funcId.VariablesSize}");
 
-            CodeSegment.AddRange(Pop("$v1"));
-            CodeSegment.AddRange(Pop("$sp"));
+            // Pop $ra into $v1
+            // ra in stack should not cover $ra due to jr will use it.
+            _codeSegment.AddRange(Pop("$v1"));
+            _codeSegment.AddRange(Pop("$sp"));
+            _codeSegment.Add($"JR");
             if (_hasComment)
-                CodeSegment.Add($"\t # {contextText}");
+                _codeSegment.Add($"\t # {contextText}");
         }
 
-        public override void ExitLiteralReturn([NotNull] ProgramParser.LiteralReturnContext context)
+        public override void ExitLiteralReturn(ProgramParser.LiteralReturnContext context)
         {
             string rlt = context.Num().GetText();
-            CodeSegment.Add($"ORI $v0, $0, {rlt}");
+            _codeSegment.Add($"ORI $v0, $0, {rlt}");
 
             PublicReturnCode(context.GetText());
         }
 
-        public override void ExitVariableReturn([NotNull] ProgramParser.VariableReturnContext context)
+        public override void ExitVariableReturn(ProgramParser.VariableReturnContext context)
         {
             var rlt = context.variable().GetText();
-            CodeSegment.Add($"LW $v0, {rlt}");
+            _codeSegment.Add($"LW $v0, {rlt}");
 
             PublicReturnCode(context.GetText());
         }
@@ -540,12 +548,12 @@ namespace Backend
 
         #region Jump
 
-        public override void ExitLabel([NotNull] ProgramParser.LabelContext context)
+        public override void ExitLabel(ProgramParser.LabelContext context)
         {
-            CodeSegment.Add(context.GetText());
+            _codeSegment.Add(context.GetText());
         }
 
-        public override void ExitJumpEqual([NotNull] ProgramParser.JumpEqualContext context)
+        public override void ExitJumpEqual(ProgramParser.JumpEqualContext context)
         {
             var lOp = context.left.GetText();
             var rOp = context.right.GetText();
@@ -554,7 +562,7 @@ namespace Backend
             lOp = DealWithMemOrImme(lOp, ref usedReg);
             rOp = DealWithMemOrImme(rOp, ref usedReg);
 
-            CodeSegment.Add($"BEQ ${lOp}, ${rOp}, {label}");
+            _codeSegment.Add($"BEQ ${lOp}, ${rOp}, {label}");
 
             TmpReg -= usedReg;
         }
@@ -565,7 +573,7 @@ namespace Backend
             var stringBuilder = new StringBuilder();
             foreach (var line in _dataSegment)
                 stringBuilder.AppendLine(line);
-            foreach (var line in CodeSegment)
+            foreach (var line in _codeSegment)
                 stringBuilder.AppendLine(line);
 
             Result = stringBuilder.ToString();

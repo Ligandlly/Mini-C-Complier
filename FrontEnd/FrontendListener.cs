@@ -330,7 +330,7 @@ namespace Frontend
         /// 如果溢出保留int的最大值
         /// </summary>
         /// <param name="context"></param>
-        public override void ExitNum([NotNull] ProgramParser.NumContext context)
+        public override void ExitNum(ProgramParser.NumContext context)
         {
             var text = context.GetText();
             if (text.Length > 1 && (text[1] == 'x' || text[1] == 'X'))
@@ -603,7 +603,7 @@ namespace Frontend
         /// </code>
         /// </example>
         /// <param name="context"></param>
-        public override void ExitUnary_exprHasDol([NotNull] ProgramParser.Unary_exprHasDolContext context)
+        public override void ExitUnary_exprHasDol(ProgramParser.Unary_exprHasDolContext context)
         {
             var exprValue = _values.Get(context.unary_expr());
             var tmpRlt = NewTmpVar(Identity.Int);
@@ -621,7 +621,7 @@ namespace Frontend
         /// = 0_t ; a
         /// </example>
         /// <param name="context"></param>
-        public override void ExitUnary_exprHasLNot([NotNull] ProgramParser.Unary_exprHasLNotContext context)
+        public override void ExitUnary_exprHasLNot(ProgramParser.Unary_exprHasLNotContext context)
         {
             var unaryId = _values.Get(context.unary_expr());
             var tmpRlt = NewTmpVar(unaryId.Type, false);
@@ -630,7 +630,7 @@ namespace Frontend
             _values.Put(context, tmpRlt);
         }
 
-        public override void ExitUnary_exprHasNot([NotNull] ProgramParser.Unary_exprHasNotContext context)
+        public override void ExitUnary_exprHasNot(ProgramParser.Unary_exprHasNotContext context)
         {
             var unaryId = _values.Get(context.unary_expr());
             var tmpRlt = NewTmpVar(unaryId.Type, false);
@@ -643,7 +643,7 @@ namespace Frontend
 
         #region Assignment_expr
 
-        public override void ExitAssignmentExprHasBinary([NotNull] ProgramParser.AssignmentExprHasBinaryContext context)
+        public override void ExitAssignmentExprHasBinary(ProgramParser.AssignmentExprHasBinaryContext context)
             => CopyIrAndValue(context, context.binaryExpr());
 
 
@@ -651,7 +651,7 @@ namespace Frontend
         /// Assignment
         /// </summary>
         /// <param name="context"></param>
-        public override void ExitAssignmentExprHasAssign([NotNull] ProgramParser.AssignmentExprHasAssignContext context)
+        public override void ExitAssignmentExprHasAssign(ProgramParser.AssignmentExprHasAssignContext context)
         {
             StringBuilder stringBuilder = new();
             var unaryVal = _values.Get(context.unary_expr()) as VariableIdentity;
@@ -683,7 +683,7 @@ namespace Frontend
         /// </example>
         /// <param name="context"></param>
         /// <exception cref="FrontEndException">Divided By Zero</exception>
-        public override void ExitBinaryExpr([NotNull] ProgramParser.BinaryExprContext context)
+        public override void ExitBinaryExpr(ProgramParser.BinaryExprContext context)
         {
             if (context.num() != null)
             {
@@ -719,7 +719,7 @@ namespace Frontend
 
         #region Expr
 
-        public override void ExitExpr([NotNull] ProgramParser.ExprContext context)
+        public override void ExitExpr(ProgramParser.ExprContext context)
         {
             CopyIrAndValue(context, context.assignmentExpr());
         }
@@ -755,7 +755,7 @@ namespace Frontend
         /// </code>
         /// </example>
         /// <param name="context"></param>
-        public override void ExitSelection_stmtHasEmpty([NotNull] ProgramParser.Selection_stmtHasEmptyContext context)
+        public override void ExitSelection_stmtHasEmpty(ProgramParser.Selection_stmtHasEmptyContext context)
         {
             var exprVal = _values.Get(context.expr());
             var endIf = LabelNumber;
@@ -808,7 +808,7 @@ namespace Frontend
         /// </code>
         /// </example>
         /// <param name="context"></param>
-        public override void ExitSelection_stmtHasElse([NotNull] ProgramParser.Selection_stmtHasElseContext context)
+        public override void ExitSelection_stmtHasElse(ProgramParser.Selection_stmtHasElseContext context)
         {
             var exprVal = _values.Get(context.expr());
             var endIf = LabelNumber;
