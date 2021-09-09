@@ -216,6 +216,18 @@ public interface IProgramListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitLiteralReturn([NotNull] ProgramParser.LiteralReturnContext context);
 	/// <summary>
+	/// Enter a parse tree produced by the <c>emptyReturn</c>
+	/// labeled alternative in <see cref="ProgramParser.return"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterEmptyReturn([NotNull] ProgramParser.EmptyReturnContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>emptyReturn</c>
+	/// labeled alternative in <see cref="ProgramParser.return"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitEmptyReturn([NotNull] ProgramParser.EmptyReturnContext context);
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="ProgramParser.jumpEqual"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -225,6 +237,16 @@ public interface IProgramListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitJumpEqual([NotNull] ProgramParser.JumpEqualContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="ProgramParser.jump"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterJump([NotNull] ProgramParser.JumpContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ProgramParser.jump"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitJump([NotNull] ProgramParser.JumpContext context);
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="ProgramParser.param"/>.
 	/// </summary>

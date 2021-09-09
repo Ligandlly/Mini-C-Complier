@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using Antlr4.Runtime.Misc;
 using Frontend;
 using SymbolTable = System.Collections.Generic.Dictionary<string, Frontend.Identity>;
 
@@ -144,29 +143,29 @@ namespace Backend
             {
                 case "!":
                     // (~(x>>1)+x)>>31
-                    {
-                        int tmp = TmpReg;
-                        _codeSegment.Add($"SRL $t{tmp}, {src}, 1");
-                        _codeSegment.Add($"ADD $t{tmp}, $t{tmp}, {src}");
-                        _codeSegment.Add($"NOR $t{tmp}, $t{tmp}, $0");
-                        _codeSegment.Add($"SRL {rlt}, $t{tmp}, 31");
-                        break;
-                    }
+                {
+                    int tmp = TmpReg;
+                    _codeSegment.Add($"SRL $t{tmp}, {src}, 1");
+                    _codeSegment.Add($"ADD $t{tmp}, $t{tmp}, {src}");
+                    _codeSegment.Add($"NOR $t{tmp}, $t{tmp}, $0");
+                    _codeSegment.Add($"SRL {rlt}, $t{tmp}, 31");
+                    break;
+                }
                 case "~":
-                    {
-                        _codeSegment.Add($"NOR {rlt}, $0, {src}");
-                        break;
-                    }
+                {
+                    _codeSegment.Add($"NOR {rlt}, $0, {src}");
+                    break;
+                }
                 case "$":
-                    {
-                        _codeSegment.Add($"LW ${rlt}, 0(${src})");
-                        break;
-                    }
+                {
+                    _codeSegment.Add($"LW ${rlt}, 0(${src})");
+                    break;
+                }
                 case "=":
-                    {
-                        _codeSegment.Add($"OR {rlt}, {src}, $0");
-                        break;
-                    }
+                {
+                    _codeSegment.Add($"OR {rlt}, {src}, $0");
+                    break;
+                }
 
                 default:
                     break;
@@ -192,7 +191,7 @@ namespace Backend
         public override void EnterProgram(ProgramParser.ProgramContext context)
         {
             _dataSegment.Add(".DATA 0x100000");
-            _codeSegment.AddRange(new[] { ".TEXT", "start:", "J main" });
+            _codeSegment.AddRange(new[] { ".TEXT", "start:" });
             _tables[Global] = new SymbolTable();
         }
 
@@ -278,41 +277,41 @@ namespace Backend
             switch (op)
             {
                 case "==":
-                    {
-                        _codeSegment.Add($"XOR {rltReg}, {lReg}, {rReg}");
-                        break;
-                    }
+                {
+                    _codeSegment.Add($"XOR {rltReg}, {lReg}, {rReg}");
+                    break;
+                }
                 case "!=":
-                    {
-                        _codeSegment.Add($"SUB {rltReg}, {lReg}, {rReg}");
-                        break;
-                    }
+                {
+                    _codeSegment.Add($"SUB {rltReg}, {lReg}, {rReg}");
+                    break;
+                }
                 case "<":
-                    {
-                        _codeSegment.Add($"SLT {rltReg}, {lReg}, {rReg}");
-                        break;
-                    }
+                {
+                    _codeSegment.Add($"SLT {rltReg}, {lReg}, {rReg}");
+                    break;
+                }
                 case ">":
-                    {
-                        _codeSegment.Add($"SLT {rltReg}, {rReg}, {lReg}");
-                        break;
-                    }
+                {
+                    _codeSegment.Add($"SLT {rltReg}, {rReg}, {lReg}");
+                    break;
+                }
                 case "<=":
-                    {
-                        int tmp = TmpReg;
-                        _codeSegment.Add($"ORI $t{tmp}, $0, 1");
-                        _codeSegment.Add($"SLT {rltReg}, {rReg}, {lReg}");
-                        _codeSegment.Add($"SUB {rltReg}, {rltReg}, $t{tmp}");
-                        break;
-                    }
+                {
+                    int tmp = TmpReg;
+                    _codeSegment.Add($"ORI $t{tmp}, $0, 1");
+                    _codeSegment.Add($"SLT {rltReg}, {rReg}, {lReg}");
+                    _codeSegment.Add($"SUB {rltReg}, {rltReg}, $t{tmp}");
+                    break;
+                }
                 case ">=":
-                    {
-                        int tmp = TmpReg;
-                        _codeSegment.Add($"ORI $t{tmp}, $0, 1");
-                        _codeSegment.Add($"SLT {rltReg}, {lReg}, {rReg}");
-                        _codeSegment.Add($"SUB {rltReg}, {rltReg}, $t{tmp}");
-                        break;
-                    }
+                {
+                    int tmp = TmpReg;
+                    _codeSegment.Add($"ORI $t{tmp}, $0, 1");
+                    _codeSegment.Add($"SLT {rltReg}, {lReg}, {rReg}");
+                    _codeSegment.Add($"SUB {rltReg}, {rltReg}, $t{tmp}");
+                    break;
+                }
 
                 default:
                     break;
@@ -338,7 +337,6 @@ namespace Backend
             _codeSegment.Add($"{command} {rltReg}, $t{tmp3}, $t{tmp4}");
 
             TmpReg -= 4;
-
         }
 
         private void BinaryAlgebraOp(string op, string lReg, string rReg, string rltReg)
@@ -411,26 +409,26 @@ namespace Backend
         #region CallAndReturn
 
         /// <summary>
-        /// <ol>
         /// <li>numbers</li>
         /// <li>local variables</li>
         /// <li>params</li>
         /// <li>old sp</li>
-        /// </ol>
         /// </summary>
         /// <param name="context"></param>
         public override void ExitCall(ProgramParser.CallContext context)
         {
             static string[] Push(string reg)
             {
-                return new string[] {
-                "ADDI $sp, $sp, -4", $"SW {reg}, 0($sp)"
-            };
+                return new string[]
+                {
+                    "ADDI $sp, $sp, -4", $"SW {reg}, 0($sp)"
+                };
             }
 
             var originalSp = TmpReg++;
             var tmp = TmpReg++;
-            
+
+            // 备份sp
             _codeSegment.Add($"OR $t{originalSp}, $0, $sp");
 
             _codeSegment.AddRange(Push("$sp"));
@@ -439,38 +437,48 @@ namespace Backend
             var funcName = context.Id().GetText();
             var funcId = GetFuncId(funcName);
 
-            var rlt = _variables[context.rlt.GetText()];
-            
+            string rlt;
+            rlt = context.rlt != null ? _variables[context.rlt.GetText()].ToString() : string.Empty;
+
+            // 传参
             foreach (var item in context.param())
             {
                 var text = item.GetChild(2).GetText();
+                // 数字
                 if (char.IsDigit(text[0]))
                 {
                     _codeSegment.Add($"ORI $t{tmp}, $0, {text}");
                     _codeSegment.AddRange(Push($"$t{tmp}"));
                 }
+                // 变量
                 else
                 {
                     var mem = _variables[text];
-
+                    
+                    // 拷贝
                     for (var i = 0; i < mem.Length; ++i)
                     {
                         _codeSegment.Add($"LW $t{tmp}, {mem.Offset + (i << 2)}($t{originalSp})");
                         _codeSegment.AddRange(Push($"$t{tmp}"));
                     }
-
                 }
             }
 
+            // 参数和局部变量数（无用）
             _codeSegment.Add($"ORI $t{tmp}, $0, {funcId.VariablesSize >> 2}");
             _codeSegment.AddRange(Push($"$t{tmp}"));
 
+            // $s0-$s7
             for (var i = 0; i < 8; ++i)
                 _codeSegment.AddRange(Push($"$s{i}"));
 
+            // 跳入函数
             _codeSegment.Add($"JAL {funcName}");
+            // $v1是外层函数的返回地址，存入$ra
             _codeSegment.Add("OR $ra, $0, $v1");
-            _codeSegment.Add($"SW $v0, {rlt}");
+            // 结果存入内存
+            if (!string.IsNullOrEmpty(rlt))
+                _codeSegment.Add($"SW $v0, {rlt}");
             if (_hasComment)
                 _codeSegment.Add($"\t # call {funcName}");
 
@@ -478,14 +486,14 @@ namespace Backend
         }
 
 
-
         void PublicReturnCode(string contextText)
         {
             static string[] Pop(string reg)
-            => new[] {
-                $"LW {reg}, 0($sp)",
-                "ADDI $sp, $sp, 4"
-            };
+                => new[]
+                {
+                    $"LW {reg}, 0($sp)",
+                    "ADDI $sp, $sp, 4"
+                };
 
             for (int i = 0; i < 8; ++i)
                 _codeSegment.AddRange(Pop($"$s{i}"));
@@ -502,7 +510,7 @@ namespace Backend
             // ra in stack should not cover $ra due to jr will use it.
             _codeSegment.AddRange(Pop("$v1"));
             _codeSegment.AddRange(Pop("$sp"));
-            _codeSegment.Add($"JR");
+            _codeSegment.Add($"JR $ra");
             if (_hasComment)
                 _codeSegment.Add($"\t # {contextText}");
         }
@@ -523,6 +531,11 @@ namespace Backend
             PublicReturnCode(context.GetText());
         }
 
+        public override void ExitEmptyReturn(ProgramParser.EmptyReturnContext context)
+        {
+            PublicReturnCode(context.GetText());
+        }
+
         #endregion
 
         #region Variable
@@ -532,16 +545,15 @@ namespace Backend
             if (_isDeclFin == false) return;
             if (context.Num() == null) return;
 
-            string scope = context.scope.Text;
-            string name = context.name.Text;
-            VariableIdentity id = _tables[scope][name] as VariableIdentity;
-            int num = int.Parse(context.Num().GetText());
+            var scope = context.scope.Text;
+            var name = context.name.Text;
+            var id = _tables[scope][name] as VariableIdentity;
+            var num = int.Parse(context.Num().GetText());
             Debug.Assert(id != null, nameof(id) + " != null");
-            Memory mem = _variables[id.Name];
-            if (context.offset != null)
-            {
+            var mem = _variables[id.Name];
+            if (context.offset == null) return;
+            if (!_variables.ContainsKey(context.GetText()))
                 _variables.Add(context.GetText(), new Memory(mem.Base, mem.Offset + (num << 2)));
-            }
         }
 
         #endregion
@@ -553,6 +565,12 @@ namespace Backend
             _codeSegment.Add(context.GetText());
         }
 
+        public override void ExitJump(ProgramParser.JumpContext context)
+        {
+            var label = context.rlt.Text;
+            _codeSegment.Add($"J {label}");
+        }
+
         public override void ExitJumpEqual(ProgramParser.JumpEqualContext context)
         {
             var lOp = context.left.GetText();
@@ -562,12 +580,18 @@ namespace Backend
             lOp = DealWithMemOrImme(lOp, ref usedReg);
             rOp = DealWithMemOrImme(rOp, ref usedReg);
 
-            _codeSegment.Add($"BEQ ${lOp}, ${rOp}, {label}");
+            _codeSegment.Add($"BEQ {lOp}, {rOp}, {label}");
 
             TmpReg -= usedReg;
         }
 
         #endregion
+
+        public override void ExitEnd(ProgramParser.EndContext context)
+        {
+            _codeSegment.Add("J end");
+        }
+
         public override void ExitProgram(ProgramParser.ProgramContext context)
         {
             var stringBuilder = new StringBuilder();
@@ -575,7 +599,13 @@ namespace Backend
                 stringBuilder.AppendLine(line);
             foreach (var line in _codeSegment)
                 stringBuilder.AppendLine(line);
+            stringBuilder.AppendLine("end:");
 
+            stringBuilder.AppendLine(" # Variables:");
+            foreach (var (name, memory) in _variables)
+            {
+                stringBuilder.AppendLine($"\t# {name}, {memory}");
+            }
             Result = stringBuilder.ToString();
         }
     }

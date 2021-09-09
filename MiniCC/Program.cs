@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 using Frontend;
@@ -17,7 +18,7 @@ namespace MiniCCli
         [Option('e', "emit-ir", Default = false, HelpText = "Stop at Intermediate Representation.")]
         public bool EmitIr { get; set; }
 
-        [Option('o', "output", HelpText = "Output File")]
+        [Option('o', "output", HelpText = "Output File Path")]
         public string OutputFile { get; set; }
     }
 
@@ -53,6 +54,34 @@ namespace MiniCCli
                         Console.WriteLine("Print result to screen due to no output file was specified.");
                         Console.ResetColor();
                         Console.WriteLine(frontEndListener.Result);
+                    }
+                }
+                else
+                {
+                    var rlt = MiddleWares.MergeLabel.Merge(frontEndListener.Result);
+                    ICharStream bstream = CharStreams.fromString(rlt);
+                    ITokenSource blexer = new Backend.ProgramLexer(bstream);
+                    ITokenStream btokens = new CommonTokenStream(blexer);
+                    Backend.ProgramParser bparser = new Backend.ProgramParser(btokens)
+                    {
+                        BuildParseTree = true,
+                        ErrorHandler = new FrontEndErrorStrategy()
+                    };
+
+                    IParseTree bTree = bparser.program();
+                    var bWalker = new ParseTreeWalker();
+                    var backendListener = new Backend.BackendListener();
+                    bWalker.Walk(backendListener, bTree);
+                    if (options.OutputFile != null)
+                    {
+                        File.WriteAllText(options.OutputFile, backendListener.Result, Encoding.ASCII);
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("Print result to screen due to no output file was specified.");
+                        Console.ResetColor();
+                        Console.WriteLine(backendListener.Result);
                     }
                 }
             }

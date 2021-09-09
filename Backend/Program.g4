@@ -1,6 +1,6 @@
 ﻿grammar Program;
 
-program: funcDecl+ decls funcDefs;
+program: funcDecl+ decls call end funcDefs;
 
 funcDefs: funcDef+;
 
@@ -32,7 +32,7 @@ funcHead: 'func' ';' Type ';' Id ';' Num ';';
 
 funcDef: funcHead stmt* funcTail;
 
-quaternary: unary | binary | return | jumpEqual | end | call;
+quaternary: unary | binary | return | jumpEqual | jump | end | call;
 
 operand: Num | variable;
 
@@ -62,14 +62,18 @@ binary:
 
 return:
 	'return' ';' variable ';' ';' ';'	# variableReturn
-	| 'return' ';' Num ';' ';' ';'		# literalReturn;
+	| 'return' ';' Num ';' ';' ';'		# literalReturn
+	| 'return' ';' ';' ';' ';'          # emptyReturn;
 
 jumpEqual:
 	'Je' ';' left = operand ';' right = operand ';' rlt = InlineLabel ';';
+	
+jump:
+    'J' ';' rlt = InlineLabel ';' ';' ';';
 
 param: 'param' ';' (variable | Num) ';' ';' ';';
 
-call: param* 'call' ';' Id ';' Num ';' rlt = variable ';';
+call: param* 'call' ';' Id ';' Num ';' (rlt = variable)? ';';
 
 end: 'end' ';' ';' ';' ';';
 

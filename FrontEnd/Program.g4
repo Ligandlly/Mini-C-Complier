@@ -83,7 +83,7 @@ continue_stmt: CONTINUE ';';
 
 break_stmt: BREAK ';';
 
-return_stmt: RETURN expr ';';
+return_stmt: RETURN expr? ';';
 
 expr_stmt: expr ';';
 
@@ -101,9 +101,6 @@ Newline: ( '\r' '\n'? | '\n') -> skip;
 BlockComment: '/*' .*? '*/' -> skip;
 LineComment: '//' ~[\r\n]* -> skip;
 
-// LSFT: '<<'; // Operators RSFT: '>>'; LOR: '||'; LAND: '&&'; EQ: '=='; NE: '!='; LE: '<='; GE:
-// '>='; LT: '<'; GT: '>'; MUL: '*'; DIV: '/'; MOD: '%'; OR: '|'; AND: '&'; XOR: '^'; NOT: '~';
-// LNOT: '!'; ASSIGN: '='; DOL: '$'; INC: '++'; DEC: '--'; MIN: '-'; ADD: '+';
 INT: 'int';
 SHORT: 'short';
 CHAR: 'char';
@@ -139,34 +136,3 @@ fragment NonzeroDigit: [1-9];
 fragment OctalDigit: [0-7];
 
 fragment HexadecimalDigit: [0-9a-fA-F];
-
-
-// unary_operator: ADD | MIN | NOT | LNOT | INC | DEC | DOL; binary_op: ADD | MIN | MUL | DIV | MOD
-// | LAND | LOR | OR | AND | XOR | RSFT | LSFT | GE | GT | LE | LT | NE | EQ;
-
-// unaryOperator: '&' | '*' | '+' | '-' | '~' | '!';
-
-// multiplicative_expr: unary_expr (('*' | '/' | '%') unary_expr)*;
-
-// additive_expr: multiplicative_expr (('+' | '-') multiplicative_expr)*;
-
-// sft_expr: additive_expr (('<<' | '>>') additive_expr)*;
-
-// relational_expr: sft_expr (('<' | '>' | '<=' | '>=') sft_expr)*;
-
-// equalityExpression: relational_expr (('==' | '!=') relational_expr)*;
-
-// andExpression: equalityExpression ( '&' equalityExpression)*;
-
-// exclusiveOrExpression: andExpression ('^' andExpression)*;
-
-// inclusiveOrExpression: exclusiveOrExpression ('|' exclusiveOrExpression)*;
-
-// logicalAndExpression: inclusiveOrExpression ('&&' inclusiveOrExpression)*;
-
-// logicalOrExpression: logicalAndExpression ('||' logicalAndExpression)*;
-
-// conditionalExpression: logicalOrExpression ('?' expr ':' conditionalExpression)?;
-
-// assignmentExpression: conditionalExpression | unary_expr assignmentOperator assignmentExpression
-// | num;

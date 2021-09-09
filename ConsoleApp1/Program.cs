@@ -13,15 +13,16 @@ namespace ConsoleApp1
         {
             string test = @"
 int foo2(int i[2]) {
-    return i[0] + 1;
+    if (i[0] == 0) {
+        return i[1];
+    } else {
+        return i[0] + 1;
+    }
 }
-//int foo(int i) {
-  //  int a;
-    //return i + 1;
-//}
-int main() {
+void main() {
     int a[2];
     foo2(a);
+    return;
 }
 ";
 

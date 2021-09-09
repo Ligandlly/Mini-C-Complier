@@ -1,23 +1,13 @@
-vade, liber, verbisque meis loca grata saluta:
+> felices ornent haec instrumenta libellos:
+>
+> fortunae memorem te decet esse meae.
+>
+> nec fragili geminae poliantur pumice frontes,
+>
+> hirsutus sparsis ut videare comis.
+>
+> neve liturarum pudeat; qui viderit illas,
+>
+> de lacrimis factas sentiat esse meis.
 
-contingam certe quo licet illa pede.
-
-siquis, ut in populo, nostri non inmemor illi,
-
-siquis, qui, quid agam, forte requirat, erit,
-
-vivere me dices, salvum tamen esse negabis;
-
-id quoque, quod vivam, munus habere dei.
-
-atque ita tu tacitus, quaerent si plura legentes,
-
-ne, quae non opus est, forte loquare, cave!
-
-protinus admonitus repetet mea crimina lector,
-
-et peragar populi publicus ore reus.
-
-tu cave defendas, quamvis mordebere dictis;
-
-causa patrocinio non bona maior erit.
+—— _Tristia_ I 1

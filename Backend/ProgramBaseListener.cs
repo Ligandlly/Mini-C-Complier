@@ -257,6 +257,20 @@ public partial class ProgramBaseListener : IProgramListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitLiteralReturn([NotNull] ProgramParser.LiteralReturnContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by the <c>emptyReturn</c>
+	/// labeled alternative in <see cref="ProgramParser.return"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterEmptyReturn([NotNull] ProgramParser.EmptyReturnContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>emptyReturn</c>
+	/// labeled alternative in <see cref="ProgramParser.return"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitEmptyReturn([NotNull] ProgramParser.EmptyReturnContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="ProgramParser.jumpEqual"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -268,6 +282,18 @@ public partial class ProgramBaseListener : IProgramListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitJumpEqual([NotNull] ProgramParser.JumpEqualContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="ProgramParser.jump"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterJump([NotNull] ProgramParser.JumpContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ProgramParser.jump"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitJump([NotNull] ProgramParser.JumpContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="ProgramParser.param"/>.
 	/// <para>The default implementation does nothing.</para>

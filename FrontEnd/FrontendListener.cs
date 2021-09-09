@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using Antlr4.Runtime.Misc;
@@ -128,6 +129,9 @@ namespace Frontend
             foreach (var decl in _decls)
                 stringBuilder.AppendLine(decl);
 
+            stringBuilder.AppendLine(_irBuilder.GenerateIr("call", "main", "0"));
+            stringBuilder.AppendLine(_irBuilder.GenerateIr("end"));
+
             foreach (var declContext in context.decl())
                 stringBuilder.AppendLine(_ir.Get(declContext));
 
@@ -137,7 +141,7 @@ namespace Frontend
 
             Result = Regex.Replace(Result, @"^\s*$[\r\n]*", string.Empty, RegexOptions.Multiline);
 
-            Result += _irBuilder.GenerateIr("end") + "\r\n";
+            // Result += _irBuilder.GenerateIr("end") + "\r\n";
         }
 
         #endregion
@@ -282,7 +286,7 @@ namespace Frontend
             }
 
             rltBuilder.AppendLine(_ir.Get(context.compound_stmt()));
-
+            rltBuilder.AppendLine(_irBuilder.GenerateIr("return"));
             rltBuilder.AppendLine(_irBuilder.GenerateIr("end_func"));
 
             var rlt = rltBuilder.ToString();
@@ -395,11 +399,11 @@ namespace Frontend
         /// <c>int foo(int, int ,int); foo(a, 1, foo(2))</c> =>
         /// <code>
         /// param 2
-        /// call foo 0_t 1
+        /// call foo 1 0_t 
         /// param a
         /// param 1
         /// param 0_t
-        /// call foo 1_t 3
+        /// call foo 3 1_t
         /// </code>
         /// </example>
         /// <param name="context"></param>
@@ -897,6 +901,11 @@ namespace Frontend
 
         public override void ExitReturn_stmt(ProgramParser.Return_stmtContext context)
         {
+            if (context.expr() == null)
+            {
+                _ir.Put(context, _irBuilder.GenerateIr("return"));
+                return;
+            }
             StringBuilder stringBuilder = new();
             stringBuilder.AppendLine(_ir.Get(context.expr()));
             var exprVal = _values.Get(context.expr());
