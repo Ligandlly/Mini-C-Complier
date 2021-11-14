@@ -15,16 +15,14 @@
  * Like priceless treasures sinking in the sand.
  */
 
+using Antlr4.Runtime.Tree;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
-using Antlr4.Runtime.Misc;
-using Antlr4.Runtime.Tree;
 
 namespace Frontend
 {
@@ -472,7 +470,7 @@ namespace Frontend
             var funcName = context.id().GetText();
 
             // If do not have function defined or the identity with the name is not defined as a function,
-            var table = Tables[_currentScopeName];
+            var table = Tables[Global];
             if (!table.ContainsKey(funcName) || table[funcName] is not FuncIdentity func)
             {
                 throw new KeyNotFoundException("Function Undefined");

@@ -12,17 +12,14 @@ namespace ConsoleApp1
         static void Main(string[] args)
         {
             string test = @"
-int foo2(int i[2]) {
-    if (i[0] == 0) {
-        return i[1];
-    } else {
-        return i[0] + 1;
-    }
+int f() {
+    return 1;
 }
+
 void main() {
-    int a[2];
-    foo2(a);
-    return;
+    int a;
+    a = 1;
+    f();
 }
 ";
 
@@ -38,12 +35,12 @@ void main() {
             var walker = new ParseTreeWalker();
             var frontEndListener = new FrontEndListener();
             walker.Walk(frontEndListener, tree);
-            Console.WriteLine(frontEndListener.Result);
+            //Console.WriteLine(frontEndListener.Result);
 
 
             var rlt = MiddleWares.MergeLabel.Merge(frontEndListener.Result);
 
-            Console.WriteLine(rlt);
+            //Console.WriteLine(rlt);
             ICharStream bstream = CharStreams.fromString(rlt);
             ITokenSource blexer = new Backend.ProgramLexer(bstream);
             ITokenStream btokens = new CommonTokenStream(blexer);
